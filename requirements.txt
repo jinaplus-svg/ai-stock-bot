@@ -1,3 +1,6 @@
 openai
 feedparser
+finance-datareader
+pandas
 requests
+lxml

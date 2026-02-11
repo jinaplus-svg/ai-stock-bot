@@ -1,0 +1,37 @@
+name: Stock Closing Bet Bot
+
+on:
+  schedule:
+    # UTC 06:40 = 한국 시간 15:40 (오후 3시 40분)
+    # 월~금(1-5)만 실행
+    - cron: '40 6 * * 1-5'
+  
+  # 수동 실행 버튼
+  workflow_dispatch:
+
+jobs:
+  run-stock-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 코드 체크아웃
+      uses: actions/checkout@v3
+
+    - name: 파이썬 설정
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: 라이브러리 설치
+      run: |
+        pip install -r requirements.txt
+
+    - name: 주식 봇 실행
+      env:
+        # 주식 봇에 필요한 비밀키들 (Settings에 등록된 것들)
+        TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        CHAT_ID: ${{ secrets.CHAT_ID }}
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      run: python finalbet_full.py

@@ -2,7 +2,7 @@ name: Stock Closing Bet Bot
 
 on:
   schedule:
-    # UTC 06:40 = 한국 시간 15:40 (오후 3시 40분)
+    # UTC 08:00 = 한국 시간 17:00 (오후 3시 40분)
     # 월~금(1-5)만 실행
     - cron: '40 6 * * 1-5'
   

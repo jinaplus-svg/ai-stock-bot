@@ -4,4 +4,10 @@ finance-datareader
 pandas
 requests
 lxml
-
+streamlit
+pandas
+numpy
+yfinance
+plotly
+requests
+xmltodict

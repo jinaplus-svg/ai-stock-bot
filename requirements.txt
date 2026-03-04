@@ -23,3 +23,9 @@ openai
 google-api-python-client
 google-auth-oauthlib
 requests
+streamlit
+openai
+google-api-python-client
+google-auth-oauthlib
+requests
+yfinance

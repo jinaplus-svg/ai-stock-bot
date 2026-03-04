@@ -86,7 +86,7 @@ def send_email(to_email, title, content, image_url=None):
 
 def search_tavily(query, include_images=True):
     """Tavily API로 최신 기사 및 관련 이미지 검색"""
-    url = "[https://api.tavily.com/search](https://api.tavily.com/search)"
+    url = "https://api.tavily.com/search"
     payload = {
         "api_key": TAVILY_API_KEY,
         "query": query,
@@ -102,7 +102,7 @@ def search_tavily(query, include_images=True):
 
 def get_unsplash_image(query):
     """Unsplash 대체 이미지 검색"""
-    url = f"[https://api.unsplash.com/search/photos?query=](https://api.unsplash.com/search/photos?query=){query}&per_page=1"
+    url = f"https://api.unsplash.com/search/photos?query={query}&per_page=1"
     headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}", "Accept-Version": "v1"}
     response = requests.get(url, headers=headers)
     if response.status_code == 200 and response.json().get('results'):

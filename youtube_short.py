@@ -10,8 +10,10 @@ st.set_page_config(page_title="🚀 숏폼 훅 추출기", layout="wide")
 # 귀하의 깃허브 시크릿에 있는 OPENAI_API_KEY를 참조합니다.
 # (주의: Streamlit Cloud 설정의 Secrets에도 동일하게 입력되어야 합니다)
 try:
-    openai_key = st.secrets["OPENAI_API_KEY"]
+        # str()로 감싸서 무조건 문자열 텍스트로만 들어가게 강제합니다.
+    openai_key = str(st.secrets["OPENAI_API_KEY"])
     client = OpenAI(api_key=openai_key)
+
 except KeyError:
     st.error("⚠️ Streamlit Secrets에 'OPENAI_API_KEY'가 누락되었습니다. 세팅을 확인하세요.")
     st.stop()

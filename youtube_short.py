@@ -2,136 +2,126 @@ import streamlit as st
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 from openai import OpenAI
-import re
 
-# ---------------------------------------------------------
-# 1. 시스템 엔진 및 보안 장착
-# ---------------------------------------------------------
-st.set_page_config(page_title="🚀 PRO 숏폼 훅 추출기", layout="wide")
+# 페이지 기본 설정
+st.set_page_config(page_title="유튜브 쇼츠 기획기", page_icon="🎬", layout="wide")
+st.title("🎬 트렌딩 유튜브 & 쇼츠 기획 도우미")
 
-try:
-    # 공식 루트: Streamlit Secrets에서 두 개의 키를 모두 호출
-    YOUTUBE_API_KEY = str(st.secrets["YOUTUBE_API_KEY"])
-    OPENAI_API_KEY = str(st.secrets["OPENAI_API_KEY"])
-    
-    youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
-    client = OpenAI(api_key=OPENAI_API_KEY)
-except KeyError as e:
-    st.error(f"⚠️ Secrets 설정이 누락되었습니다: {e}")
-    st.stop()
+# 사이드바에서 API 키 입력받기 (보안 및 편의성)
+with st.sidebar:
+    st.header("🔑 API 키 설정")
+    yt_api_key = st.text_input("YouTube Data API v3 키를 입력하세요", type="password")
+    openai_api_key = st.text_input("OpenAI API 키를 입력하세요", type="password")
+    st.markdown("---")
+    st.info("API 키는 앱이 실행되는 동안만 메모리에 유지되며 저장되지 않습니다.")
 
-# ---------------------------------------------------------
-# 2. 공식 API 기반 데이터 수집 모듈
-# ---------------------------------------------------------
-def get_video_info(video_id):
-    """구글 공식 API를 사용하여 영상 제목과 정보를 가져옵니다."""
-    request = youtube.videos().list(part="snippet", id=video_id)
+# 1. 유튜브 인기 영상 가져오기 함수
+def get_trending_videos(api_key):
+    youtube = build('youtube', 'v3', developerKey=api_key)
+    request = youtube.videos().list(
+        part="snippet",
+        chart="mostPopular",
+        regionCode="KR",
+        maxResults=10 # 상위 10개 가져오기
+    )
     response = request.execute()
-    if response['items']:
-        return response['items'][0]['snippet']['title']
-    return "알 수 없는 영상"
+    return response.get('items', [])
 
-def get_video_id(url):
-    pattern = r'(?:v=|\/)([0-9A-Za-z_-]{11}).*'
-    match = re.search(pattern, url)
-    return match.group(1) if match else None
-
-def fetch_transcript_pro(video_id):
-    """무적의 자막 추출: 공식 API로 경로를 확인하고 텍스트를 파싱합니다."""
+# 2. 영상 자막(대본) 추출 함수
+def get_transcript(video_id):
     try:
-        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-        # 한국어 최우선 -> 영어 -> 그다음 아무거나(자동생성 포함)
-        try:
-            transcript = transcript_list.find_transcript(['ko', 'en'])
-        except:
-            transcript = next(iter(transcript_list))
-            
-        fetched_data = transcript.fetch()
-        formatted_text = ""
-        for item in fetched_data:
-            start_time = int(item['start'])
-            start_min, start_sec = divmod(start_time, 60)
-            text = item['text'].replace('\n', ' ')
-            formatted_text += f"[{start_min:02d}:{start_sec:02d}] {text}\n"
-        return formatted_text
+        # 한국어 우선, 없으면 영어 자막 시도
+        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+        text = " ".join([t['text'] for t in transcript_list])
+        return text
     except Exception as e:
-        return f"Error: 자막 추출 불가 ({e})"
+        return None
 
-# ---------------------------------------------------------
-# 3. AI 전략 분석 모듈 (100만 유튜버 기획자 뇌)
-# ---------------------------------------------------------
-def analyze_content(title, transcript):
-    prompt = f"""너는 100만 구독자를 가진 숏폼 전문 기획자야.
-아래 영상의 '제목'과 '전체 대본'을 분석해서, 숏폼으로 만들었을 때 조회수가 폭발할 '최고의 훅(Hook)' 구간 2곳을 선정해줘.
-
-영상 제목: {title}
-
-[분석 지침]
-1. 시청자의 시선을 3초 안에 뺏을 수 있는 강렬한 문장이 포함된 구간일 것.
-2. 정확한 [시작시간-종료시간]을 표시할 것.
-3. 해당 구간의 '대사 내용'과 '선정 이유'를 상세히 적어줘.
-4. 결과는 무조건 한국어로 작성해.
-
-대본 데이터:
-{transcript}
-"""
+# 3. GPT 요약 함수
+def summarize_video(client, text):
+    prompt = f"다음은 유튜브 영상의 대본입니다. 이 영상의 핵심 내용을 3~4줄로 명확하게 요약해 주세요.\n\n대본:\n{text[:3000]}"
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[{"role": "system", "content": "You are a viral content expert."},
-                  {"role": "user", "content": prompt}],
-        temperature=0.8
+        messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content
 
-# ---------------------------------------------------------
-# 4. 인터랙티브 UI (사용자 환경)
-# ---------------------------------------------------------
-st.title("🎯 PRO급 숏폼 타겟팅 시스템")
-st.markdown("구글 공식 API와 GPT-4o-mini 엔진을 결합한 가장 안정적인 숏폼 생산 기계입니다.")
-st.divider()
+# 4. 쇼츠 포인트 추출 함수
+def extract_shorts_points(client, text):
+    prompt = f"""
+    당신은 전문 유튜브 쇼츠(Shorts) 기획자입니다. 
+    다음 대본을 읽고 쇼츠로 만들었을 때 가장 조회수가 높을 만한 흥미롭거나 재미있는 구간을 1곳 추천해 주세요.
+    
+    반드시 아래 양식에 맞춰 답변해 주세요:
+    - 📌 **추천 쇼츠 제목**: (시선을 끄는 제목)
+    - ⏱️ **내용 및 추천 이유**: (어떤 내용이며 왜 이 구간이 좋은지)
+    - 💬 **쇼츠 자막으로 쓸 문구**: (실제 영상에 들어갈 자막 3~4문장)
 
-# 추천 채굴장
-st.subheader("⛏️ 분석 타겟 추천")
-cols = st.columns(3)
-if 'target_url' not in st.session_state: st.session_state.target_url = ""
+    대본:
+    {text[:4000]}
+    """
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
 
-samples = {
-    "🔥 슈카월드 (경제/이슈)": "https://www.youtube.com/watch?v=F0f-E4kQO4Y",
-    "🧠 조던 피터슨 (심리)": "https://www.youtube.com/watch?v=e8yZMArnE28",
-    "💪 데이비드 고긴스 (동기부여)": "https://www.youtube.com/watch?v=TLKxdTmk-zc"
-}
-
-for i, (name, url) in enumerate(samples.items()):
-    if cols[i].button(name): st.session_state.target_url = url
-
-target_url = st.text_input("유튜브 링크를 입력하세요:", value=st.session_state.target_url)
-
-if st.button("🚀 숏폼 하이라이트 발췌 시작", type="primary"):
-    video_id = get_video_id(target_url)
-    if not video_id:
-        st.error("URL이 올바르지 않습니다.")
-    else:
-        with st.status("🛠️ 시스템 가동 중...", expanded=True) as status:
-            st.write("1️⃣ 구글 API 접속 및 영상 정보 확인 중...")
-            title = get_video_info(video_id)
-            st.write(f"📺 영상 제목: **{title}**")
+# 메인 화면 로직
+if not yt_api_key or not openai_api_key:
+    st.warning("👈 좌측 사이드바에 YouTube 및 OpenAI API 키를 먼저 입력해 주세요!")
+else:
+    # OpenAI 클라이언트 초기화
+    client = OpenAI(api_key=openai_api_key)
+    
+    st.subheader("🔥 현재 한국 유튜브 인기 동영상")
+    
+    with st.spinner("인기 동영상을 불러오는 중입니다..."):
+        try:
+            videos = get_trending_videos(yt_api_key)
             
-            st.write("2️⃣ 고밀도 자막 데이터 추출 중...")
-            transcript = fetch_transcript_pro(video_id)
+            # 비디오 제목으로 선택 박스 만들기
+            video_options = {vid['snippet']['title']: vid for vid in videos}
+            selected_title = st.selectbox("분석할 영상을 선택하세요:", list(video_options.keys()))
             
-            if "Error" in transcript:
-                st.error(transcript)
-                status.update(label="분석 실패", state="error")
-            else:
-                st.write("3️⃣ AI 기획자가 터지는 구간을 선별 중...")
-                analysis = analyze_content(title, transcript)
+            if selected_title:
+                selected_video = video_options[selected_title]
+                video_id = selected_video['id']
+                video_url = f"https://www.youtube.com/watch?v={video_id}"
+                channel_title = selected_video['snippet']['channelTitle']
                 
-                st.success("✅ 분석 완료!")
-                status.update(label="분석 성공", state="complete")
+                # 영상 정보 출력
+                st.write(f"**채널명:** {channel_title}")
+                st.write(f"**링크:** [{video_url}]({video_url})")
                 
-                st.divider()
-                st.markdown("### 🏆 AI 기획자의 숏폼 발췌 리포트")
-                st.info(analysis)
+                st.markdown("---")
                 
-                with st.expander("📝 전체 대본 데이터 보기"):
-                    st.text_area("Transcript Data", transcript, height=300)
+                # 자막 추출 및 분석
+                transcript_text = get_transcript(video_id)
+                
+                if transcript_text:
+                    st.success("✅ 영상 대본을 성공적으로 추출했습니다!")
+                    
+                    # 탭을 사용하여 UI를 깔끔하게 분리
+                    tab1, tab2 = st.tabs(["📝 영상 요약 및 대본", "✂️ 쇼츠(Shorts) 포인트 기획"])
+                    
+                    with tab1:
+                        st.subheader("영상 내용 요약")
+                        with st.spinner("GPT가 내용을 요약하고 있습니다..."):
+                            summary = summarize_video(client, transcript_text)
+                            st.write(summary)
+                            
+                        with st.expander("전체 추출 대본 보기"):
+                            st.write(transcript_text)
+                            
+                    with tab2:
+                        st.info("버튼을 누르면 GPT가 대본을 분석하여 쇼츠로 만들기 좋은 구간을 추천해 줍니다.")
+                        if st.button("🚀 쇼츠 포인트 추출하기", type="primary"):
+                            with st.spinner("쇼츠 기획안을 작성하는 중입니다. 잠시만 기다려 주세요..."):
+                                shorts_plan = extract_shorts_points(client, transcript_text)
+                                st.markdown("### 💡 쇼츠 기획 결과")
+                                st.write(shorts_plan)
+                else:
+                    st.error("❌ 이 영상은 자막(CC)이 제공되지 않아 텍스트를 추출할 수 없습니다. 다른 영상을 선택해 주세요.")
+                    
+        except Exception as e:
+            st.error(f"데이터를 불러오는 중 오류가 발생했습니다. API 키가 정확한지 확인해 주세요. (에러: {e})")

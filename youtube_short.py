@@ -7,13 +7,13 @@ from openai import OpenAI
 st.set_page_config(page_title="유튜브 쇼츠 기획기", page_icon="🎬", layout="wide")
 st.title("🎬 트렌딩 유튜브 & 쇼츠 기획 도우미")
 
-# 사이드바에서 API 키 입력받기 (보안 및 편의성)
-with st.sidebar:
-    st.header("🔑 API 키 설정")
-    yt_api_key = st.text_input("YouTube Data API v3 키를 입력하세요", type="password")
-    openai_api_key = st.text_input("OpenAI API 키를 입력하세요", type="password")
-    st.markdown("---")
-    st.info("API 키는 앱이 실행되는 동안만 메모리에 유지되며 저장되지 않습니다.")
+# Streamlit Secrets에서 API 키 불러오기 (안전한 방식)
+try:
+    yt_api_key = st.secrets["YOUTUBE_API_KEY"]
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
+except KeyError:
+    st.error("🚨 API 키가 설정되지 않았습니다! Streamlit Cloud 설정에서 Secrets를 먼저 입력해 주세요.")
+    st.stop() # 키가 없으면 여기서 실행을 멈춥니다.
 
 # 1. 유튜브 인기 영상 가져오기 함수
 def get_trending_videos(api_key):
@@ -66,62 +66,58 @@ def extract_shorts_points(client, text):
     )
     return response.choices[0].message.content
 
-# 메인 화면 로직
-if not yt_api_key or not openai_api_key:
-    st.warning("👈 좌측 사이드바에 YouTube 및 OpenAI API 키를 먼저 입력해 주세요!")
-else:
-    # OpenAI 클라이언트 초기화
-    client = OpenAI(api_key=openai_api_key)
-    
-    st.subheader("🔥 현재 한국 유튜브 인기 동영상")
-    
-    with st.spinner("인기 동영상을 불러오는 중입니다..."):
-        try:
-            videos = get_trending_videos(yt_api_key)
+# OpenAI 클라이언트 초기화
+client = OpenAI(api_key=openai_api_key)
+
+st.subheader("🔥 현재 한국 유튜브 인기 동영상")
+
+with st.spinner("인기 동영상을 불러오는 중입니다..."):
+    try:
+        videos = get_trending_videos(yt_api_key)
+        
+        # 비디오 제목으로 선택 박스 만들기
+        video_options = {vid['snippet']['title']: vid for vid in videos}
+        selected_title = st.selectbox("분석할 영상을 선택하세요:", list(video_options.keys()))
+        
+        if selected_title:
+            selected_video = video_options[selected_title]
+            video_id = selected_video['id']
+            video_url = f"https://www.youtube.com/watch?v={video_id}"
+            channel_title = selected_video['snippet']['channelTitle']
             
-            # 비디오 제목으로 선택 박스 만들기
-            video_options = {vid['snippet']['title']: vid for vid in videos}
-            selected_title = st.selectbox("분석할 영상을 선택하세요:", list(video_options.keys()))
+            # 영상 정보 출력
+            st.write(f"**채널명:** {channel_title}")
+            st.write(f"**링크:** [{video_url}]({video_url})")
             
-            if selected_title:
-                selected_video = video_options[selected_title]
-                video_id = selected_video['id']
-                video_url = f"https://www.youtube.com/watch?v={video_id}"
-                channel_title = selected_video['snippet']['channelTitle']
+            st.markdown("---")
+            
+            # 자막 추출 및 분석
+            transcript_text = get_transcript(video_id)
+            
+            if transcript_text:
+                st.success("✅ 영상 대본을 성공적으로 추출했습니다!")
                 
-                # 영상 정보 출력
-                st.write(f"**채널명:** {channel_title}")
-                st.write(f"**링크:** [{video_url}]({video_url})")
+                # 탭을 사용하여 UI를 깔끔하게 분리
+                tab1, tab2 = st.tabs(["📝 영상 요약 및 대본", "✂️ 쇼츠(Shorts) 포인트 기획"])
                 
-                st.markdown("---")
+                with tab1:
+                    st.subheader("영상 내용 요약")
+                    with st.spinner("GPT가 내용을 요약하고 있습니다..."):
+                        summary = summarize_video(client, transcript_text)
+                        st.write(summary)
+                        
+                    with st.expander("전체 추출 대본 보기"):
+                        st.write(transcript_text)
+                        
+                with tab2:
+                    st.info("버튼을 누르면 GPT가 대본을 분석하여 쇼츠로 만들기 좋은 구간을 추천해 줍니다.")
+                    if st.button("🚀 쇼츠 포인트 추출하기", type="primary"):
+                        with st.spinner("쇼츠 기획안을 작성하는 중입니다. 잠시만 기다려 주세요..."):
+                            shorts_plan = extract_shorts_points(client, transcript_text)
+                            st.markdown("### 💡 쇼츠 기획 결과")
+                            st.write(shorts_plan)
+            else:
+                st.error("❌ 이 영상은 자막(CC)이 제공되지 않아 텍스트를 추출할 수 없습니다. 다른 영상을 선택해 주세요.")
                 
-                # 자막 추출 및 분석
-                transcript_text = get_transcript(video_id)
-                
-                if transcript_text:
-                    st.success("✅ 영상 대본을 성공적으로 추출했습니다!")
-                    
-                    # 탭을 사용하여 UI를 깔끔하게 분리
-                    tab1, tab2 = st.tabs(["📝 영상 요약 및 대본", "✂️ 쇼츠(Shorts) 포인트 기획"])
-                    
-                    with tab1:
-                        st.subheader("영상 내용 요약")
-                        with st.spinner("GPT가 내용을 요약하고 있습니다..."):
-                            summary = summarize_video(client, transcript_text)
-                            st.write(summary)
-                            
-                        with st.expander("전체 추출 대본 보기"):
-                            st.write(transcript_text)
-                            
-                    with tab2:
-                        st.info("버튼을 누르면 GPT가 대본을 분석하여 쇼츠로 만들기 좋은 구간을 추천해 줍니다.")
-                        if st.button("🚀 쇼츠 포인트 추출하기", type="primary"):
-                            with st.spinner("쇼츠 기획안을 작성하는 중입니다. 잠시만 기다려 주세요..."):
-                                shorts_plan = extract_shorts_points(client, transcript_text)
-                                st.markdown("### 💡 쇼츠 기획 결과")
-                                st.write(shorts_plan)
-                else:
-                    st.error("❌ 이 영상은 자막(CC)이 제공되지 않아 텍스트를 추출할 수 없습니다. 다른 영상을 선택해 주세요.")
-                    
-        except Exception as e:
-            st.error(f"데이터를 불러오는 중 오류가 발생했습니다. API 키가 정확한지 확인해 주세요. (에러: {e})")
+    except Exception as e:
+        st.error(f"데이터를 불러오는 중 오류가 발생했습니다. API 키가 정확한지 확인해 주세요. (에러: {e})")

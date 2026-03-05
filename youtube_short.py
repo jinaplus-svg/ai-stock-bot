@@ -26,18 +26,25 @@ def get_video_id(url):
     return match.group(1) if match else None
 
 def fetch_transcript(video_id):
-    """유튜브 서버에서 영상(시각)은 버리고 대본(텍스트)만 긁어옵니다."""
+    """유튜브 서버에서 영상(시각)은 버리고 대본(텍스트)만 긁어옵니다. (최신 API 규격 적용)"""
     try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+        # 1. 엔진 인스턴스 생성 (최신 1.x.x 버전 규격)
+        ytt_api = YouTubeTranscriptApi()
+        
+        # 2. fetch 메서드로 한국어/영어 대본 가져오기
+        fetched_transcript = ytt_api.fetch(video_id, languages=['ko', 'en'])
+        
         formatted_text = ""
-        for item in transcript_list:
-            start_time = int(item['start'])
+        # 3. 리스트 딕셔너리가 아닌 객체(snippet) 속성으로 접근하여 조립
+        for snippet in fetched_transcript:
+            start_time = int(snippet.start)
             start_min, start_sec = divmod(start_time, 60)
-            text = item['text'].replace('\n', ' ')
+            text = snippet.text.replace('\n', ' ')
             formatted_text += f"[{start_min:02d}:{start_sec:02d}] {text}\n"
+            
         return formatted_text
     except Exception as e:
-        return f"Error: 자막 추출 실패 (자막이 비활성화된 영상입니다) - {e}"
+        return f"Error: 자막 추출 실패 (자막이 비활성화된 영상이거나 구조가 변경되었습니다) - {e}"
 
 # --- 4. 뇌(Brain): AI 프롬프트 실행 ---
 def analyze_transcript(transcript_text):

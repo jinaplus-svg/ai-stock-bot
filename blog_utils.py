@@ -7,11 +7,15 @@ client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY")
 
+# blog_utils.py 파일 수정
+
 COUPANG_AD_HTML = """
-<div style="text-align: center; margin: 30px 0;">
-    <a href="https://link.coupang.com/a/dYVf3W" target="_blank">
-        <img src="https://image9.coupangcdn.com/image/affiliate/banner/ba0d7b0572b94e82be0592e35d1fcc51@2x.jpg" alt="추천 상품 보러가기" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+<div style="text-align: center; margin: 30px 0; padding: 20px; border: 1px dashed #0073e9; border-radius: 10px;">
+    <p style="margin-bottom: 15px; font-weight: bold; color: #333;">🎁 T대디가 엄선한 오늘의 추천 특가! 🎁</p>
+    <a href="https://link.coupang.com/a/dYVf3W" target="_blank" style="display: inline-block; padding: 15px 30px; background-color: #0073e9; color: #ffffff !important; text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        👉 추천 상품 상세 정보 확인하기
     </a>
+    <p style="margin-top: 10px; font-size: 12px; color: #666;">(한정 수량이니 서두르세요! 🏃‍♂️)</p>
 </div>
 """
 

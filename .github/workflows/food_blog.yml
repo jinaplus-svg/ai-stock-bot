@@ -14,7 +14,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python scripts/run_food.py
         env:
-        PYTHONPATH: .  # 👈 이 줄을 새로 추가해 주세요!
+          PYTHONPATH: .  # 👈 이 줄을 새로 추가해 주세요!
           FOOD_BLOG_ID: ${{ secrets.FOOD_BLOG_ID }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

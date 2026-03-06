@@ -1,0 +1,23 @@
+name: IT Blog
+on:
+  schedule:
+    - cron: '0 0 * * *'  # KST 09:00
+    - cron: '0 5 * * *'  # KST 14:00
+    - cron: '0 12 * * *' # KST 21:00
+  workflow_dispatch:
+jobs:
+  run-blog: # (하단 steps 설정은 위와 완전히 동일. env에서 IT_BLOG_ID 와 run_it.py 만 변경)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install -r requirements.txt
+      - run: python scripts/run_it.py
+        env:
+          IT_BLOG_ID: ${{ secrets.IT_BLOG_ID }}
+          GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}

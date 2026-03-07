@@ -1,8 +1,7 @@
-# blog_utils.py (최종 업그레이드 버전)
-
 import os
 import requests
-import random  # 🎲 랜덤 추출을 위해 추가
+import random
+import re  # 👈 문자열 치환(정규식)을 위해 새롭게 추가됨
 from openai import OpenAI
 
 # API 키 및 클라이언트 초기화
@@ -11,17 +10,17 @@ TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY")
 
 COUPANG_AD_HTML = """
-<div style="text-align: center; margin: 30px 0; padding: 20px; border: 1px dashed #0073e9; border-radius: 10px; background-color: #f0f8ff;">
-    <p style="margin-bottom: 15px; font-weight: bold; color: #333; font-size: 16px;">🎁 T대디가 엄선한 오늘의 추천 특가! 🎁</p>
-    <a href="https://link.coupang.com/a/dYVf3W" target="_blank" style="display: inline-block; padding: 15px 30px; background-color: #0073e9; color: #ffffff !important; text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s;">
+<div style="text-align: center; margin: 50px 0; padding: 25px; border: 2px dashed #0073e9; border-radius: 12px; background-color: #f8fbff;">
+    <p style="margin-bottom: 15px; font-weight: bold; color: #1a1a1a; font-size: 17px;">🎁 T대디가 엄선한 오늘의 추천 특가! 🎁</p>
+    <a href="https://link.coupang.com/a/dYVf3W" target="_blank" style="display: inline-block; padding: 16px 32px; background-color: #0073e9; color: #ffffff !important; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 18px; box-shadow: 0 4px 10px rgba(0,115,233,0.3); transition: all 0.3s;">
         👉 추천 상품 상세 정보 확인하기
     </a>
-    <p style="margin-top: 10px; font-size: 12px; color: #666;">(한정 수량이니 서두르세요! 🏃‍♂️)</p>
+    <p style="margin-top: 12px; font-size: 13px; color: #777;">(한정 수량이니 서두르세요! 🏃‍♂️)</p>
 </div>
 """
 
 DISCLAIMER_HTML = """
-<p style="font-size:12px; color:#888; text-align:center; margin-top:40px; padding-top:20px; border-top:1px solid #eee;">
+<p style="font-size:12px; color:#999; text-align:center; margin-top:50px; padding-top:20px; border-top:1px solid #eaeaea;">
 "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
 </p>
 """
@@ -42,14 +41,12 @@ def get_thumbnail_image(keyword):
     if not PEXELS_API_KEY: return ""
     
     headers = {"Authorization": PEXELS_API_KEY}
-    # 🎲 다양성을 위해 per_page를 20으로 늘립니다.
-    url = f"https://api.pexels.com/v1/search?query={keyword}&per_page=20&locale=en-US"
+    url = f"https://api.pexels.com/v1/search?query={keyword}&per_page=15&locale=en-US"
     
     try:
         res = requests.get(url, headers=headers).json()
         photos = res.get('photos', [])
         if photos:
-            # 🎲 검색된 20개의 사진 중 하나를 랜덤으로 선택합니다. (중복 방지 핵심)
             random_photo = random.choice(photos)
             return random_photo['src']['large']
     except Exception as e:
@@ -59,66 +56,55 @@ def get_thumbnail_image(keyword):
 def generate_blog_post(system_role, subject, search_context):
     """지정된 페르소나와 구조에 맞춰 힙한 블로그 HTML 코드를 생성합니다."""
     
-    # 🌟 프롬프트 대폭 강화: 제공해주신 예시 스타일 반영
     prompt = f"""
     당신은 인스타그램과 블로그에서 엄청난 인기를 끄는 스타 블로거 **'지니'**입니다. 
-    방금 제공받은 최신 정보를 바탕으로, 마치 본인이 직접 경험한 것처럼 생생하고 힙한 감성의 블로그 포스팅을 HTML 형식으로 작성해주세요. 독자들과 수다를 떠는 듯한 친근한 말투(해요체)를 사용하고 이모지를 풍부하게 써주세요.
+    방금 제공받은 정보를 바탕으로 본인이 직접 경험한 것처럼 생생하고 힙한 감성의 블로그 포스팅을 HTML 형식으로 작성해주세요. 독자들과 수다를 떠는 듯한 친근한 말투(해요체)와 이모지를 풍부하게 사용하세요.
 
     [최신 정보 데이터]: {search_context}
     [포스팅 주제]: {subject}
     [당신의 페르소나]: {system_role}
 
     [필수 작성 구조 및 규칙]
-    1.  **제목:** 응답의 맨 첫 줄은 무조건 `<h1>✨ 제목</h1>` 형식이어야 합니다. SEO를 고려하면서도 클릭을 유도하는 매력적인 제목을 지으세요.
-    2.  **본문:** 주입식 정보 전달은 절대 금지! 본인의 감정(와!, 미쳤다!, 존맛탱 등)을 섞어 재미있게 묘사하세요. 소제목(`<h2>✨ 주제</h2>`)을 활용해 가독성을 높이세요.
-    3.  **이미지 플레이스홀더:** 본문 곳곳에 사진이 들어갈 자리를 `(사진 N: 사진에 대한 생생한 묘사)` 형식으로 최소 3개 이상 넣어주세요. (예: `(사진 1: 'DINER' 네온사인이 반겨주는 입구와 따뜻한 실내 분위기)`)
-    4.  **정보 요약 섹션:** 글 하단에 반드시 `<h3>📍 정보 요약 & 꿀팁</h3>` 섹션을 만드세요.
-        * `<ul>` 태그를 사용하여 주소(`🗺️`), 영업시간(`⏰`) 등을 정리하세요.
-        * `<h4>💡 지니의 꿀팁!</h4>`을 만들어 방문 전 꼭 알아야 할 팁을 적어주세요.
-    5.  **광고 삽입:** 본문의 흐름이 자연스럽게 바뀌는 중간 지점에 정확히 `[COUPANG_AD]` 라는 텍스트를 한 번만 삽입하세요.
-    6.  **마무리 & 해시태그:** 친근한 인사로 글을 맺고, 맨 마지막 줄에는 관련 해시태그 10개를 띄어쓰기로 구분하여 작성하세요.
-    7.  **Pexels 키워드:** **가장 중요합니다.** HTML 작성이 끝나고 맨 아래에 `[PEXELS_KEYWORDS]: 영어 키워드` 형식으로, 이 글 전체 내용과 분위기에 딱 맞는 Pexels 검색용 영어 키워드 3~5개를 쉼표로 구분하여 작성하세요. (예: `[PEXELS_KEYWORDS]: lake view restaurant, cozy interior, gourmet food plating`)
-    8.  HTML 태그 외의 마크다운 기호(```html 등)는 절대 출력하지 마세요.
+    1. 제목: 맨 첫 줄은 무조건 `<h1>✨ 제목</h1>` 형식으로 매력적인 제목을 지으세요.
+    2. 넓은 띄어쓰기(가독성): 모바일 독자를 위해 문단 사이 간격이 아주 넓어야 합니다. 새로운 문단이나 주제가 시작될 때는 반드시 `<p style="margin-bottom: 40px; line-height: 1.8; font-size: 16px;">` 태그를 사용하여 여백을 충분히 주세요.
+    3. 다중 이미지 자동 삽입 (가장 중요): 글을 쓰다가 시각적 자료가 필요한 곳(최소 3곳 이상)에 절대 '(사진 1: 설명)' 같은 한글을 쓰지 마세요. 
+       대신 해당 상황에 맞는 영어 검색어를 넣어 `[IMAGE: 영어 검색어]` 형식으로 코드만 삽입하세요.
+       예시: [IMAGE: delicious pasta plating], [IMAGE: cozy cafe interior], [IMAGE: modern city street]
+       이 코드는 나중에 시스템이 실제 고화질 사진으로 자동 변환합니다.
+    4. 정보 요약 섹션: 글 하단에 `<h3>📍 정보 요약 & 꿀팁</h3>` 을 만들고 주소, 영업시간, 지니의 꿀팁 등을 작성하세요.
+    5. 광고 삽입: 본문 중간에 흐름이 바뀌는 곳에 딱 한 번 `[COUPANG_AD]` 텍스트를 넣으세요.
+    6. 해시태그: 맨 아래에 관련 해시태그 10개를 띄어쓰기로 구분하여 작성하세요.
+    7. HTML 태그 외의 마크다운 기호(```html 등)는 절대 출력하지 마세요.
     """
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.7
+        temperature=0.75
     )
     
-    response_text = response.choices[0].message.content.strip()
+    final_html = response.choices[0].message.content.strip()
     
-    # 1. 🎲 Pexels 동적 키워드 추출 및 사진 가져오기
+    # 1. 제목 추출
     title = "오늘의 인사이트"
-    final_html = response_text
-    dynamic_image_url = ""
-
-    if "[PEXELS_KEYWORDS]:" in response_text:
-        try:
-            temp_parts = response_text.split("[PEXELS_KEYWORDS]:")
-            final_html = temp_parts[0].strip() # 키워드 부분 제외한 HTML
-            pexels_keywords = temp_parts[1].strip()
-            # AI가 생성한 키워드로 Pexels 검색 (다양성 확보)
-            dynamic_image_url = get_thumbnail_image(pexels_keywords)
-        except: pass
-
-    # 만약 키워드 추출 실패 시 주제 기반 고정 키워드로 백업
-    if not dynamic_image_url:
-        dynamic_image_url = get_thumbnail_image(subject[:15])
-
-    # 2. 제목 추출 및 본문 정리
     if "<h1>" in final_html and "</h1>" in final_html:
         title = final_html.split("<h1>")[1].split("</h1>")[0]
         final_html = final_html.replace(f"<h1>{title}</h1>", "")
+
+    # 2. [IMAGE: 검색어] 코드를 찾아 실제 Pexels 이미지 HTML로 변환하는 함수
+    def replace_with_image(match):
+        keyword = match.group(1).strip()
+        img_url = get_thumbnail_image(keyword)
+        if img_url:
+            # 여백을 넉넉히 준 이미지 컨테이너 반환
+            return f'<div style="text-align:center; margin: 50px 0;"><img src="{img_url}" alt="{keyword}" style="max-width:100%; border-radius:12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15);"></div>'
+        return "" # 이미지를 못 찾으면 해당 텍스트 삭제
+
+    # 정규식(Regex)을 사용하여 [IMAGE: ...] 패턴을 모두 찾아 치환 실행
+    final_html = re.sub(r'\[IMAGE:\s*(.*?)\]', replace_with_image, final_html)
     
-    # 3. 최상단 썸네일 이미지 HTML 생성
-    image_html = f'<div style="text-align:center;"><img src="{dynamic_image_url}" alt="{title}" style="max-width:100%; border-radius:12px; margin-bottom:25px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>' if dynamic_image_url else ""
-    
-    # 4. 쿠팡 광고 및 마무리 문구 조합
-    # 본문 중간의 [COUPANG_AD]를 진짜 HTML 버튼으로 치환
+    # 3. 쿠팡 광고 및 마무리 문구 조합
     final_content = final_html.replace("[COUPANG_AD]", COUPANG_AD_HTML)
-    # 전체 구조 조합: 썸네일 + 본문 + 하단 대형 배너(이전 버전 유지) + 공지
-    final_content = image_html + final_content + COUPANG_AD_HTML + DISCLAIMER_HTML
+    final_content = final_content + DISCLAIMER_HTML
     
     return title, final_content

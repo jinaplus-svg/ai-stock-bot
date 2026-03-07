@@ -1,24 +1,32 @@
 name: News Blog
 on:
   schedule:
-    - cron: '0 23 * * *' # KST 08:00 (전날 23시)
-    - cron: '30 3 * * *' # KST 12:30
-    - cron: '0 13 * * *' # KST 22:00
+    - cron: '0 23 * * *'  # KST 08:00 (삼프로TV)
+    - cron: '0 4 * * *'   # KST 13:00 (바비위키)
+    - cron: '0 9 * * *'   # KST 18:00 (슈카월드)
   workflow_dispatch:
+
 jobs:
-  run-blog: # (하단 steps 설정은 위와 완전히 동일. env에서 NEWS_BLOG_ID 와 run_news.py 만 변경)
+  run-blog:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - run: pip install -r requirements.txt
-      - run: python scripts/run_news.py
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run News Blog Script
+        run: python scripts/run_news.py
         env:
-          PYTHONPATH: .  # 👈 이 줄을 새로 추가해 주세요!
+          PYTHONPATH: .
           NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}

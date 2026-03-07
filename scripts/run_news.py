@@ -10,20 +10,17 @@ if __name__ == "__main__":
     kst = pytz.timezone('Asia/Seoul')
     hour = datetime.now(kst).hour
     
-    if hour < 11: # 오전 8시
+    if hour < 10: # 오전 08시 (경제/시사)
         channel = "삼프로TV"
-    elif hour < 18: # 오후 12시 30분
+        theme = "경제/금융 최신 이슈"
+    elif hour < 15: # 오후 13시 (이슈/인물)
         channel = "바비위키(김바비)"
-    else: # 오후 10시
+        theme = "흥미로운 인물이나 사건"
+    else: # 오후 18시 (사회/글로벌)
         channel = "슈카월드"
+        theme = "사회/글로벌 트렌드"
         
-    query = f"유튜브 '{channel}' 채널의 가장 최신 영상 내용 요약해주고, 이 주제와 관련된 대중들이 흥미로워할 만한 재미있는 배경 지식이나 에피소드 추가해줘. 만약 최신 영상이 없다면 채널의 대표적인 인기 주제로 해줘."
+    query = f"유튜브 '{channel}'의 최근 영상 중 '{theme}'에 관련된 내용을 하나 골라 상세히 요약하고, 대중들이 흥미로워할 꿀잼 배경지식 추가"
     context = search_latest_info(query)
-    
-    title, content = generate_blog_post(
-        system_role="유튜브 트렌드 분석가 및 스토리텔러",
-        subject=f"{channel} 최신 이슈 및 관련 꿀잼 지식",
-        search_context=context,
-        image_keyword=f"youtube creator broadcasting {channel}"
-    )
-    upload_post(BLOG_ID, title, content)
+    title, content = generate_blog_post("유튜브 트렌드 분석가 지니", f"오늘의 {channel} 핫클립 리뷰", context)
+    upload_post(BLOG_ID, title, content, "News 블로그")

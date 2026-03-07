@@ -21,6 +21,6 @@ if __name__ == "__main__":
         theme = "사회/글로벌 트렌드"
         
     query = f"유튜브 '{channel}'의 최근 영상 중 '{theme}'에 관련된 내용을 하나 골라 상세히 요약하고, 대중들이 흥미로워할 꿀잼 배경지식 추가"
-    context = search_latest_info(query)
-    title, content = generate_blog_post("유튜브 트렌드 분석가 지니", f"오늘의 {channel} 핫클립 리뷰", context)
+    context, images = search_latest_info(query)
+    title, content = generate_blog_post("유튜브 트렌드 분석가 지니", f"오늘의 {channel} 핫클립 리뷰", context, images)
     upload_post(BLOG_ID, title, content, "News 블로그")

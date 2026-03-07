@@ -20,6 +20,6 @@ if __name__ == "__main__":
         query = "야경이 미치도록 아름다운 국내 특정 장소(예: 부산 영도의 어느 골목, 야간 개장하는 특정 고궁 등) 1곳. 감성적인 묘사와 야간 방문 팁"
         subject = "감성 터지는 환상적인 야경 스팟 추천"
         
-    context = search_latest_info(query)
-    title, content = generate_blog_post("감성 여행 크리에이터 지니", subject, context)
+    context, images = search_latest_info(query)
+    title, content = generate_blog_post("감성 여행 크리에이터 지니", subject, context, images)
     upload_post(BLOG_ID, title, content, "Travel 블로그")

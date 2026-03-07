@@ -20,6 +20,6 @@ if __name__ == "__main__":
         query = "애플, 구글, 일론 머스크 등 글로벌 빅테크 기업들의 오늘 하루 가장 파격적이거나 재미있었던 행보/신제품 소식 1개"
         subject = "오늘의 글로벌 빅테크 꿀잼 이슈"
         
-    context = search_latest_info(query)
-    title, content = generate_blog_post("테크 긱(Geek) 리뷰어 지니", subject, context)
+    context, images = search_latest_info(query)
+    title, content = generate_blog_post("테크 긱(Geek) 리뷰어 지니", subject, context, images)
     upload_post(BLOG_ID, title, content, "IT 블로그")

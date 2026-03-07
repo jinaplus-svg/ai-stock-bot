@@ -20,6 +20,6 @@ if __name__ == "__main__":
         query = "최근 힙스터들이 많이 가는 을지로, 하이볼 명소, 독특한 안주가 있는 로컬 술집 1곳. 시그니처 메뉴와 매장 분위기 상세 묘사"
         subject = "퇴근 후 힐링, 나만 알고 싶은 힙한 술집"
         
-    context, images = search_latest_info(query) # 👈 images 변수 추가
-    title, content = generate_blog_post("역할", subject, context, images) # 👈 맨 끝에 images 전달
+    context, images = search_latest_info(query) # 👈 실제 이미지 리스트 받아오기
+    title, content = generate_blog_post("미식 큐레이터 지니", subject, context, images) # 👈 이미지 전달
     upload_post(BLOG_ID, title, content, "Food 블로그")

@@ -1,24 +1,32 @@
 name: IT Blog
 on:
   schedule:
-    - cron: '0 0 * * *'  # KST 09:00
-    - cron: '0 5 * * *'  # KST 14:00
-    - cron: '0 12 * * *' # KST 21:00
+    - cron: '0 0 * * *'   # KST 09:00 (딥테크/논문)
+    - cron: '0 5 * * *'   # KST 14:00 (오픈소스 툴)
+    - cron: '0 10 * * *'  # KST 19:00 (빅테크 트렌드)
   workflow_dispatch:
+
 jobs:
-  run-blog: # (하단 steps 설정은 위와 완전히 동일. env에서 IT_BLOG_ID 와 run_it.py 만 변경)
+  run-blog:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - run: pip install -r requirements.txt
-      - run: python scripts/run_it.py
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run IT Blog Script
+        run: python scripts/run_it.py
         env:
-          PYTHONPATH: .  # 👈 이 줄을 새로 추가해 주세요!
+          PYTHONPATH: .
           IT_BLOG_ID: ${{ secrets.IT_BLOG_ID }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}

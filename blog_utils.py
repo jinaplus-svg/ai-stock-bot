@@ -7,13 +7,10 @@ from openai import OpenAI
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 
+# 🌟 쿠팡 광고 HTML 업데이트 (대표님이 주신 배너 코드로 교체 및 가운데 정렬 적용)
 COUPANG_AD_HTML = """
-<div style="text-align: center; margin: 40px 0; padding: 25px; border: 1px dashed #0073e9; border-radius: 10px; background-color: #f0f8ff;">
-    <p style="margin-bottom: 20px; font-weight: bold; color: #333; font-size: 18px;">🎁 T대디가 엄선한 오늘의 추천 특가! 🎁</p>
-    <a href="https://link.coupang.com/a/dYVf3W" target="_blank" style="display: inline-block; padding: 18px 35px; background-color: #0073e9; color: #ffffff !important; text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s;">
-        👉 추천 상품 상세 정보 확인하기
-    </a>
-    <p style="margin-top: 15px; font-size: 14px; color: #666;">(한정 수량이니 서두르세요! 🏃‍♂️)</p>
+<div style="text-align: center; margin: 40px 0;">
+    <a href="https://link.coupang.com/a/d0lKD1" target="_blank" referrerpolicy="unsafe-url"><img src="https://image3.coupangcdn.com/image/affiliate/banner/191a9ef0ae936109f897e1b063491dd3@2x.jpg" alt="Apple 2026 맥북 네오 A18 Pro칩, 실버, A18 Pro 6코어, 5코어, 8GB, 256GB, 한글" width="120" height="240"></a>
 </div>
 """
 
@@ -88,9 +85,9 @@ def generate_blog_post(system_role, subject, search_context):
 
     print("🧠 OpenAI로 심층 블로그 포스팅 생성 중... (시간이 소요될 수 있습니다)")
     response = client.chat.completions.create(
-        model="gpt-4", # 🌟 글의 품질과 깊이를 위해 GPT-4 사용 (기존 4o-mini는 짧게 쓰는 경향이 있음)
+        model="gpt-4", 
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.75 # 전문가의 균형 잡힌 시각을 위해 temperature 조정
+        temperature=0.75 
     )
     
     response_text = response.choices[0].message.content.strip()
@@ -102,34 +99,24 @@ def generate_blog_post(system_role, subject, search_context):
         title = final_html.split("<h1>")[1].split("</h1>")[0]
         final_html = final_html.replace(f"<h1>{title}</h1>", "")
     
-    # 2. 🎲 실제 이미지 검색 및 통합 로직 (핵심 업그레이드)
-    # 정규표현식을 사용하여 이미지 플레이스홀더를 모두 찾습니다.
-    # (사진 N: 사진에 대한 구체적이고 생생한 묘사)
+    # 2. 실제 이미지 검색 및 통합 로직
     image_placeholders = re.findall(r'\(사진 \d+:[^)]+\)', final_html)
     
-    # 🎲 각 플레이스홀더에 대해 Tavily 이미지 검색을 호출하고, 실제 이미지 태그로 치환합니다.
     for i, placeholder in enumerate(image_placeholders):
-        # 플레이스홀더에서 사진 설명을 추출합니다.
         description = placeholder.split(':', 1)[1].strip(')')
         
-        # 실제 웹 이미지 검색 모델을 호출합니다.
         print(f"📸 사진 {i+1} 검색 중... (구체적 묘사: {description[:30]}...)")
         image_url = get_real_web_image(description)
         
-        # 이미지 태그를 생성합니다.
         if image_url:
             image_tag = f'<div style="text-align:center;"><img src="{image_url}" alt="{description}" style="max-width:100%; border-radius:12px; margin-bottom:25px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"><p style="font-size:12px; color:#888; margin-top:-20px; margin-bottom:25px;">▲ {description} (실제 웹 검색 이미지)</p></div>'
-            # 🎲 본문에서 플레이스홀더를 실제 이미지 태그로 치환합니다.
             final_html = final_html.replace(placeholder, image_tag)
         else:
-            # 이미지 검색 실패 시 플레이스홀더를 삭제합니다.
             final_html = final_html.replace(placeholder, "")
             print(f"❌ 사진 {i+1} 검색 실패")
 
     # 3. 쿠팡 광고 및 마무리 문구 조합
-    # 본문 중간의 [COUPANG_AD]를 진짜 HTML 버튼으로 치환
     final_content = final_html.replace("[COUPANG_AD]", COUPANG_AD_HTML)
-    # 전체 구조 조합
     final_content = final_content + COUPANG_AD_HTML + DISCLAIMER_HTML
     
     return title, final_content

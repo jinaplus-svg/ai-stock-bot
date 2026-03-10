@@ -13,10 +13,10 @@ PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY")
 PIXABAY_API_KEY = os.environ.get("PIXABAY_API_KEY")
 UNSPLASH_API_KEY = os.environ.get("UNSPLASH_API_KEY")
 
-# 🌟 쿠팡 광고 HTML (대표님 전용 맥북 배너)
+# 🌟 쿠팡 광고 HTML (모바일 오류 방지 속성 적용)
 COUPANG_AD_HTML = """
 <div style="text-align: center; margin: 60px 0;">
-    <a href="https://link.coupang.com/a/d0lKD1" target="_blank" referrerpolicy="unsafe-url"><img src="https://image3.coupangcdn.com/image/affiliate/banner/191a9ef0ae936109f897e1b063491dd3@2x.jpg" alt="Apple 2026 맥북 네오 A18 Pro칩, 실버, A18 Pro 6코어, 5코어, 8GB, 256GB, 한글" width="120" height="240"></a>
+    <a href="https://link.coupang.com/a/d0lKD1" target="_blank" rel="noopener noreferrer"><img src="https://image3.coupangcdn.com/image/affiliate/banner/191a9ef0ae936109f897e1b063491dd3@2x.jpg" alt="Apple 2026 맥북 네오 A18 Pro칩, 실버, A18 Pro 6코어, 5코어, 8GB, 256GB, 한글" width="120" height="240" style="border:none;"></a>
 </div>
 """
 
@@ -136,18 +136,14 @@ def generate_blog_post(system_role, subject, search_context):
     final_html = part1_html + "\n<br><br>\n" + part2_html
     
     # 🌟 디자인 강제 적용 (스크린샷 느낌 완벽 구현)
-    # 1. <h2> 큰 글자, 진한 폰트, 여백
     final_html = final_html.replace("<h2>", "<h2 style='font-size: 24px; font-weight: 800; color: #111; margin-top: 50px; margin-bottom: 20px; line-height: 1.4; word-break: keep-all;'>")
-    # 2. <h3> 중간 글자, 진한 폰트
     final_html = final_html.replace("<h3>", "<h3 style='font-size: 20px; font-weight: 700; color: #333; margin-top: 40px; margin-bottom: 15px;'>")
-    # 3. 본문 <p> 폰트 크기 및 줄간격(가독성)
     final_html = final_html.replace("<p>", "<p style='font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 15px; word-break: keep-all;'>")
 
     # 제목 분리
     title = "오늘의 인사이트"
     if "<h1>" in final_html and "</h1>" in final_html:
         title = final_html.split("<h1>")[1].split("</h1>")[0]
-        # 불필요한 h1 태그 삭제
         final_html = re.sub(r'<h1.*?>.*?</h1>', '', final_html)
     
     # 🎲 다중 플랫폼 이미지 통합 및 캡션 디자인
@@ -159,7 +155,6 @@ def generate_blog_post(system_role, subject, search_context):
         image_url, source_name = get_best_image(description)
         
         if image_url:
-            # 🌟 이미지 및 작은 회색 기울임꼴 캡션 적용 (스크린샷 스타일 완벽 반영)
             image_tag = f"""
             <div style="margin: 40px 0;">
                 <img src="{image_url}" alt="{description}" style="max-width:100%; height:auto; display:block;">

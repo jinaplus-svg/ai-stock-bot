@@ -37,7 +37,6 @@ SCOPES = ['https://www.googleapis.com/auth/blogger']
 # 2. 텔레그램 전송 로직
 # ==========================================
 def send_telegram_message(category, title, url):
-    """포스팅 완료 후 텔레그램으로 알림을 보냅니다."""
     if not TELEGRAM_TOKEN or not CHAT_ID:
         print("⚠️ 텔레그램 토큰 또는 CHAT_ID가 없어 알림을 생략합니다.")
         return
@@ -119,3 +118,63 @@ def write_blog_post(category, topic, base64_images):
         html_content = html_content[7:]
     if html_content.endswith("```"): 
         html_content = html_content[:-3]
+    
+    try:
+        title = html_content.split('<h2>')[1].split('</h2>')[0].strip()
+    except:
+        title = f"[{category.upper()}] {topic} 핵심 요약"
+
+    if base64_images and len(base64_images) >= 6:
+        for i in range(6):
+            img_tag = f'<div style="text-align:center; margin:30px 0;"><img src="{base64_images[i]}" style="max-width:100%; border-radius:10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);"></div>'
+            html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
+    
+    for i in range(1, 7):
+        html_content = html_content.replace(f"[IMAGE_{i}]", "")
+        
+    return title, html_content
+
+# ==========================================
+# 5. 구글 블로거 업로드
+# ==========================================
+def post_to_blogger(blog_id, title, content):
+    print("☁️ 구글 블로그에 업로드 중...")
+    token_info = json.loads(GOOGLE_OAUTH_TOKEN_STR)
+    creds = Credentials.from_authorized_user_info(token_info, SCOPES)
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+        
+    service = build('blogger', 'v3', credentials=creds)
+    body = {"title": title, "content": content}
+    
+    try:
+        request = service.posts().insert(blogId=blog_id, body=body, isDraft=False)
+        response = request.execute()
+        post_url = response.get('url')
+        print(f"🎉 포스팅 성공! 링크: {post_url}")
+        return post_url
+    except Exception as e:
+        print(f"❌ 포스팅 실패: {e}")
+        return None
+
+# ==========================================
+# 6. 메인 실행부 (여기가 지워졌었습니다!)
+# ==========================================
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--category", type=str, required=True)
+    parser.add_argument("--topic", type=str, required=True)
+    args = parser.parse_args()
+    
+    target_blog_id = BLOG_REGISTRY.get(args.category)
+    if not target_blog_id:
+        print(f"❌ 카테고리 '{args.category}'의 블로그 ID가 없습니다.")
+        exit(1)
+        
+    images = generate_and_split_images_xai(args.topic)
+    title, final_html = write_blog_post(args.category, args.topic, images)
+    
+    # 블로그 포스팅 후 성공 시 텔레그램 알림 발송
+    uploaded_url = post_to_blogger(target_blog_id, title, final_html)
+    if uploaded_url:
+        send_telegram_message(args.category, title, uploaded_url)

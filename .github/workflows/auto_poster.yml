@@ -2,21 +2,20 @@ name: Integrated Blog Auto Poster
 
 on:
   schedule:
-    # 매일 한국 시간 오전 8시 (UTC 23시) - IT 블로그 포스팅
-    - cron: '0 23 * * *'
-    # 매일 한국 시간 오후 12시 (UTC 3시) - 맛집/Food 블로그 포스팅
-    - cron: '0 3 * * *'
-    # 필요한 시간이 있다면 여기에 추가하세요
+    - cron: '0 23 * * *' # IT (오전 8시)
+    - cron: '0 3 * * *'  # 맛집 (오후 12시)
   workflow_dispatch:
     inputs:
       category:
-        description: '포스팅할 블로그 (it, food, news, stock, youtube)'
+        description: 'it, food, news, stock, youtube'
         required: true
-        default: 'it'
       topic:
-        description: '작성할 주제'
+        description: '주제 (또는 영상 제목)'
         required: true
-        default: '오늘의 핫이슈'
+      reference_url:
+        description: '참조할 외부 URL'
+        required: false
+        default: ''
 
 jobs:
   run-autoposter:
@@ -25,16 +24,16 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-          
+          python-version: '3.11'
       - name: Install Dependencies
+        run: pip install openai google-api-python-client google-auth-oauthlib requests Pillow
+      - name: Run Autoposter
         run: |
-          pip install openai google-api-python-client google-auth-oauthlib requests Pillow
-
-      - name: Run IT Blog Post
-        if: github.event.schedule == '0 23 * * *'
-        run: python main_autoposter.py --category it --topic "최신 IT 기술 트렌드와 미래 전망"
-        env: &env_secrets
+          python main_autoposter.py \
+            --category "${{ github.event.inputs.category || (github.event.schedule == '0 23 * * *' && 'it' || 'food') }}" \
+            --topic "${{ github.event.inputs.topic || '오늘의 이슈' }}" \
+            --reference_url "${{ github.event.inputs.reference_url }}"
+        env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           XAI: ${{ secrets.XAI }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
@@ -43,16 +42,5 @@ jobs:
           NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}
           STOCK_BLOG_ID: ${{ secrets.STOCK_BLOG_ID }}
           YOUTUBE_BLOG_ID: ${{ secrets.YOUTUBE_BLOG_ID }}
-          # 텔레그램 알림을 위한 환경변수 추가
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-
-      - name: Run Food Blog Post
-        if: github.event.schedule == '0 3 * * *'
-        run: python main_autoposter.py --category food --topic "놓치면 안 될 숨은 로컬 맛집 추천"
-        env: *env_secrets
-
-      - name: Run Manual Post (수동 실행)
-        if: github.event_name == 'workflow_dispatch'
-        run: python main_autoposter.py --category "${{ github.event.inputs.category }}" --topic "${{ github.event.inputs.topic }}"
-        env: *env_secrets

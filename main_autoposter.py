@@ -115,4 +115,7 @@ def write_blog_post(category, topic, base64_images):
     
     html_content = res.choices[0].message.content.strip()
     
-    if html_content.startswith("
+    if html_content.startswith("```html"): 
+        html_content = html_content[7:]
+    if html_content.endswith("```"): 
+        html_content = html_content[:-3]

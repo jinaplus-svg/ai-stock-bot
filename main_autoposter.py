@@ -149,9 +149,10 @@ def write_blog_post(category, base64_images, ref_content="", ref_title="", ref_u
     
     for i in range(1, 7): html_content = html_content.replace(f"[IMAGE_{i}]", "")
     
-    # 원문 링크 추가
+# 원문 링크 추가
     if ref_url:
-        link_html = f'<br><br><hr><p style="text-align:center; color:#555;">🔗 <a href="{ref_url}" target="_blank" style="color:#0066cc; text-decoration:none;"><strong>원본 후기 자세히 보기 (클릭)</strong></a></p>'
+        clean_url = ref_url.strip()
+        link_html = f'<br><br><hr><p style="text-align:center; color:#555;">🔗 <a href="{clean_url}" target="_blank" rel="noopener noreferrer" style="color:#0066cc; text-decoration:none;"><strong>원본 후기 자세히 보기 (클릭)</strong></a></p>'
         html_content += link_html
 
     return title, html_content

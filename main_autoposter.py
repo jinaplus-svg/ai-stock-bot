@@ -4,6 +4,7 @@ import argparse
 import base64
 import requests
 import datetime
+import re
 from io import BytesIO
 from PIL import Image
 from openai import OpenAI
@@ -38,53 +39,49 @@ SCOPES = ['https://www.googleapis.com/auth/blogger']
 # ==========================================
 def fetch_reference_content(url):
     if not url: return "", "주제 없음"
-    print(f"🔗 외부 링크({url}) 본문/메타데이터 분석 중...")
+    print(f"🔗 외부 링크({url}) 분석 중...")
     try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
+        headers = {"User-Agent": "Mozilla/5.0"}
         res = requests.get(url, headers=headers, timeout=15)
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         
-        # 1. 제목 추출 (og:title 우선)
         title_tag = soup.find('meta', property='og:title')
         page_title = title_tag['content'] if title_tag else (soup.title.text if soup.title else "참조 링크")
         
-        # 2. 요약 메타데이터 추출 (유튜브 등 본문이 없는 경우 대비)
         desc_tag = soup.find('meta', property='og:description') or soup.find('meta', name='description')
         meta_desc = desc_tag['content'] if desc_tag else ""
         
-        # 3. 본문 텍스트 추출
         for script in soup(["script", "style", "nav", "footer"]):
             script.decompose()
         text = soup.get_text(separator=' ', strip=True)
         
-        # 본문과 메타설명을 합쳐서 핵심만 전달 (약 3000자 제한)
-        combined_content = f"[요약/설명]: {meta_desc}\n\n[본문 내용]: {text[:2500]}"
-        print(f"✅ 추출 성공! 제목: {page_title[:30]}...")
+        combined_content = f"[요약]: {meta_desc}\n\n[본문]: {text[:2500]}"
         return combined_content, page_title
     except Exception as e:
         print(f"⚠️ 링크 분석 실패: {e}")
         return "", "주제 없음"
 
 # ==========================================
-# 3. [Step 1] 은유적(Metaphor) 이미지 프롬프트 설계
+# 3. [Step 1] 카테고리 맞춤형 은유적 이미지 프롬프트
 # ==========================================
-def create_metaphorical_prompt(topic, ref_content):
-    print("🧠 GPT가 안전하고 은유적인 이미지 프롬프트를 구상 중입니다...")
-    system_msg = """
-    당신은 추상적이고 은유적인 표현에 능한 아트 디렉터입니다.
-    주어진 기사/사건의 핵심 주제를 분석하여, 1차원적인 묘사를 배제하고 '상징적인 사물이나 풍경'으로 은유(Metaphor)하는 영문 프롬프트를 작성하세요.
+def create_metaphorical_prompt(category, topic, ref_content):
+    print(f"🧠 [{category.upper()}] 성격에 맞는 안전하고 감각적인 이미지 프롬프트 구상 중...")
     
+    system_msg = f"""
+    당신은 트렌디하고 감각적인 아트 디렉터입니다.
+    주어진 기사/사건의 주제와 블로그 카테고리 '{category}'의 특성에 맞춰, 1차원적 묘사를 피하고 '감각적인 상징이나 풍경'으로 은유(Metaphor)하는 영문 이미지 프롬프트를 1~2문장으로 작성하세요.
+
     [절대 금지 사항]
-    - 피(blood), 총/칼/무기(gun, weapon), 살인, 폭력, 범죄자 등의 직접적이고 자극적인 묘사는 API 차단을 유발하므로 절대 금지합니다.
-    - 텍스트나 글자를 이미지에 넣지 마세요.
-    
-    [작성 가이드]
-    - 예시 (범죄/암살 기사): "A broken scale of justice entangled in thorny vines, cold cinematic lighting, dark and mysterious atmosphere."
-    - 예시 (주식 폭락 기사): "A massive ship navigating through a turbulent stormy sea, dark clouds, dramatic lighting."
-    - 결과물은 오직 영문 1~2문장만 출력하세요. 다른 설명은 붙이지 마세요.
+    - 피, 무기, 살인, 범죄자 등 직접적이고 자극적인 묘사 절대 금지.
+    - 텍스트나 글자 포함 금지.
+
+    [카테고리별 무드 가이드]
+    - news(이슈/사회): 부서진 시계, 얽힌 가시덤불, 흑백의 체스판 등 무겁고 시네마틱한 은유.
+    - it(기술/과학): 빛나는 홀로그램 텍스처, 미니멀하고 깨끗한 룸, 네온 빛의 회로도 등 세련되고 미래지향적인 분위기.
+    - food(맛집/요리): 신선함이 돋보이는 아늑한 웜톤 조명, 미슐랭 스타일의 감각적인 테이블 세팅, 먹음직스러운 색감.
+    - stock(경제/주식): 위로 뻗어나가는 황금빛 궤적, 톱니바퀴, 거대한 파도 등 역동적이고 추상적인 흐름.
+    - youtube(자유/엔터): 팝아트 느낌, 화려한 색채, 무대 조명 등 트렌디하고 톡톡 튀는 분위기.
     """
     
     try:
@@ -97,20 +94,17 @@ def create_metaphorical_prompt(topic, ref_content):
             temperature=0.8
         )
         metaphor_prompt = res.choices[0].message.content.strip()
-        print(f"💡 생성된 메타포 프롬프트: {metaphor_prompt}")
+        print(f"💡 생성된 프롬프트: {metaphor_prompt}")
         return metaphor_prompt
     except Exception as e:
-        print(f"⚠️ 프롬프트 생성 오류, 기본값 사용: {e}")
         return "abstract cinematic mood, soft lighting, highly detailed."
 
 # ==========================================
-# 4. [Step 2] xAI 이미지 생성 (6분할 적용)
+# 4. [Step 2] xAI 이미지 생성
 # ==========================================
 def generate_and_split_images_xai(metaphor_prompt):
-    print("🎨 메타포를 기반으로 6컷 분할 이미지 생성 중...")
-    
-    # 그리드 6분할 강제 지시문 + 생성된 메타포 결합
-    final_prompt = f"A professional 3:2 aspect ratio grid image collage divided into 6 clean scenes. {metaphor_prompt} Modern magazine photography style, no text, minimal borders."
+    print("🎨 6컷 분할 이미지 생성 중...")
+    final_prompt = f"A professional 3:2 aspect ratio grid image collage divided into 6 clean scenes. {metaphor_prompt} Modern aesthetic photography style, no text, minimal borders."
     
     try:
         response = xai_client.images.generate(
@@ -146,23 +140,20 @@ def generate_and_split_images_xai(metaphor_prompt):
         return []
 
 # ==========================================
-# 5. [Step 3] 비판적/통찰력 있는 블로그 원고 작성
+# 5. [Step 3] 초압축 + 통찰력 블로그 원고 작성
 # ==========================================
 def write_blog_post(category, base64_images, ref_content="", ref_title="", ref_url=""):
-    print(f"✍️ [{category}] '10년 차 비평가 모드'로 원고 작성 중...")
-    
-    topic_context = f"기사/영상 제목: {ref_title}\n{ref_content}" if ref_content else "주제 없음"
+    print(f"✍️ 짧고 타격감 있는 원고 작성 중...")
+    topic_context = f"기사 제목: {ref_title}\n{ref_content}" if ref_content else "주제 없음"
 
     system_prompt = f"""
-    당신은 10년 차 사회/이슈 비평 블로거이자 날카로운 인사이트로 유명한 칼럼니스트입니다.
-    주어진 기사/영상의 내용을 바탕으로 독자의 시선을 사로잡고 생각을 뒤흔드는 글을 작성하세요.
+    당신은 10년 차 비평가입니다. 기존보다 분량을 절반 이하로 팍 줄여서(공백 포함 최대 800자 이내), 아주 짧고 임팩트 있게 핵심만 찌르는 글을 작성하세요.
     
-    [핵심 작성 원칙]
-    1. 구성 비율: 주어진 사건의 팩트 요약은 글의 30%만 할애하세요. 나머지 70%는 이 사건이 사회에 미치는 파장, 숨겨진 모순점, 독자가 알아야 할 이면의 진실 등 '비판적 통찰'로 채우세요.
-    2. 페르소나 (말투): "이 남성은 ~라고 주장했습니다" 같은 건조한 기계적 요약투는 절대 금지합니다. 독자에게 직접 질문을 던지거나, 핵심을 찌르는 단호하고 몰입감 있는 문체를 사용하세요. (예: "과연 이게 우연일까요?", "우리가 진짜 분노해야 할 지점은 따로 있습니다.")
-    3. HTML 서식: 본문은 순수 HTML 태그(<h2>, <p>, <strong>, <ul> 등)만 사용하세요. 모바일 가독성을 위해 문단 사이는 <br><br>를 넣어 넓게 띄우세요.
-    4. 제목(<h2>): 평범한 요약이 아닌, 호기심을 극대화하는 후킹한 제목으로 시작하세요.
-    5. 이미지 배치: 문맥 흐름에 맞게 [IMAGE_1] 부터 [IMAGE_6] 까지의 태그를 분산 배치하세요. 각 이미지 태그 아래에는 <p> 태그로 짤막하고 의미심장한 이미지 캡션을 달아주세요.
+    [작성 규칙]
+    1. 글 최상단에는 무조건 <h2> 태그로 후킹하는 제목을 딱 1번만 쓰세요.
+    2. 구구절절한 설명은 다 빼고, 가장 충격적이거나 중요한 팩트 1줄 + 독자의 뒤통수를 치는 비판적 통찰 위주로 짧게 치고 빠지세요.
+    3. 문단은 <br><br>로 넉넉히 띄워 모바일 가독성을 극대화하세요.
+    4. [IMAGE_1] 부터 [IMAGE_6] 태그를 문맥에 맞게 분산 배치하고, 짧은 캡션을 다세요.
     
     [참고 데이터]
     {topic_context}
@@ -171,32 +162,37 @@ def write_blog_post(category, base64_images, ref_content="", ref_title="", ref_u
     res = gpt_client.chat.completions.create(
         model="gpt-5.4-mini",
         messages=[{"role": "system", "content": system_prompt}],
-        temperature=0.85 # 창의성과 날카로움을 위해 온도 상향
+        temperature=0.8
     )
     
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
-    try: title = html_content.split('<h2>')[1].split('</h2>')[0].strip()
-    except: title = f"[{category.upper()}] 당신이 몰랐던 충격적인 진실"
+    # 📌 [수정] 정규식으로 제목을 추출한 뒤 본문에서 <h2> 태그 부분을 완전히 삭제합니다.
+    title = f"[{category.upper()}] 오늘의 핵심 인사이트"
+    h2_match = re.search(r'<h2>(.*?)</h2>', html_content)
+    if h2_match:
+        title = h2_match.group(1).strip()
+        # 본문에서 해당 h2 태그 전체를 공백으로 치환 (중복 노출 방지)
+        html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
 
-    # 이미지 플레이스홀더 치환 (의미심장한 캡션 스타일 유지)
+    # 이미지 플레이스홀더 치환
     if base64_images:
         for i, b64 in enumerate(base64_images):
-            img_tag = f'<div style="text-align:center; margin:40px 0;"><img src="{b64}" style="max-width:100%; border-radius:10px; box-shadow: 0 5px 15px rgba(0,0,0,0.15);"></div>'
+            img_tag = f'<div style="text-align:center; margin:35px 0;"><img src="{b64}" style="max-width:100%; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>'
             html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
     
     for i in range(1, 7): html_content = html_content.replace(f"[IMAGE_{i}]", "")
     
-    # 네이버 블로그 등 외부 링크 오류 방지 (rel="noopener noreferrer")
+    # 원문 링크 삽입 (네이버 오류 방지 rel 태그 포함)
     if ref_url:
         clean_url = ref_url.strip()
-        link_html = f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0; font-size: 1.1em;">더 자세한 원문과 팩트가 궁금하다면?</p><p style="margin: 10px 0 0 0;">🔗 <a href="{clean_url}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; text-decoration:none; font-weight: bold;">[사건 원문 기사/영상 확인하기]</a></p></div>'
+        link_html = f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0; font-size: 1.0em; color:#333;">더 자세한 원문이 궁금하다면?</p><p style="margin: 10px 0 0 0;">🔗 <a href="{clean_url}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; text-decoration:none; font-weight: bold;">[사건 원문 기사 확인하기]</a></p></div>'
         html_content += link_html
 
     return title, html_content
 
 # ==========================================
-# 6. 자동 시간대별 카테고리 배분 로직
+# 6. 메인 실행부
 # ==========================================
 def get_auto_category():
     now_kst = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
@@ -206,9 +202,6 @@ def get_auto_category():
         if hour in hours: return cat
     return "news"
 
-# ==========================================
-# 7. 메인 실행 및 블로그 업로드
-# ==========================================
 def post_to_blogger(blog_id, title, content):
     token_info = json.loads(GOOGLE_OAUTH_TOKEN_STR)
     creds = Credentials.from_authorized_user_info(token_info, SCOPES)
@@ -230,27 +223,21 @@ if __name__ == "__main__":
     blog_id = BLOG_REGISTRY.get(category)
     if not blog_id: exit(1)
         
-    # 1. 링크 긁어오기
     ref_content, ref_title = fetch_reference_content(args.reference_url) if args.reference_url else ("", "")
     
-    # 2. 이미지용 은유적 프롬프트 생성
+    # 📌 이미지 프롬프트 생성 시 category 정보를 넘겨주어 무드를 맞춤 설정합니다.
     topic_for_image = ref_title if ref_title != "주제 없음" else args.topic
-    metaphor_prompt = create_metaphorical_prompt(topic_for_image, ref_content)
+    metaphor_prompt = create_metaphorical_prompt(category, topic_for_image, ref_content)
     
-    # 3. 이미지 생성 및 분할
     images = generate_and_split_images_xai(metaphor_prompt)
-    
-    # 4. 통찰력 있는 글쓰기
     title, html = write_blog_post(category, images, ref_content, ref_title, args.reference_url)
     
-    # 5. 블로그 업로드 및 알림
     try:
         post_url = post_to_blogger(blog_id, title, html)
         print(f"✅ 발행 성공 URL: {post_url}")
         
         if TELEGRAM_TOKEN and CHAT_ID:
-            msg = f"🔥 [{category.upper()}] 비판적 인사이트 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
+            msg = f"⚡ [{category.upper()}] 숏폼 인사이트 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
             requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": msg})
-            
     except Exception as e:
         print(f"❌ 구글 블로그 업로드 오류: {e}")

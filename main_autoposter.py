@@ -35,7 +35,7 @@ xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 # ==========================================
-# 2. 외부 링크 스크래핑 (뉴스, 유튜브 메타데이터 포함)
+# 2. 외부 링크 스크래핑
 # ==========================================
 def fetch_reference_content(url):
     if not url: return "", "주제 없음"
@@ -63,48 +63,42 @@ def fetch_reference_content(url):
         return "", "주제 없음"
 
 # ==========================================
-# 3. [Step 1] 카테고리 맞춤형 은유적 이미지 프롬프트
+# 3. [Step 1] 카테고리별 맞춤형 은유 이미지 프롬프트
 # ==========================================
 def create_metaphorical_prompt(category, topic, ref_content):
-    print(f"🧠 [{category.upper()}] 성격에 맞는 안전하고 감각적인 이미지 프롬프트 구상 중...")
+    print(f"🧠 [{category.upper()}] 성격에 맞는 감각적인 이미지 프롬프트 구상 중...")
     
     system_msg = f"""
-    당신은 트렌디하고 감각적인 아트 디렉터입니다.
-    주어진 기사/사건의 주제와 블로그 카테고리 '{category}'의 특성에 맞춰, 1차원적 묘사를 피하고 '감각적인 상징이나 풍경'으로 은유(Metaphor)하는 영문 이미지 프롬프트를 1~2문장으로 작성하세요.
+    당신은 블로그 카테고리에 맞춰 이미지를 기획하는 아트 디렉터입니다.
+    주어진 주제를 1차원적으로 묘사하지 말고, 카테고리 '{category}'의 특성에 맞는 '감각적이고 상징적인 무드보드' 형식의 영문 이미지 프롬프트를 1~2문장으로 작성하세요.
 
     [절대 금지 사항]
-    - 피, 무기, 살인, 범죄자 등 직접적이고 자극적인 묘사 절대 금지.
-    - 텍스트나 글자 포함 금지.
+    - 피, 무기, 폭력 등 자극적 묘사 금지. 문자(Text) 포함 금지. 사람 얼굴 직접 묘사 금지.
 
-    [카테고리별 무드 가이드]
-    - news(이슈/사회): 부서진 시계, 얽힌 가시덤불, 흑백의 체스판 등 무겁고 시네마틱한 은유.
-    - it(기술/과학): 빛나는 홀로그램 텍스처, 미니멀하고 깨끗한 룸, 네온 빛의 회로도 등 세련되고 미래지향적인 분위기.
-    - food(맛집/요리): 신선함이 돋보이는 아늑한 웜톤 조명, 미슐랭 스타일의 감각적인 테이블 세팅, 먹음직스러운 색감.
-    - stock(경제/주식): 위로 뻗어나가는 황금빛 궤적, 톱니바퀴, 거대한 파도 등 역동적이고 추상적인 흐름.
-    - youtube(자유/엔터): 팝아트 느낌, 화려한 색채, 무대 조명 등 트렌디하고 톡톡 튀는 분위기.
+    [카테고리별 필수 무드]
+    - news: 체스판, 빛과 그림자, 서류철 등 무겁고 시네마틱한 메타포.
+    - it: 홀로그램, 데이터 라인, 미니멀한 룸, 사이버네틱 텍스처 등 세련된 미래주의.
+    - food: 아늑한 웜톤 조명, 미슐랭 레스토랑의 테이블 세팅, 따뜻하고 먹음직스러운 색채.
+    - stock: 상승하는 빛의 궤적, 거대한 물결, 추상적인 톱니바퀴 등 역동적 흐름.
+    - youtube: 팝아트 컬러, 스포트라이트, 화려하고 트렌디한 공간.
     """
     
     try:
         res = gpt_client.chat.completions.create(
             model="gpt-5.4-mini",
-            messages=[
-                {"role": "system", "content": system_msg}, 
-                {"role": "user", "content": f"주제: {topic}\n내용: {ref_content[:1000]}"}
-            ],
+            messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content[:1000]}"}],
             temperature=0.8
         )
-        metaphor_prompt = res.choices[0].message.content.strip()
-        print(f"💡 생성된 프롬프트: {metaphor_prompt}")
-        return metaphor_prompt
-    except Exception as e:
-        return "abstract cinematic mood, soft lighting, highly detailed."
+        return res.choices[0].message.content.strip()
+    except:
+        return "abstract cinematic mood, highly detailed, soft lighting."
 
 # ==========================================
-# 4. [Step 2] xAI 이미지 생성
+# 4. [Step 2] xAI 이미지 생성 및 1:1 정사각형 스마트 크롭
 # ==========================================
 def generate_and_split_images_xai(metaphor_prompt):
-    print("🎨 6컷 분할 이미지 생성 중...")
-    final_prompt = f"A professional 3:2 aspect ratio grid image collage divided into 6 clean scenes. {metaphor_prompt} Modern aesthetic photography style, no text, minimal borders."
+    print("🎨 6컷 분할 이미지 생성 및 스마트 크롭 중...")
+    final_prompt = f"A moodboard collage composed of 6 distinct square panels. {metaphor_prompt} High-end editorial photography style, no text."
     
     try:
         response = xai_client.images.generate(
@@ -118,42 +112,56 @@ def generate_and_split_images_xai(metaphor_prompt):
         img = Image.open(BytesIO(img_data))
         
         width, height = img.size
-        step_w, step_h = width // 3, height // 2
-        margin = 25
+        cell_w, cell_h = width // 3, height // 2
         
         base64_images = []
         for row in range(2):
             for col in range(3):
-                left, top = (col * step_w) + margin, (row * step_h) + margin
-                right, bottom = (col * step_w) + step_w - margin, (row * step_h) + step_h - margin
+                # 1. 6등분 구역 계산
+                left, top = col * cell_w, row * cell_h
+                right, bottom = left + cell_w, top + cell_h
+                cell_img = img.crop((left, top, right, bottom))
                 
-                cropped = img.crop((left, top, right, bottom))
-                cropped = cropped.resize((600, int(600 * (cropped.height / cropped.width))), Image.Resampling.LANCZOS)
-                if cropped.mode in ('RGBA', 'P'): cropped = cropped.convert('RGB')
+                # 2. 마진 적용 (테두리 자르기)
+                margin = 20
+                cell_img = cell_img.crop((margin, margin, cell_img.width - margin, cell_img.height - margin))
+                
+                # 3. 1:1 정사각형 중앙 크롭 (찌그러짐 방지)
+                min_dim = min(cell_img.width, cell_img.height)
+                c_left = (cell_img.width - min_dim) // 2
+                c_top = (cell_img.height - min_dim) // 2
+                square_img = cell_img.crop((c_left, c_top, c_left + min_dim, c_top + min_dim))
+                
+                # 4. 최종 600x600 사이즈로 리사이즈
+                final_img = square_img.resize((600, 600), Image.Resampling.LANCZOS)
                 
                 buffered = BytesIO()
-                cropped.save(buffered, format="JPEG", quality=85)
+                if final_img.mode in ('RGBA', 'P'): final_img = final_img.convert('RGB')
+                final_img.save(buffered, format="JPEG", quality=85)
                 base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buffered.getvalue()).decode()}")
+                
         return base64_images
     except Exception as e:
         print(f"❌ 이미지 생성 실패: {e}")
         return []
 
 # ==========================================
-# 5. [Step 3] 초압축 + 통찰력 블로그 원고 작성
+# 5. [Step 3] 풍부하고 깊이 있는 원고 작성
 # ==========================================
 def write_blog_post(category, base64_images, ref_content="", ref_title="", ref_url=""):
-    print(f"✍️ 짧고 타격감 있는 원고 작성 중...")
+    print(f"✍️ 풍부한 내용의 블로그 원고 작성 중...")
     topic_context = f"기사 제목: {ref_title}\n{ref_content}" if ref_content else "주제 없음"
 
     system_prompt = f"""
-    당신은 10년 차 비평가입니다. 기존보다 분량을 절반 이하로 팍 줄여서(공백 포함 최대 800자 이내), 아주 짧고 임팩트 있게 핵심만 찌르는 글을 작성하세요.
+    당신은 '{category}' 분야의 통찰력 있는 10년 차 리뷰어입니다. 
+    글을 너무 짧게 자르지 말고, 독자가 몰입할 수 있도록 1500자 내외의 충분한 분량으로 작성하세요.
     
     [작성 규칙]
-    1. 글 최상단에는 무조건 <h2> 태그로 후킹하는 제목을 딱 1번만 쓰세요.
-    2. 구구절절한 설명은 다 빼고, 가장 충격적이거나 중요한 팩트 1줄 + 독자의 뒤통수를 치는 비판적 통찰 위주로 짧게 치고 빠지세요.
-    3. 문단은 <br><br>로 넉넉히 띄워 모바일 가독성을 극대화하세요.
-    4. [IMAGE_1] 부터 [IMAGE_6] 태그를 문맥에 맞게 분산 배치하고, 짧은 캡션을 다세요.
+    1. 글 최상단에는 무조건 <h2> 태그로 후킹하는 전체 제목을 딱 1번만 쓰세요.
+    2. 본문은 3~4개의 소주제로 나누고, 각 소주제 시작마다 <h3> 태그를 활용해 가독성을 높이세요.
+    3. 한 줄 쓰고 끊지 마세요. 한 문단(소주제)에 최소 3~5문장 이상 깊이 있는 비평과 통찰을 담으세요. 문단 간격은 <br><br>로 띄웁니다.
+    4. 이미지 배치: [IMAGE_1] 부터 [IMAGE_6] 까지의 태그를 문장 중간에 뜬금없이 넣지 말고, '소주제(문단)가 하나 끝날 때마다' 1~2개씩 자연스럽게 배치하세요.
+    5. 기계적 요약투가 아닌, 독자에게 말을 거는 듯한 친근하면서도 날카로운 문체를 사용하세요.
     
     [참고 데이터]
     {topic_context}
@@ -167,26 +175,25 @@ def write_blog_post(category, base64_images, ref_content="", ref_title="", ref_u
     
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
-    # 📌 [수정] 정규식으로 제목을 추출한 뒤 본문에서 <h2> 태그 부분을 완전히 삭제합니다.
+    # 📌 제목 중복 노출 방지 로직 (완벽 처리)
     title = f"[{category.upper()}] 오늘의 핵심 인사이트"
     h2_match = re.search(r'<h2>(.*?)</h2>', html_content)
     if h2_match:
         title = h2_match.group(1).strip()
-        # 본문에서 해당 h2 태그 전체를 공백으로 치환 (중복 노출 방지)
-        html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
+        html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip() # 본문에서 h2 태그 삭제
 
-    # 이미지 플레이스홀더 치환
+    # 이미지 플레이스홀더 치환 (정사각형 비율에 어울리는 CSS 적용)
     if base64_images:
         for i, b64 in enumerate(base64_images):
-            img_tag = f'<div style="text-align:center; margin:35px 0;"><img src="{b64}" style="max-width:100%; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>'
+            # 모바일에서 예쁘게 보이도록 가로폭 조절 및 그림자 효과 부여
+            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 90%; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>'
             html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
     
     for i in range(1, 7): html_content = html_content.replace(f"[IMAGE_{i}]", "")
     
-    # 원문 링크 삽입 (네이버 오류 방지 rel 태그 포함)
     if ref_url:
         clean_url = ref_url.strip()
-        link_html = f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0; font-size: 1.0em; color:#333;">더 자세한 원문이 궁금하다면?</p><p style="margin: 10px 0 0 0;">🔗 <a href="{clean_url}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; text-decoration:none; font-weight: bold;">[사건 원문 기사 확인하기]</a></p></div>'
+        link_html = f'<br><br><hr><div style="text-align:center; padding: 25px; background-color: #f8f9fa; border-radius: 12px; margin-top: 40px;"><p style="margin: 0; font-size: 1.1em; color:#333; font-weight: bold;">더 자세한 원문이 궁금하다면?</p><p style="margin: 10px 0 0 0;">🔗 <a href="{clean_url}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; text-decoration:none;">사건 원문 기사 바로가기</a></p></div>'
         html_content += link_html
 
     return title, html_content
@@ -225,7 +232,6 @@ if __name__ == "__main__":
         
     ref_content, ref_title = fetch_reference_content(args.reference_url) if args.reference_url else ("", "")
     
-    # 📌 이미지 프롬프트 생성 시 category 정보를 넘겨주어 무드를 맞춤 설정합니다.
     topic_for_image = ref_title if ref_title != "주제 없음" else args.topic
     metaphor_prompt = create_metaphorical_prompt(category, topic_for_image, ref_content)
     
@@ -237,7 +243,7 @@ if __name__ == "__main__":
         print(f"✅ 발행 성공 URL: {post_url}")
         
         if TELEGRAM_TOKEN and CHAT_ID:
-            msg = f"⚡ [{category.upper()}] 숏폼 인사이트 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
+            msg = f"⚡ [{category.upper()}] 프리미엄 인사이트 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
             requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": msg})
     except Exception as e:
         print(f"❌ 구글 블로그 업로드 오류: {e}")

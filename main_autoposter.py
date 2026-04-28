@@ -42,13 +42,12 @@ def clean_naver_text(text):
     return html.unescape(text)
 
 # ==========================================
-# 2. [Track 1] 네이버 API 실시간 이슈 기획 (링크 없을 때)
+# 2. 실시간 데이터 가져오기 (네이버 API & 링크 스크래핑)
 # ==========================================
 def generate_auto_topic(category):
     print(f"🤖 [{category.upper()}] 네이버 API로 실시간 이슈 검색 중...")
-    
     search_queries = {
-        "news": "사회 이슈", "it": "IT 신기술", "stock": "증시 전망", 
+        "news": "사회 이슈", "it": "IT 신기술 스마트폰", "stock": "증시 주식 경제", 
         "food": "맛집 트렌드", "youtube": "유튜브 트렌드"
     }
     query = search_queries.get(category, "핫이슈")
@@ -64,60 +63,45 @@ def generate_auto_topic(category):
                 data = response.json()
                 if data.get('items'):
                     item = data['items'][0]
-                    real_title = clean_naver_text(item['title'])
-                    real_desc = clean_naver_text(item['description'])
-                    real_link = item['originallink'] if item.get('originallink') else item['link']
-                    print(f"✅ 네이버 검색 성공: {real_title}")
-                    return f"[요약]: {real_desc}", real_title, real_link
+                    return f"[요약]: {clean_naver_text(item['description'])}", clean_naver_text(item['title']), item.get('originallink') or item['link']
         except Exception as e:
             print(f"⚠️ 네이버 검색 오류: {e}")
             
-    # 네이버 실패 시 GPT 임시 기획
-    try:
-        system_prompt = f"당신은 '{category}' 전문가입니다. 오늘 대중이 관심 가질 만한 최신 핫이슈를 기획하세요.\n응답 형식:\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
-        res = gpt_client.chat.completions.create(
-            model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.9
-        )
-        result = res.choices[0].message.content.strip()
-        topic = re.search(r'\[주제\]:\s*(.*)', result).group(1)
-        content = re.search(r'\[내용\]:\s*(.*)', result, re.DOTALL).group(1)
-        return content, topic, ""
-    except:
-        return "오늘의 주요 브리핑", f"[{category.upper()}] 오늘의 핫이슈", ""
+    # 네이버 실패 시 임시 기획
+    system_prompt = f"당신은 '{category}' 전문가입니다. 최신 핫이슈를 기획하세요.\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
+    res = gpt_client.chat.completions.create(model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.9)
+    result = res.choices[0].message.content.strip()
+    return re.search(r'\[내용\]:\s*(.*)', result, re.DOTALL).group(1), re.search(r'\[주제\]:\s*(.*)', result).group(1), ""
 
-# ==========================================
-# 3. [Track 2] 텔레그램 링크 분석기 (링크 있을 때)
-# ==========================================
 def fetch_reference_content(url):
     if not url: return "", "", ""
-    print(f"🔗 텔레그램 링크({url}) 분석 중...")
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-        res = requests.get(url, headers=headers, timeout=15)
+        res = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=15)
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
-        
-        title_tag = soup.find('meta', property='og:title')
-        page_title = title_tag['content'] if title_tag else (soup.title.text if soup.title else "참조 링크")
-        
-        desc_tag = soup.find('meta', property='og:description') or soup.find('meta', name='description')
-        meta_desc = desc_tag['content'] if desc_tag else ""
-        
+        title = (soup.find('meta', property='og:title') or soup.title).get('content', soup.title.text if soup.title else "참조")
+        desc = (soup.find('meta', property='og:description') or soup.find('meta', name='description'))
+        desc_text = desc['content'] if desc else ""
         for script in soup(["script", "style", "nav", "footer"]): script.decompose()
-        text = soup.get_text(separator=' ', strip=True)
-        return f"[요약]: {meta_desc}\n\n[본문]: {text[:2500]}", page_title, url
-    except Exception as e:
-        print(f"⚠️ 링크 분석 실패: {e}")
+        return f"[요약]: {desc_text}\n\n[본문]: {soup.get_text(separator=' ', strip=True)[:2500]}", title, url
+    except:
         return "", "", ""
 
 # ==========================================
-# 4. 카테고리 맞춤형 메타포(은유) 프롬프트
+# 3. ⭐️ 4분할용 자연스러운 실사 프롬프트 생성 ⭐️
 # ==========================================
-def create_metaphorical_prompt(category, topic, ref_content):
-    print(f"🧠 [{category.upper()}] 맞춤형 이미지 프롬프트 구상 중...")
+def create_photo_prompt(category, topic, ref_content):
+    print(f"🧠 [{category.upper()}] 자연스러운 실사 4분할 프롬프트 구상 중...")
     system_msg = f"""
-    당신은 아트 디렉터입니다. 주제 '{topic}'를 표현할 영문 이미지 프롬프트를 1문장으로 작성하세요.
-    피, 폭력, 총, 글자(text) 절대 금지. 카테고리 '{category}'의 특성에 맞게 (IT는 미래적, 맛집은 웜톤, 뉴스는 시네마틱 등) 상징적으로 표현하세요.
+    당신은 보도사진 편집장입니다. 주제 '{topic}'와 관련된 영문 이미지 프롬프트를 딱 1문장으로 작성하세요.
+    
+    [필수 규칙]
+    1. 3D CG, 그래픽, 추상적 표현은 절대 피하세요.
+    2. 무조건 사람들이 일상이나 현장에서 자연스럽게 행동하는 '고화질 실사 보도사진(Photorealistic, natural everyday scenes, editorial photography)' 느낌으로 묘사하세요.
+    3. 과도한 폭력(피, 무기)이나 글자(text)는 제외하세요.
+    4. 예시: "Real people working in a busy modern office", "A chef cooking in a real restaurant kitchen"
+    
+    오직 영문 프롬프트 1문장만 출력하세요.
     """
     try:
         res = gpt_client.chat.completions.create(
@@ -127,91 +111,96 @@ def create_metaphorical_prompt(category, topic, ref_content):
         )
         return res.choices[0].message.content.strip()
     except:
-        return "abstract cinematic mood, highly detailed, soft lighting."
+        return "Photorealistic natural scene with real people interacting, editorial photography, highly detailed."
 
 # ==========================================
-# 5. xAI 6분할 이미지 생성
+# 4. ⭐️ 2K 해상도 4분할 (2x2) 생성 및 자르기 ⭐️
 # ==========================================
-def generate_and_split_images_xai(metaphor_prompt):
-    print("🎨 6컷 분할 이미지 생성 중...")
-    final_prompt = f"A professional 3:2 aspect ratio grid image collage divided into 6 clean scenes. {metaphor_prompt} Modern aesthetic photography style, no text."
+def generate_and_split_images_xai(prompt):
+    print("🎨 2K 고화질 4분할(2x2) 실사 이미지 생성 중...")
+    
+    # xAI에게 2x2 그리드의 4분할 사진을 그려달라고 명확히 지시
+    final_prompt = f"A photo collage composed of exactly 4 distinct square panels arranged in a 2x2 grid. {prompt} Photorealistic, natural everyday scenes showing real people, cinematic lighting, no text, no borders."
+    
     try:
+        # 1:1 비율로 생성해야 2x2로 잘랐을 때 완벽한 정사각형이 나옵니다.
         response = xai_client.images.generate(
             model="grok-imagine-image",
             prompt=final_prompt,
-            extra_body={"aspect_ratio": "3:2", "resolution": "2k"},
+            extra_body={"aspect_ratio": "1:1", "resolution": "2k"},
             n=1
         )
         img_data = requests.get(response.data[0].url).content
         img = Image.open(BytesIO(img_data))
         
         width, height = img.size
-        cell_w, cell_h = width // 3, height // 2
-        margin = 25
+        cell_w, cell_h = width // 2, height // 2
+        margin = 15 # AI가 그린 경계선 제거용 마진
+        
         base64_images = []
         for row in range(2):
-            for col in range(3):
-                left, top = (col * cell_w) + margin, (row * cell_h) + margin
-                right, bottom = left + cell_w - margin, top + cell_h - margin
+            for col in range(2):
+                # 4등분(2x2) 구역 계산
+                left = col * cell_w + margin
+                top = row * cell_h + margin
+                right = left + cell_w - (margin * 2)
+                bottom = top + cell_h - (margin * 2)
+                
                 cropped = img.crop((left, top, right, bottom))
-                cropped = cropped.resize((600, int(600 * (cropped.height / cropped.width))), Image.Resampling.LANCZOS)
+                
+                # 블로그에 올리기 좋게 600x600 사이즈로 통일
+                cropped = cropped.resize((600, 600), Image.Resampling.LANCZOS)
+                
                 if cropped.mode in ('RGBA', 'P'): cropped = cropped.convert('RGB')
                 buffered = BytesIO()
-                cropped.save(buffered, format="JPEG", quality=85)
+                cropped.save(buffered, format="JPEG", quality=88)
                 base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buffered.getvalue()).decode()}")
+                
         return base64_images
     except Exception as e:
         print(f"❌ 이미지 생성 실패: {e}")
         return []
 
 # ==========================================
-# 6. 통찰력 있는 1500자 원고 작성
+# 5. 블로그 원고 작성 (4장 배치)
 # ==========================================
 def write_blog_post(category, base64_images, ref_content="", topic=""):
-    print(f"✍️ 1500자 분량의 깊이 있는 원고 작성 중...")
+    print(f"✍️ 1500자 분량의 칼럼 작성 중...")
     system_prompt = f"""
-    당신은 '{category}' 분야의 통찰력 있는 10년 차 리뷰어입니다. 
-    글 길이를 1500자 내외로 넉넉하고 깊이 있게 작성하세요.
+    당신은 '{category}' 분야의 10년 차 칼럼니스트입니다. 
+    글을 1500자 내외로 풍성하고 비판적인 시각으로 작성하세요.
     
     [작성 규칙]
     1. 최상단에 <h2> 태그로 후킹하는 제목 1번 작성.
-    2. 본문은 3~4개의 소주제로 나누고 <h3> 소제목 사용.
-    3. 한 문단에 최소 3~4문장 이상 깊이 있는 비평을 담고, 문단 간격은 <br><br> 사용.
-    4. 이미지 배치: [IMAGE_1] 부터 [IMAGE_6] 태그를 문장 중간중간에 골고루 분산 배치하세요.
-    5. 기계적 요약 금지, 독자에게 말을 거는 친근하고 날카로운 문체 사용.
+    2. 본문은 4개의 소주제로 나누고 각 문단 시작에 <h3> 태그 사용.
+    3. 기계적 요약 금지, 독자에게 직접 질문을 던지는 듯한 생생한 어조 사용.
+    4. 생성된 4장의 사진을 배치하기 위해, 각 <h3> 문단이 끝날 때마다 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4]를 순서대로 하나씩 삽입하세요.
     
-    [오늘의 참고 데이터]
     주제/기사제목: {topic}
     주요내용: {ref_content}
     """
-    res = gpt_client.chat.completions.create(
-        model="gpt-5.4-mini",
-        messages=[{"role": "system", "content": system_prompt}],
-        temperature=0.85
-    )
+    res = gpt_client.chat.completions.create(model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.85)
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
-    # 제목 중복 렌더링 방지
-    title = f"[{category.upper()}] 오늘의 핵심 인사이트"
-    h2_match = re.search(r'<h2>(.*?)</h2>', html_content)
-    if h2_match:
+    title = f"[{category.upper()}] 핵심 인사이트"
+    if h2_match := re.search(r'<h2>(.*?)</h2>', html_content):
         title = h2_match.group(1).strip()
         html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
 
-    # 이미지 태그 치환
+    # 4개의 이미지 태그 치환 (그림자 및 테두리 효과 적용)
     if base64_images:
         for i, b64 in enumerate(base64_images):
-            img_tag = f'<div style="text-align:center; margin: 35px 0;"><img src="{b64}" style="max-width: 90%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>'
+            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>'
             html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
-    for i in range(1, 7): html_content = html_content.replace(f"[IMAGE_{i}]", "")
+    
+    html_content = re.sub(r'\[IMAGE_\d+\]', '', html_content) # 남은 태그 삭제
     return title, html_content
 
 # ==========================================
-# 7. 메인 실행부 (에러 수정 완료)
+# 6. 메인 실행부
 # ==========================================
 def get_auto_category():
-    now_kst = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
-    hour = now_kst.hour
+    hour = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).hour
     mapping = {(7, 12, 17): "news", (8, 13, 18): "it", (9, 14, 19): "stock", (10, 15, 20): "youtube", (11, 16, 21): "food"}
     for hours, cat in mapping.items():
         if hour in hours: return cat
@@ -223,14 +212,12 @@ def post_to_blogger(blog_id, title, content):
     if creds and creds.expired and creds.refresh_token: creds.refresh(Request())
     service = build('blogger', 'v3', credentials=creds)
     request = service.posts().insert(blogId=blog_id, body={"title": title, "content": content}, isDraft=False)
-    response = request.execute()
-    return response.get('url')
+    return request.execute().get('url')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--category", required=True)
     parser.add_argument("--reference_url", default="") 
-    # 📌 텔레그램 리모컨 호환성을 위한 파라미터(에러 방지)
     parser.add_argument("--topic", default="", help="ignored") 
     args = parser.parse_args()
     
@@ -238,28 +225,24 @@ if __name__ == "__main__":
     blog_id = BLOG_REGISTRY.get(category)
     if not blog_id: exit(1)
         
-    # 링크 유무에 따라 트랙1(네이버 API) 또는 트랙2(직접 스크래핑) 분기
     ref_url_for_post = args.reference_url
     if args.reference_url:
         ref_content, topic, _ = fetch_reference_content(args.reference_url)
     else:
         ref_content, topic, ref_url_for_post = generate_auto_topic(category)
     
-    # 공통 로직 (프롬프트 -> 생성 -> 작성)
-    metaphor_prompt = create_metaphorical_prompt(category, topic, ref_content)
-    images = generate_and_split_images_xai(metaphor_prompt)
+    # ⭐️ 자연스러운 실사 프롬프트를 만들고 4분할 사진을 생성합니다.
+    photo_prompt = create_photo_prompt(category, topic, ref_content)
+    images = generate_and_split_images_xai(photo_prompt)
     title, html = write_blog_post(category, images, ref_content, topic)
     
-    # 원문 링크 삽입 (네이버 오류 방지 적용)
     if ref_url_for_post:
-        link_html = f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0;">🔗 <a href="{ref_url_for_post}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; font-weight: bold; text-decoration:none;">[사건 원문 기사 확인하기]</a></p></div>'
-        html += link_html
+        html += f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0;">🔗 <a href="{ref_url_for_post}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; font-weight: bold; text-decoration:none;">[사건 원문 기사 확인하기]</a></p></div>'
         
     try:
         post_url = post_to_blogger(blog_id, title, html)
         print(f"✅ 발행 성공: {post_url}")
         if TELEGRAM_TOKEN and CHAT_ID:
-            msg = f"⚡ [{category.upper()}] 실시간 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
-            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": msg})
+            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 실사 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"})
     except Exception as e:
         print(f"❌ 오류: {e}")

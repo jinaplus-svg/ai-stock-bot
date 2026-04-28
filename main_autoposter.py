@@ -30,7 +30,7 @@ BLOG_REGISTRY = {
     "food": os.environ.get("FOOD_BLOG_ID"),
     "news": os.environ.get("NEWS_BLOG_ID"),
     "stock": os.environ.get("STOCK_BLOG_ID"),
-    "travel": os.environ.get("TRAVEL_BLOG_ID") # 유튜브 대신 여행으로 변경됨!
+    "travel": os.environ.get("TRAVEL_BLOG_ID")
 }
 
 gpt_client = OpenAI(api_key=OPENAI_API_KEY)
@@ -42,7 +42,7 @@ def clean_naver_text(text):
     return html.unescape(text)
 
 # ==========================================
-# 2. 실시간 데이터 가져오기 (네이버 API)
+# 2. 실시간 데이터 가져오기 (네이버 API & GPT 방어코드)
 # ==========================================
 def generate_auto_topic(category):
     print(f"🤖 [{category.upper()}] 네이버 API 검색 중...")
@@ -63,13 +63,31 @@ def generate_auto_topic(category):
                 if data.get('items'):
                     item = data['items'][0]
                     return f"[요약]: {clean_naver_text(item['description'])}", clean_naver_text(item['title']), item.get('originallink') or item['link']
+            else:
+                print(f"⚠️ 네이버 검색 실패 (상태코드: {response.status_code})")
         except Exception as e:
             print(f"⚠️ 네이버 검색 오류: {e}")
             
-    system_prompt = f"당신은 '{category}' 전문가입니다. 대중의 이목을 끌 최신 핫이슈를 기획하세요.\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
-    res = gpt_client.chat.completions.create(model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.9)
-    result = res.choices[0].message.content.strip()
-    return re.search(r'\[내용\]:\s*(.*)', result, re.DOTALL).group(1), re.search(r'\[주제\]:\s*(.*)', result).group(1), ""
+    # 네이버 실패 시 GPT 기획 (🚨 정규식 에러 방지 무적 로직 추가)
+    print("🤖 GPT 백업 기획 모드 가동...")
+    system_prompt = f"당신은 '{category}' 전문가입니다. 대중의 이목을 끌 최신 핫이슈를 기획하세요.\n반드시 다음 양식을 지켜주세요.\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
+    
+    try:
+        res = gpt_client.chat.completions.create(model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.9)
+        result = res.choices[0].message.content.strip()
+        
+        # 정규식을 유연하게 (대괄호가 없어도 찾을 수 있게) 수정
+        topic_match = re.search(r'\[?주제\]?\s*:\s*(.*)', result)
+        content_match = re.search(r'\[?내용\]?\s*:\s*(.*)', result, re.DOTALL)
+        
+        topic = topic_match.group(1).strip() if topic_match else f"[{category.upper()}] 오늘의 핫이슈"
+        content = content_match.group(1).strip() if content_match else result
+        
+        return content, topic, ""
+    except Exception as e:
+        print(f"⚠️ GPT 파싱 완전 실패 (오류 무시): {e}")
+        # 최후의 방어선: 어떻게든 뻗지 않고 기본값을 내보냄
+        return "오늘의 주요 브리핑 내용입니다.", f"[{category.upper()}] 주요 브리핑", ""
 
 def fetch_reference_content(url):
     if not url: return "", "", ""

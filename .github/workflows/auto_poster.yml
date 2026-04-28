@@ -40,7 +40,7 @@ jobs:
           FOOD_BLOG_ID: ${{ secrets.FOOD_BLOG_ID }}
           NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}
           STOCK_BLOG_ID: ${{ secrets.STOCK_BLOG_ID }}
-          YOUTUBE_BLOG_ID: ${{ secrets.YOUTUBE_BLOG_ID }}
+          TRAVEL_BLOG_ID: ${{ secrets.TRAVEL_BLOG_ID }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           # 여기에 네이버 시크릿 키를 전달합니다.

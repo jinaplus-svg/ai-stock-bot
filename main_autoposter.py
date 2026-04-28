@@ -5,6 +5,7 @@ import base64
 import requests
 import datetime
 import re
+import html
 from io import BytesIO
 from PIL import Image
 from openai import OpenAI
@@ -21,6 +22,9 @@ XAI_API_KEY = os.environ.get("XAI")
 GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
+# 네이버 API 키 추가
+NAVER_CLIENT_ID = os.environ.get("NAVER_CLIENT_ID")
+NAVER_CLIENT_SECRET = os.environ.get("NAVER_CLIENT_SECRET")
 
 BLOG_REGISTRY = {
     "it": os.environ.get("IT_BLOG_ID"),
@@ -34,11 +38,71 @@ gpt_client = OpenAI(api_key=OPENAI_API_KEY)
 xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
+# 네이버 텍스트 정제 (<b> 태그 및 html 엔티티 제거)
+def clean_naver_text(text):
+    text = re.sub(r'<[^>]+>', '', text)
+    return html.unescape(text)
+
 # ==========================================
-# 2. 외부 링크 스크래핑
+# 2. [완성] 네이버 실시간 뉴스 트렌드 가져오기
 # ==========================================
+def generate_auto_topic(category):
+    print(f"🤖 [{category.upper()}] 네이버 API로 최신 실시간 이슈를 검색합니다...")
+    
+    # 카테고리별 네이버 검색 키워드 매핑
+    search_queries = {
+        "news": "사회 주요 뉴스",
+        "it": "IT 신기술 스마트폰 인공지능",
+        "stock": "주식 증시 경제 전망",
+        "food": "인기 맛집 트렌드 음식",
+        "youtube": "유튜브 크리에이터 트렌드"
+    }
+    query = search_queries.get(category, "오늘의 핫이슈")
+
+    if NAVER_CLIENT_ID and NAVER_CLIENT_SECRET:
+        try:
+            api_url = "https://openapi.naver.com/v1/search/news.json"
+            headers = {
+                "X-Naver-Client-Id": NAVER_CLIENT_ID,
+                "X-Naver-Client-Secret": NAVER_CLIENT_SECRET
+            }
+            # 최신순(date)으로 가장 핫한 뉴스 1개 가져오기
+            params = {"query": query, "display": 1, "sort": "date"}
+            
+            response = requests.get(api_url, headers=headers, params=params, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('items'):
+                    item = data['items'][0]
+                    real_title = clean_naver_text(item['title'])
+                    real_desc = clean_naver_text(item['description'])
+                    real_link = item['originallink'] if item.get('originallink') else item['link']
+                    
+                    print(f"✅ 네이버 뉴스 검색 성공: {real_title}")
+                    return f"[기사 요약]: {real_desc}", real_title, real_link
+            else:
+                print(f"⚠️ 네이버 API 호출 실패 (코드: {response.status_code})")
+        except Exception as e:
+            print(f"⚠️ 네이버 검색 중 오류: {e}")
+            
+    # 네이버 키가 없거나 실패했을 때의 안전장치 (GPT 가상 기획)
+    print("⚠️ 네이버 API 연결 실패. GPT가 트렌드 주제를 기획합니다.")
+    try:
+        system_prompt = f"당신은 '{category}' 전문가입니다. 대중이 관심 가질 만한 구체적인 최신 핫이슈를 기획하세요.\n응답 형식:\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
+        res = gpt_client.chat.completions.create(
+            model="gpt-5.4-mini",
+            messages=[{"role": "system", "content": system_prompt}],
+            temperature=0.9
+        )
+        result = res.choices[0].message.content.strip()
+        topic = re.search(r'\[주제\]:\s*(.*)', result).group(1)
+        content = re.search(r'\[내용\]:\s*(.*)', result, re.DOTALL).group(1)
+        return content, topic, ""
+    except:
+        return "오늘의 주요 브리핑", f"[{category.upper()}] 오늘의 핫이슈", ""
+
 def fetch_reference_content(url):
-    if not url: return "", "주제 없음"
+    if not url: return "", "", ""
     print(f"🔗 외부 링크({url}) 분석 중...")
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -52,41 +116,26 @@ def fetch_reference_content(url):
         desc_tag = soup.find('meta', property='og:description') or soup.find('meta', name='description')
         meta_desc = desc_tag['content'] if desc_tag else ""
         
-        for script in soup(["script", "style", "nav", "footer"]):
-            script.decompose()
+        for script in soup(["script", "style", "nav", "footer"]): script.decompose()
         text = soup.get_text(separator=' ', strip=True)
-        
-        combined_content = f"[요약]: {meta_desc}\n\n[본문]: {text[:2500]}"
-        return combined_content, page_title
+        return f"[요약]: {meta_desc}\n\n[본문]: {text[:2500]}", page_title, url
     except Exception as e:
         print(f"⚠️ 링크 분석 실패: {e}")
-        return "", "주제 없음"
+        return "", "", ""
 
 # ==========================================
-# 3. [Step 1] 카테고리별 맞춤형 은유 이미지 프롬프트
+# 3. 은유적 프롬프트 생성기
 # ==========================================
 def create_metaphorical_prompt(category, topic, ref_content):
-    print(f"🧠 [{category.upper()}] 성격에 맞는 감각적인 이미지 프롬프트 구상 중...")
-    
+    print(f"🧠 [{category.upper()}] 6분할 이미지용 감각적 프롬프트 구상 중...")
     system_msg = f"""
-    당신은 블로그 카테고리에 맞춰 이미지를 기획하는 아트 디렉터입니다.
-    주어진 주제를 1차원적으로 묘사하지 말고, 카테고리 '{category}'의 특성에 맞는 '감각적이고 상징적인 무드보드' 형식의 영문 이미지 프롬프트를 1~2문장으로 작성하세요.
-
-    [절대 금지 사항]
-    - 피, 무기, 폭력 등 자극적 묘사 금지. 문자(Text) 포함 금지. 사람 얼굴 직접 묘사 금지.
-
-    [카테고리별 필수 무드]
-    - news: 체스판, 빛과 그림자, 서류철 등 무겁고 시네마틱한 메타포.
-    - it: 홀로그램, 데이터 라인, 미니멀한 룸, 사이버네틱 텍스처 등 세련된 미래주의.
-    - food: 아늑한 웜톤 조명, 미슐랭 레스토랑의 테이블 세팅, 따뜻하고 먹음직스러운 색채.
-    - stock: 상승하는 빛의 궤적, 거대한 물결, 추상적인 톱니바퀴 등 역동적 흐름.
-    - youtube: 팝아트 컬러, 스포트라이트, 화려하고 트렌디한 공간.
+    당신은 트렌디한 아트 디렉터입니다. 주제 '{topic}'를 표현할 영문 이미지 프롬프트를 1문장으로 작성하세요.
+    피, 폭력, 총, 글자(text)는 절대 금지. 카테고리 '{category}'의 특성에 맞게 상징적으로 표현하세요.
     """
-    
     try:
         res = gpt_client.chat.completions.create(
             model="gpt-5.4-mini",
-            messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content[:1000]}"}],
+            messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"내용: {ref_content[:500]}"}],
             temperature=0.8
         )
         return res.choices[0].message.content.strip()
@@ -94,12 +143,11 @@ def create_metaphorical_prompt(category, topic, ref_content):
         return "abstract cinematic mood, highly detailed, soft lighting."
 
 # ==========================================
-# 4. [Step 2] xAI 이미지 생성 및 1:1 정사각형 스마트 크롭
+# 4. xAI 6분할 이미지 생성
 # ==========================================
 def generate_and_split_images_xai(metaphor_prompt):
-    print("🎨 6컷 분할 이미지 생성 및 스마트 크롭 중...")
-    final_prompt = f"A moodboard collage composed of 6 distinct square panels. {metaphor_prompt} High-end editorial photography style, no text."
-    
+    print("🎨 6컷 분할 이미지 생성 중...")
+    final_prompt = f"A professional 3:2 aspect ratio grid image collage divided into 6 clean scenes. {metaphor_prompt} Modern aesthetic photography style, no text, minimal borders."
     try:
         response = xai_client.images.generate(
             model="grok-imagine-image",
@@ -107,95 +155,66 @@ def generate_and_split_images_xai(metaphor_prompt):
             extra_body={"aspect_ratio": "3:2", "resolution": "2k"},
             n=1
         )
-        img_url = response.data[0].url
-        img_data = requests.get(img_url).content
+        img_data = requests.get(response.data[0].url).content
         img = Image.open(BytesIO(img_data))
         
         width, height = img.size
         cell_w, cell_h = width // 3, height // 2
-        
+        margin = 25
         base64_images = []
         for row in range(2):
             for col in range(3):
-                # 1. 6등분 구역 계산
-                left, top = col * cell_w, row * cell_h
-                right, bottom = left + cell_w, top + cell_h
-                cell_img = img.crop((left, top, right, bottom))
-                
-                # 2. 마진 적용 (테두리 자르기)
-                margin = 20
-                cell_img = cell_img.crop((margin, margin, cell_img.width - margin, cell_img.height - margin))
-                
-                # 3. 1:1 정사각형 중앙 크롭 (찌그러짐 방지)
-                min_dim = min(cell_img.width, cell_img.height)
-                c_left = (cell_img.width - min_dim) // 2
-                c_top = (cell_img.height - min_dim) // 2
-                square_img = cell_img.crop((c_left, c_top, c_left + min_dim, c_top + min_dim))
-                
-                # 4. 최종 600x600 사이즈로 리사이즈
-                final_img = square_img.resize((600, 600), Image.Resampling.LANCZOS)
-                
+                left, top = (col * cell_w) + margin, (row * cell_h) + margin
+                right, bottom = left + cell_w - margin, top + cell_h - margin
+                cropped = img.crop((left, top, right, bottom))
+                cropped = cropped.resize((600, int(600 * (cropped.height / cropped.width))), Image.Resampling.LANCZOS)
+                if cropped.mode in ('RGBA', 'P'): cropped = cropped.convert('RGB')
                 buffered = BytesIO()
-                if final_img.mode in ('RGBA', 'P'): final_img = final_img.convert('RGB')
-                final_img.save(buffered, format="JPEG", quality=85)
+                cropped.save(buffered, format="JPEG", quality=85)
                 base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buffered.getvalue()).decode()}")
-                
         return base64_images
     except Exception as e:
         print(f"❌ 이미지 생성 실패: {e}")
         return []
 
 # ==========================================
-# 5. [Step 3] 풍부하고 깊이 있는 원고 작성
+# 5. 인사이트 블로그 원고 작성
 # ==========================================
-def write_blog_post(category, base64_images, ref_content="", ref_title="", ref_url=""):
-    print(f"✍️ 풍부한 내용의 블로그 원고 작성 중...")
-    topic_context = f"기사 제목: {ref_title}\n{ref_content}" if ref_content else "주제 없음"
-
+def write_blog_post(category, base64_images, ref_content="", topic=""):
+    print(f"✍️ 1500자 분량의 깊이 있는 원고 작성 중...")
     system_prompt = f"""
     당신은 '{category}' 분야의 통찰력 있는 10년 차 리뷰어입니다. 
-    글을 너무 짧게 자르지 말고, 독자가 몰입할 수 있도록 1500자 내외의 충분한 분량으로 작성하세요.
+    글 길이를 1500자 내외로 넉넉하고 깊이 있게 작성하세요.
     
     [작성 규칙]
-    1. 글 최상단에는 무조건 <h2> 태그로 후킹하는 전체 제목을 딱 1번만 쓰세요.
-    2. 본문은 3~4개의 소주제로 나누고, 각 소주제 시작마다 <h3> 태그를 활용해 가독성을 높이세요.
-    3. 한 줄 쓰고 끊지 마세요. 한 문단(소주제)에 최소 3~5문장 이상 깊이 있는 비평과 통찰을 담으세요. 문단 간격은 <br><br>로 띄웁니다.
-    4. 이미지 배치: [IMAGE_1] 부터 [IMAGE_6] 까지의 태그를 문장 중간에 뜬금없이 넣지 말고, '소주제(문단)가 하나 끝날 때마다' 1~2개씩 자연스럽게 배치하세요.
-    5. 기계적 요약투가 아닌, 독자에게 말을 거는 듯한 친근하면서도 날카로운 문체를 사용하세요.
+    1. 최상단에 <h2> 태그로 후킹하는 제목 1번 작성.
+    2. 본문은 3~4개의 소주제로 나누고 <h3> 소제목 사용.
+    3. 한 문단에 최소 3~4문장 이상 깊이 있는 비평을 담고, 문단 간격은 <br><br> 사용.
+    4. 이미지 배치: [IMAGE_1] 부터 [IMAGE_6] 태그를 문장 중간중간에 골고루 분산 배치하세요.
+    5. 기계적 요약 금지, 독자에게 말을 거는 친근하고 날카로운 문체 사용.
     
-    [참고 데이터]
-    {topic_context}
+    [오늘의 참고 데이터]
+    주제/기사제목: {topic}
+    주요내용: {ref_content}
     """
-    
     res = gpt_client.chat.completions.create(
         model="gpt-5.4-mini",
         messages=[{"role": "system", "content": system_prompt}],
-        temperature=0.8
+        temperature=0.85
     )
-    
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
-    # 📌 제목 중복 노출 방지 로직 (완벽 처리)
     title = f"[{category.upper()}] 오늘의 핵심 인사이트"
     h2_match = re.search(r'<h2>(.*?)</h2>', html_content)
     if h2_match:
         title = h2_match.group(1).strip()
-        html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip() # 본문에서 h2 태그 삭제
+        html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
 
-    # 이미지 플레이스홀더 치환 (정사각형 비율에 어울리는 CSS 적용)
     if base64_images:
         for i, b64 in enumerate(base64_images):
-            # 모바일에서 예쁘게 보이도록 가로폭 조절 및 그림자 효과 부여
-            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 90%; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>'
+            img_tag = f'<div style="text-align:center; margin: 35px 0;"><img src="{b64}" style="max-width: 90%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>'
             html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
-    
     for i in range(1, 7): html_content = html_content.replace(f"[IMAGE_{i}]", "")
-    
-    if ref_url:
-        clean_url = ref_url.strip()
-        link_html = f'<br><br><hr><div style="text-align:center; padding: 25px; background-color: #f8f9fa; border-radius: 12px; margin-top: 40px;"><p style="margin: 0; font-size: 1.1em; color:#333; font-weight: bold;">더 자세한 원문이 궁금하다면?</p><p style="margin: 10px 0 0 0;">🔗 <a href="{clean_url}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; text-decoration:none;">사건 원문 기사 바로가기</a></p></div>'
-        html_content += link_html
-
     return title, html_content
 
 # ==========================================
@@ -221,29 +240,34 @@ def post_to_blogger(blog_id, title, content):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--category", required=True)
-    parser.add_argument("--topic", default="오늘의 주요 이슈")
     parser.add_argument("--reference_url", default="") 
     args = parser.parse_args()
     
     category = get_auto_category() if args.category == "auto" else args.category
-    
     blog_id = BLOG_REGISTRY.get(category)
     if not blog_id: exit(1)
         
-    ref_content, ref_title = fetch_reference_content(args.reference_url) if args.reference_url else ("", "")
+    # 링크가 있으면 긁어오고, 없으면 네이버 뉴스에서 실시간 기사를 검색합니다.
+    ref_url_for_post = args.reference_url
+    if args.reference_url:
+        ref_content, topic, _ = fetch_reference_content(args.reference_url)
+    else:
+        ref_content, topic, ref_url_for_post = generate_auto_topic(category)
     
-    topic_for_image = ref_title if ref_title != "주제 없음" else args.topic
-    metaphor_prompt = create_metaphorical_prompt(category, topic_for_image, ref_content)
-    
+    metaphor_prompt = create_metaphorical_prompt(category, topic, ref_content)
     images = generate_and_split_images_xai(metaphor_prompt)
-    title, html = write_blog_post(category, images, ref_content, ref_title, args.reference_url)
+    title, html = write_blog_post(category, images, ref_content, topic)
     
+    # 텔레그램으로 보낸 링크든, 네이버에서 스스로 찾은 링크든 기사 원문 링크 달아주기
+    if ref_url_for_post:
+        link_html = f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0;">🔗 <a href="{ref_url_for_post}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; font-weight: bold; text-decoration:none;">[사건/이슈 원문 기사 확인하기]</a></p></div>'
+        html += link_html
+        
     try:
         post_url = post_to_blogger(blog_id, title, html)
-        print(f"✅ 발행 성공 URL: {post_url}")
-        
+        print(f"✅ 발행 성공: {post_url}")
         if TELEGRAM_TOKEN and CHAT_ID:
-            msg = f"⚡ [{category.upper()}] 프리미엄 인사이트 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
+            msg = f"⚡ [{category.upper()}] 실시간 이슈 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
             requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": msg})
     except Exception as e:
-        print(f"❌ 구글 블로그 업로드 오류: {e}")
+        print(f"❌ 오류: {e}")

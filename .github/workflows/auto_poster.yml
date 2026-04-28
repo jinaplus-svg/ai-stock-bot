@@ -2,7 +2,6 @@ name: Integrated Blog Auto Poster
 
 on:
   schedule:
-    # KST 기준 오전 7시부터 밤 10시까지 매시간 정각에 실행 (총 16회)
     - cron: '0 22,23,0,1,2,3,4,5,6,7,8,9,10,11,12,13 * * *'
   workflow_dispatch:
     inputs:
@@ -10,10 +9,10 @@ on:
         description: 'it, food, news, stock, youtube'
         required: true
       topic:
-        description: '주제 (수동 실행용)'
+        description: '주제 (수동용)'
         required: true
       reference_url:
-        description: '참조할 외부 URL'
+        description: '참조 URL'
         required: false
         default: ''
 
@@ -29,7 +28,6 @@ jobs:
         run: pip install openai google-api-python-client google-auth-oauthlib requests Pillow beautifulsoup4
       - name: Run Autoposter
         run: |
-          # 카테고리가 입력되지 않은 자동 스케줄 실행 시 'auto'를 전달하여 파이썬 코드가 알아서 분배하게 합니다.
           python main_autoposter.py \
             --category "${{ github.event.inputs.category || 'auto' }}" \
             --topic "${{ github.event.inputs.topic || '오늘의 핫이슈' }}" \
@@ -45,3 +43,6 @@ jobs:
           YOUTUBE_BLOG_ID: ${{ secrets.YOUTUBE_BLOG_ID }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+          # 여기에 네이버 시크릿 키를 전달합니다.
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}

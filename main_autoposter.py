@@ -22,7 +22,6 @@ XAI_API_KEY = os.environ.get("XAI")
 GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
-# 네이버 API 키 추가
 NAVER_CLIENT_ID = os.environ.get("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = os.environ.get("NAVER_CLIENT_SECRET")
 
@@ -38,35 +37,26 @@ gpt_client = OpenAI(api_key=OPENAI_API_KEY)
 xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
-# 네이버 텍스트 정제 (<b> 태그 및 html 엔티티 제거)
 def clean_naver_text(text):
     text = re.sub(r'<[^>]+>', '', text)
     return html.unescape(text)
 
 # ==========================================
-# 2. [완성] 네이버 실시간 뉴스 트렌드 가져오기
+# 2. [Track 1] 네이버 API 실시간 이슈 기획 (링크 없을 때)
 # ==========================================
 def generate_auto_topic(category):
-    print(f"🤖 [{category.upper()}] 네이버 API로 최신 실시간 이슈를 검색합니다...")
+    print(f"🤖 [{category.upper()}] 네이버 API로 실시간 이슈 검색 중...")
     
-    # 카테고리별 네이버 검색 키워드 매핑
     search_queries = {
-        "news": "사회 주요 뉴스",
-        "it": "IT 신기술 스마트폰 인공지능",
-        "stock": "주식 증시 경제 전망",
-        "food": "인기 맛집 트렌드 음식",
-        "youtube": "유튜브 크리에이터 트렌드"
+        "news": "사회 이슈", "it": "IT 신기술", "stock": "증시 전망", 
+        "food": "맛집 트렌드", "youtube": "유튜브 트렌드"
     }
-    query = search_queries.get(category, "오늘의 핫이슈")
+    query = search_queries.get(category, "핫이슈")
 
     if NAVER_CLIENT_ID and NAVER_CLIENT_SECRET:
         try:
             api_url = "https://openapi.naver.com/v1/search/news.json"
-            headers = {
-                "X-Naver-Client-Id": NAVER_CLIENT_ID,
-                "X-Naver-Client-Secret": NAVER_CLIENT_SECRET
-            }
-            # 최신순(date)으로 가장 핫한 뉴스 1개 가져오기
+            headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
             params = {"query": query, "display": 1, "sort": "date"}
             
             response = requests.get(api_url, headers=headers, params=params, timeout=10)
@@ -77,22 +67,16 @@ def generate_auto_topic(category):
                     real_title = clean_naver_text(item['title'])
                     real_desc = clean_naver_text(item['description'])
                     real_link = item['originallink'] if item.get('originallink') else item['link']
-                    
-                    print(f"✅ 네이버 뉴스 검색 성공: {real_title}")
-                    return f"[기사 요약]: {real_desc}", real_title, real_link
-            else:
-                print(f"⚠️ 네이버 API 호출 실패 (코드: {response.status_code})")
+                    print(f"✅ 네이버 검색 성공: {real_title}")
+                    return f"[요약]: {real_desc}", real_title, real_link
         except Exception as e:
-            print(f"⚠️ 네이버 검색 중 오류: {e}")
+            print(f"⚠️ 네이버 검색 오류: {e}")
             
-    # 네이버 키가 없거나 실패했을 때의 안전장치 (GPT 가상 기획)
-    print("⚠️ 네이버 API 연결 실패. GPT가 트렌드 주제를 기획합니다.")
+    # 네이버 실패 시 GPT 임시 기획
     try:
-        system_prompt = f"당신은 '{category}' 전문가입니다. 대중이 관심 가질 만한 구체적인 최신 핫이슈를 기획하세요.\n응답 형식:\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
+        system_prompt = f"당신은 '{category}' 전문가입니다. 오늘 대중이 관심 가질 만한 최신 핫이슈를 기획하세요.\n응답 형식:\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
         res = gpt_client.chat.completions.create(
-            model="gpt-5.4-mini",
-            messages=[{"role": "system", "content": system_prompt}],
-            temperature=0.9
+            model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.9
         )
         result = res.choices[0].message.content.strip()
         topic = re.search(r'\[주제\]:\s*(.*)', result).group(1)
@@ -101,9 +85,12 @@ def generate_auto_topic(category):
     except:
         return "오늘의 주요 브리핑", f"[{category.upper()}] 오늘의 핫이슈", ""
 
+# ==========================================
+# 3. [Track 2] 텔레그램 링크 분석기 (링크 있을 때)
+# ==========================================
 def fetch_reference_content(url):
     if not url: return "", "", ""
-    print(f"🔗 외부 링크({url}) 분석 중...")
+    print(f"🔗 텔레그램 링크({url}) 분석 중...")
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
         res = requests.get(url, headers=headers, timeout=15)
@@ -124,13 +111,13 @@ def fetch_reference_content(url):
         return "", "", ""
 
 # ==========================================
-# 3. 은유적 프롬프트 생성기
+# 4. 카테고리 맞춤형 메타포(은유) 프롬프트
 # ==========================================
 def create_metaphorical_prompt(category, topic, ref_content):
-    print(f"🧠 [{category.upper()}] 6분할 이미지용 감각적 프롬프트 구상 중...")
+    print(f"🧠 [{category.upper()}] 맞춤형 이미지 프롬프트 구상 중...")
     system_msg = f"""
-    당신은 트렌디한 아트 디렉터입니다. 주제 '{topic}'를 표현할 영문 이미지 프롬프트를 1문장으로 작성하세요.
-    피, 폭력, 총, 글자(text)는 절대 금지. 카테고리 '{category}'의 특성에 맞게 상징적으로 표현하세요.
+    당신은 아트 디렉터입니다. 주제 '{topic}'를 표현할 영문 이미지 프롬프트를 1문장으로 작성하세요.
+    피, 폭력, 총, 글자(text) 절대 금지. 카테고리 '{category}'의 특성에 맞게 (IT는 미래적, 맛집은 웜톤, 뉴스는 시네마틱 등) 상징적으로 표현하세요.
     """
     try:
         res = gpt_client.chat.completions.create(
@@ -143,11 +130,11 @@ def create_metaphorical_prompt(category, topic, ref_content):
         return "abstract cinematic mood, highly detailed, soft lighting."
 
 # ==========================================
-# 4. xAI 6분할 이미지 생성
+# 5. xAI 6분할 이미지 생성
 # ==========================================
 def generate_and_split_images_xai(metaphor_prompt):
     print("🎨 6컷 분할 이미지 생성 중...")
-    final_prompt = f"A professional 3:2 aspect ratio grid image collage divided into 6 clean scenes. {metaphor_prompt} Modern aesthetic photography style, no text, minimal borders."
+    final_prompt = f"A professional 3:2 aspect ratio grid image collage divided into 6 clean scenes. {metaphor_prompt} Modern aesthetic photography style, no text."
     try:
         response = xai_client.images.generate(
             model="grok-imagine-image",
@@ -178,7 +165,7 @@ def generate_and_split_images_xai(metaphor_prompt):
         return []
 
 # ==========================================
-# 5. 인사이트 블로그 원고 작성
+# 6. 통찰력 있는 1500자 원고 작성
 # ==========================================
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     print(f"✍️ 1500자 분량의 깊이 있는 원고 작성 중...")
@@ -204,12 +191,14 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     )
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
+    # 제목 중복 렌더링 방지
     title = f"[{category.upper()}] 오늘의 핵심 인사이트"
     h2_match = re.search(r'<h2>(.*?)</h2>', html_content)
     if h2_match:
         title = h2_match.group(1).strip()
         html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
 
+    # 이미지 태그 치환
     if base64_images:
         for i, b64 in enumerate(base64_images):
             img_tag = f'<div style="text-align:center; margin: 35px 0;"><img src="{b64}" style="max-width: 90%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>'
@@ -218,7 +207,7 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     return title, html_content
 
 # ==========================================
-# 6. 메인 실행부
+# 7. 메인 실행부 (에러 수정 완료)
 # ==========================================
 def get_auto_category():
     now_kst = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
@@ -241,33 +230,36 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--category", required=True)
     parser.add_argument("--reference_url", default="") 
+    # 📌 텔레그램 리모컨 호환성을 위한 파라미터(에러 방지)
+    parser.add_argument("--topic", default="", help="ignored") 
     args = parser.parse_args()
     
     category = get_auto_category() if args.category == "auto" else args.category
     blog_id = BLOG_REGISTRY.get(category)
     if not blog_id: exit(1)
         
-    # 링크가 있으면 긁어오고, 없으면 네이버 뉴스에서 실시간 기사를 검색합니다.
+    # 링크 유무에 따라 트랙1(네이버 API) 또는 트랙2(직접 스크래핑) 분기
     ref_url_for_post = args.reference_url
     if args.reference_url:
         ref_content, topic, _ = fetch_reference_content(args.reference_url)
     else:
         ref_content, topic, ref_url_for_post = generate_auto_topic(category)
     
+    # 공통 로직 (프롬프트 -> 생성 -> 작성)
     metaphor_prompt = create_metaphorical_prompt(category, topic, ref_content)
     images = generate_and_split_images_xai(metaphor_prompt)
     title, html = write_blog_post(category, images, ref_content, topic)
     
-    # 텔레그램으로 보낸 링크든, 네이버에서 스스로 찾은 링크든 기사 원문 링크 달아주기
+    # 원문 링크 삽입 (네이버 오류 방지 적용)
     if ref_url_for_post:
-        link_html = f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0;">🔗 <a href="{ref_url_for_post}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; font-weight: bold; text-decoration:none;">[사건/이슈 원문 기사 확인하기]</a></p></div>'
+        link_html = f'<br><br><hr><div style="text-align:center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;"><p style="margin: 0;">🔗 <a href="{ref_url_for_post}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; font-weight: bold; text-decoration:none;">[사건 원문 기사 확인하기]</a></p></div>'
         html += link_html
         
     try:
         post_url = post_to_blogger(blog_id, title, html)
         print(f"✅ 발행 성공: {post_url}")
         if TELEGRAM_TOKEN and CHAT_ID:
-            msg = f"⚡ [{category.upper()}] 실시간 이슈 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
+            msg = f"⚡ [{category.upper()}] 실시간 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"
             requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": msg})
     except Exception as e:
         print(f"❌ 오류: {e}")

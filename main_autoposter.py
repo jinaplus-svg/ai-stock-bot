@@ -13,6 +13,7 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from bs4 import BeautifulSoup
+from youtube_transcript_api import YouTubeTranscriptApi
 
 # ==========================================
 # 1. 설정 및 API 키 로드
@@ -37,60 +38,37 @@ gpt_client = OpenAI(api_key=OPENAI_API_KEY)
 xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
-def clean_naver_text(text):
-    text = re.sub(r'<[^>]+>', '', text)
-    return html.unescape(text)
-
 # ==========================================
-# 2. 실시간 데이터 가져오기 (네이버 API & GPT 방어코드)
+# 2. 크롤링 및 유튜브 자막 추출
 # ==========================================
-def generate_auto_topic(category):
-    print(f"🤖 [{category.upper()}] 네이버 API 검색 중...")
-    search_queries = {
-        "news": "사회 속보", "it": "IT 신기술 트렌드", "stock": "증시 주식 특징주", 
-        "food": "인기 맛집 핫플", "travel": "여행 가볼만한곳 추천 숙소"
-    }
-    query = search_queries.get(category, "핫이슈")
-
-    if NAVER_CLIENT_ID and NAVER_CLIENT_SECRET:
-        try:
-            api_url = "https://openapi.naver.com/v1/search/news.json"
-            headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
-            params = {"query": query, "display": 1, "sort": "date"}
-            response = requests.get(api_url, headers=headers, params=params, timeout=10)
-            if response.status_code == 200:
-                data = response.json()
-                if data.get('items'):
-                    item = data['items'][0]
-                    return f"[요약]: {clean_naver_text(item['description'])}", clean_naver_text(item['title']), item.get('originallink') or item['link']
-            else:
-                print(f"⚠️ 네이버 검색 실패 (상태코드: {response.status_code})")
-        except Exception as e:
-            print(f"⚠️ 네이버 검색 오류: {e}")
-            
-    # 네이버 실패 시 GPT 기획 (🚨 정규식 에러 방지 무적 로직 추가)
-    print("🤖 GPT 백업 기획 모드 가동...")
-    system_prompt = f"당신은 '{category}' 전문가입니다. 대중의 이목을 끌 최신 핫이슈를 기획하세요.\n반드시 다음 양식을 지켜주세요.\n[주제]: (주제명)\n[내용]: (내용 브리핑)"
+def get_youtube_content(url):
+    video_id = None
+    if "youtu.be" in url:
+        video_id = url.split("/")[-1].split("?")[0]
+    elif "youtube.com" in url:
+        video_id = re.search(r"v=([a-zA-Z0-9_-]+)", url).group(1)
     
+    if not video_id: return "", "유튜브 영상", url
+    
+    print(f"📺 유튜브 영상 분석 중... (ID: {video_id})")
     try:
-        res = gpt_client.chat.completions.create(model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.9)
-        result = res.choices[0].message.content.strip()
+        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+        transcript_text = " ".join([item['text'] for item in transcript_list])
         
-        # 정규식을 유연하게 (대괄호가 없어도 찾을 수 있게) 수정
-        topic_match = re.search(r'\[?주제\]?\s*:\s*(.*)', result)
-        content_match = re.search(r'\[?내용\]?\s*:\s*(.*)', result, re.DOTALL)
+        res = requests.get(url)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        title = soup.title.string.replace(" - YouTube", "") if soup.title else "유튜브 영상 분석"
         
-        topic = topic_match.group(1).strip() if topic_match else f"[{category.upper()}] 오늘의 핫이슈"
-        content = content_match.group(1).strip() if content_match else result
-        
-        return content, topic, ""
+        return f"[유튜브 자막 내용]:\n{transcript_text[:3000]}", title, url
     except Exception as e:
-        print(f"⚠️ GPT 파싱 완전 실패 (오류 무시): {e}")
-        # 최후의 방어선: 어떻게든 뻗지 않고 기본값을 내보냄
-        return "오늘의 주요 브리핑 내용입니다.", f"[{category.upper()}] 주요 브리핑", ""
+        print(f"⚠️ 유튜브 자막 추출 실패: {e}")
+        return "자막을 읽을 수 없는 영상입니다.", "유튜브 영상", url
 
 def fetch_reference_content(url):
     if not url: return "", "", ""
+    if "youtube.com" in url or "youtu.be" in url:
+        return get_youtube_content(url)
+        
     try:
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         res = requests.get(url, headers=headers, timeout=15)
@@ -104,100 +82,69 @@ def fetch_reference_content(url):
     except:
         return "", "", ""
 
-# ==========================================
-# 3. 4분할 실사 프롬프트
-# ==========================================
-def create_photo_prompt(category, topic, ref_content):
-    print(f"🧠 실사 4분할 프롬프트 구상 중...")
-    system_msg = f"""
-    당신은 보도사진 편집장입니다. 주제 '{topic}'와 관련된 영문 이미지 프롬프트를 딱 1문장으로 작성하세요.
-    1. 3D CG 절대 금지. 무조건 고화질 실사(Photorealistic, editorial photography).
-    2. 사람들이 현장(여행지, 식당, 회사 등)에서 자연스럽게 행동하는 모습 묘사. 폭력/글자 금지.
-    """
-    try:
-        res = gpt_client.chat.completions.create(model="gpt-5.4-mini", messages=[{"role": "system", "content": system_msg}], temperature=0.8)
-        return res.choices[0].message.content.strip()
-    except:
-        return "Photorealistic natural scene with real people interacting, editorial photography."
+def generate_auto_topic(category):
+    print(f"🤖 [{category.upper()}] 네이버 API 검색 중...")
+    search_queries = {"news": "사회 속보", "it": "IT 신기술 트렌드", "stock": "증시 주식 특징주", "food": "인기 맛집 핫플", "travel": "여행 가볼만한곳 추천 숙소"}
+    query = search_queries.get(category, "핫이슈")
+    if NAVER_CLIENT_ID and NAVER_CLIENT_SECRET:
+        try:
+            api_url = "https://openapi.naver.com/v1/search/news.json"
+            headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
+            params = {"query": query, "display": 1, "sort": "date"}
+            response = requests.get(api_url, headers=headers, params=params, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('items'):
+                    item = data['items'][0]
+                    clean_desc = re.sub(r'<[^>]+>', '', item['description'])
+                    return f"[요약]: {html.unescape(clean_desc)}", html.unescape(re.sub(r'<[^>]+>', '', item['title'])), item.get('originallink') or item['link']
+        except: pass
+    return "오늘의 주요 브리핑 내용입니다.", f"[{category.upper()}] 주요 브리핑", ""
 
 # ==========================================
-# 4. 2K 해상도 4분할 이미지 생성
+# 3. AI 이미지 생성 및 글 작성
 # ==========================================
+def create_photo_prompt(category, topic, ref_content):
+    system_msg = f"당신은 보도사진 편집장입니다. 주제 '{topic}'와 관련된 영문 이미지 프롬프트를 작성하세요. 3D CG 절대 금지. 무조건 고화질 실사(Photorealistic)."
+    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_msg}], temperature=0.8)
+    return res.choices[0].message.content.strip()
+
 def generate_and_split_images_xai(prompt):
-    print("🎨 2K 고화질 4분할(2x2) 실사 이미지 생성 중...")
-    final_prompt = f"A photo collage composed of exactly 4 distinct square panels arranged in a 2x2 grid. {prompt} Photorealistic, natural everyday scenes showing real people, cinematic lighting, no text, no borders."
+    final_prompt = f"A photo collage of 4 panels in 2x2 grid. {prompt} Photorealistic, natural scenes, no text."
     try:
         response = xai_client.images.generate(model="grok-imagine-image", prompt=final_prompt, extra_body={"aspect_ratio": "1:1", "resolution": "2k"}, n=1)
         img_data = requests.get(response.data[0].url).content
         img = Image.open(BytesIO(img_data))
-        
-        width, height = img.size
-        cell_w, cell_h = width // 2, height // 2
+        w, h = img.size
+        cw, ch = w // 2, h // 2
         margin = 15
         base64_images = []
-        
-        for row in range(2):
-            for col in range(2):
-                left, top = col * cell_w + margin, row * cell_h + margin
-                right, bottom = left + cell_w - (margin * 2), top + cell_h - (margin * 2)
-                cropped = img.crop((left, top, right, bottom)).resize((600, 600), Image.Resampling.LANCZOS)
+        for r in range(2):
+            for c in range(2):
+                l, t = c * cw + margin, r * ch + margin
+                ri, b = l + cw - (margin * 2), t + ch - (margin * 2)
+                cropped = img.crop((l, t, ri, b)).resize((600, 600), Image.Resampling.LANCZOS)
                 if cropped.mode in ('RGBA', 'P'): cropped = cropped.convert('RGB')
-                buffered = BytesIO()
-                cropped.save(buffered, format="JPEG", quality=88)
-                base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buffered.getvalue()).decode()}")
+                buf = BytesIO()
+                cropped.save(buf, format="JPEG", quality=88)
+                base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buf.getvalue()).decode()}")
         return base64_images
-    except Exception as e:
-        print(f"❌ 이미지 생성 실패: {e}")
-        return []
+    except: return []
 
-# ==========================================
-# 5. 가독성 극대화 블로그 원고 작성
-# ==========================================
 def write_blog_post(category, base64_images, ref_content="", topic=""):
-    print(f"✍️ 가독성을 높인 트렌디한 원고 작성 중...")
-    blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 10px 15px; margin: 25px 0; background-color: #fff5f5; color: #333; font-style: normal; font-weight: bold; border-radius: 0 8px 8px 0;"'
-    
-    system_prompt = f"""
-    당신은 '{category}' 분야의 정보를 날카롭게 분석하는 '상위 1% 업계 내부자'입니다.
-    스마트폰으로 읽기 편하도록 1000자 내외로 짧고, 타격감 있고, 가독성 있게 작성하세요.
-    
-    [가독성 극대화 작성 규칙]
-    1. 제목: 최상단에 <h2> 태그로 도발적인 제목 1개만 작성.
-    2. 시각적 호흡: 절대 한 문단이 3문장을 넘지 않게 하세요. 문단이 끝나면 무조건 <br><br>로 넓게 띄어쓰기를 하세요.
-    3. 핵심 강조: 문단마다 가장 중요한 핵심 단어나 문장은 <strong> 태그로 굵게 표시하세요.
-    4. 인용구 활용: 본문 중간에 이 기사를 꿰뚫는 가장 뼈 때리는 한 문장을 <blockquote {blockquote_style}> 여기에 작성 </blockquote> 형태로 삽입.
-    5. 3줄 요약: 글의 맨 마지막에는 <ul>과 <li> 태그를 사용해 "바쁜 분들을 위한 핵심 요약" 3가지를 정리해 주세요.
-    6. 어조: 독자에게 직접 말을 거는 몰입감 있는 1:1 대화체를 사용하세요.
-    7. 이미지 배치: [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 태그를 각 문단이나 소제목 사이에 분산 배치하세요.
-    
-    주제/기사제목: {topic}
-    주요내용: {ref_content}
-    """
-    res = gpt_client.chat.completions.create(model="gpt-5.4-mini", messages=[{"role": "system", "content": system_prompt}], temperature=0.85)
+    blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 10px 15px; margin: 25px 0; background-color: #fff5f5; color: #333; font-weight: bold; border-radius: 0 8px 8px 0;"'
+    system_prompt = f"당신은 '{category}' 전문가입니다. 스마트폰 가독성을 극대화하여 1:1 대화체로 작성하세요. [IMAGE_1]~[IMAGE_4] 태그를 문맥에 맞게 배치하세요. 인용구는 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸주세요."
+    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content}"}], temperature=0.85)
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
-    
     title = f"[{category.upper()}] 핵심 브리핑"
     if h2_match := re.search(r'<h2>(.*?)</h2>', html_content):
         title = h2_match.group(1).strip()
         html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
-
     if base64_images:
         for i, b64 in enumerate(base64_images):
-            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>'
+            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px;"></div>'
             html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
-    
-    html_content = re.sub(r'\[IMAGE_\d+\]', '', html_content)
     return title, html_content
-
-# ==========================================
-# 6. 메인 실행부
-# ==========================================
-def get_auto_category():
-    hour = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).hour
-    mapping = {(7, 12, 17): "news", (8, 13, 18): "it", (9, 14, 19): "stock", (10, 15, 20): "travel", (11, 16, 21): "food"}
-    for hours, cat in mapping.items():
-        if hour in hours: return cat
-    return "news"
 
 def post_to_blogger(blog_id, title, content):
     token_info = json.loads(GOOGLE_OAUTH_TOKEN_STR)
@@ -210,37 +157,35 @@ def post_to_blogger(blog_id, title, content):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--category", required=True)
-    parser.add_argument("--reference_url", default="") 
-    parser.add_argument("--topic", default="", help="ignored") 
+    parser.add_argument("--reference_url", default="")
+    parser.add_argument("--topic", default="")
     args = parser.parse_args()
     
-    category = get_auto_category() if args.category == "auto" else args.category
-    blog_id = BLOG_REGISTRY.get(category)
-    
-    if not blog_id: 
-        error_msg = f"❌ [{category.upper()}] 발행 실패! 깃허브 Secrets에 {category.upper()}_BLOG_ID 가 없습니다."
-        print(error_msg)
-        if TELEGRAM_TOKEN and CHAT_ID:
-            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": error_msg})
-        exit(1)
+    category = args.category
+    if category == "auto":
+        hour = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).hour
+        mapping = {(7,12,17): "news", (8,13,18): "it", (9,14,19): "stock", (10,15,20): "travel", (11,16,21): "food"}
+        category = next((v for k, v in mapping.items() if hour in k), "news")
         
-    ref_url_for_post = args.reference_url
-    if args.reference_url:
-        ref_content, topic, _ = fetch_reference_content(args.reference_url)
+    blog_id = BLOG_REGISTRY.get(category)
+    if not blog_id: exit(1)
+        
+    ref_url = args.reference_url
+    if ref_url:
+        ref_content, topic, _ = fetch_reference_content(ref_url)
     else:
-        ref_content, topic, ref_url_for_post = generate_auto_topic(category)
+        ref_content, topic, ref_url = generate_auto_topic(category)
     
     photo_prompt = create_photo_prompt(category, topic, ref_content)
     images = generate_and_split_images_xai(photo_prompt)
     title, html_output = write_blog_post(category, images, ref_content, topic)
     
-    if ref_url_for_post:
-        html_output += f'<br><br><hr><div style="text-align:center; padding: 25px; background-color: #f8f9fa; border-radius: 12px;"><p style="margin: 0; color:#555; font-size:14px;">팩트체크가 더 필요하신가요?</p><p style="margin: 8px 0 0 0;">🔗 <a href="{ref_url_for_post}" target="_blank" rel="noopener noreferrer" style="color:#0056b3; font-weight: bold; text-decoration:none;">원문 기사 바로가기</a></p></div>'
+    if ref_url:
+        html_output += f'<br><br><hr><div style="text-align:center;"><p>🔗 <a href="{ref_url}" target="_blank">원본 콘텐츠 보기</a></p></div>'
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)
-        print(f"✅ 발행 성공: {post_url}")
         if TELEGRAM_TOKEN and CHAT_ID:
-            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 포스팅 완료!\n\n📝 {title}\n👉 {post_url}"})
+            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 포스팅 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:
-        print(f"❌ 오류: {e}")
+        print(f"Error: {e}")

@@ -128,22 +128,42 @@ def generate_and_split_images_xai(prompt):
                 buf = BytesIO()
                 cropped.save(buf, format="JPEG", quality=88)
                 base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buf.getvalue()).decode()}")
+        print("✅ xAI 이미지 4장 생성 완료!")
         return base64_images
-    except: return []
+    except Exception as e: 
+        print(f"❌ xAI 이미지 생성 실패: {e}")
+        return []
 
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 10px 15px; margin: 25px 0; background-color: #fff5f5; color: #333; font-weight: bold; border-radius: 0 8px 8px 0;"'
-    system_prompt = f"당신은 '{category}' 전문가입니다. 스마트폰 가독성을 극대화하여 1:1 대화체로 작성하세요. [IMAGE_1]~[IMAGE_4] 태그를 문맥에 맞게 배치하세요. 인용구는 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸주세요."
+    
+    # ⭐️ 줄바꿈(<br>)과 이미지 태그를 강력하게 지시
+    system_prompt = f"""
+    당신은 '{category}' 전문가입니다. 스마트폰 가독성을 극대화하여 1:1 대화체로 작성하세요.
+    문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 줄바꿈을 넉넉하게 하세요!
+    본문 중간중간에 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 라는 텍스트를 정확하게 흩뿌려서 배치하세요.
+    인용구는 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸주세요.
+    """
+    
     res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content}"}], temperature=0.85)
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     title = f"[{category.upper()}] 핵심 브리핑"
+    
     if h2_match := re.search(r'<h2>(.*?)</h2>', html_content):
         title = h2_match.group(1).strip()
         html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
+        
+    # ⭐️ 절대 실패하지 않는 이미지 삽입 안전장치!
     if base64_images:
         for i, b64 in enumerate(base64_images):
-            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px;"></div>'
-            html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
+            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>'
+            
+            # GPT가 [IMAGE_X] 태그를 썼다면 교체하고, 까먹었다면 글 맨 밑에라도 붙여넣습니다!
+            if f"[IMAGE_{i+1}]" in html_content:
+                html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
+            else:
+                html_content += f"<br>{img_tag}"
+                
     return title, html_content
 
 def post_to_blogger(blog_id, title, content):

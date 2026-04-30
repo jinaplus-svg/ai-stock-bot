@@ -83,21 +83,29 @@ def fetch_reference_content(url):
         return "", "", ""
 
 def generate_auto_topic(category):
-    print(f"🤖 [{category.upper()}] 네이버 API 검색 중...")
+    print(f"🤖 [{category.upper()}] 네이버 API 검색 중 (엣지 모드)...")
     search_queries = {"news": "사회 속보", "it": "IT 신기술 트렌드", "stock": "증시 주식 특징주", "food": "인기 맛집 핫플", "travel": "여행 가볼만한곳 추천 숙소"}
     query = search_queries.get(category, "핫이슈")
     if NAVER_CLIENT_ID and NAVER_CLIENT_SECRET:
         try:
             api_url = "https://openapi.naver.com/v1/search/news.json"
             headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
-            params = {"query": query, "display": 1, "sort": "date"}
+            # ⭐️ 재료 보강: 1개가 아닌 3개의 최신 뉴스를 긁어와서 정보를 풍성하게 만듭니다.
+            params = {"query": query, "display": 3, "sort": "date"}
             response = requests.get(api_url, headers=headers, params=params, timeout=10)
             if response.status_code == 200:
                 data = response.json()
                 if data.get('items'):
-                    item = data['items'][0]
-                    clean_desc = re.sub(r'<[^>]+>', '', item['description'])
-                    return f"[요약]: {html.unescape(clean_desc)}", html.unescape(re.sub(r'<[^>]+>', '', item['title'])), item.get('originallink') or item['link']
+                    combined_desc = ""
+                    main_title = ""
+                    main_link = ""
+                    for i, item in enumerate(data['items']):
+                        if i == 0:
+                            main_title = html.unescape(re.sub(r'<[^>]+>', '', item['title']))
+                            main_link = item.get('originallink') or item['link']
+                        clean_desc = html.unescape(re.sub(r'<[^>]+>', '', item['description']))
+                        combined_desc += f"- {clean_desc}\n"
+                    return f"[주요 뉴스 요약 브리핑]:\n{combined_desc}", main_title, main_link
         except: pass
     return "오늘의 주요 브리핑 내용입니다.", f"[{category.upper()}] 주요 브리핑", ""
 
@@ -137,28 +145,31 @@ def generate_and_split_images_xai(prompt):
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 10px 15px; margin: 25px 0; background-color: #fff5f5; color: #333; font-weight: bold; border-radius: 0 8px 8px 0;"'
     
-    # ⭐️ GPT 뇌 세팅 (업그레이드): 제목 강제 생성 및 인용구 오남용 방지
+    # ⭐️ GPT 뇌 세팅 (독설/엣지 모드): 날카로운 통찰력과 몰입감 있는 썰 풀이 지시
     system_prompt = f"""
-    당신은 '{category}' 전문가입니다. 스마트폰 가독성을 극대화하여 1:1 대화체로 작성하세요.
+    당신은 '{category}' 분야의 최고 전문가이자 날카로운 인사이트를 자랑하는 100만 유튜버/스타 블로거입니다.
+    단순한 사실 전달을 넘어, 독자의 시선을 확 끄는 도발적이고 매력적인 훅(Hook)과 비판적/분석적 시각(Edge)을 담아 글을 쓰세요.
+    지루한 뉴스 기사나 설명서처럼 쓰지 말고, 친구에게 흥미진진한 썰을 풀듯 1:1 대화체로 몰입감 있게 작성하세요.
     
     [필수 작성 규칙]
-    1. 글의 제일 첫 줄은 무조건 <h2>시선을 끄는 훅(Hook) 제목</h2> 형태로 시작하세요. (인용구 등 다른 태그에 절대 넣지 마세요!)
-    2. 문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 줄바꿈을 넉넉하게 하세요.
-    3. 본문 중간중간에 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 정확하게 흩뿌려서 배치하세요.
-    4. 인용구는 본문 중 아주 중요한 문장에만 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸주세요.
+    1. 글의 제일 첫 줄은 무조건 <h2>시선을 확 끄는 도발적인 어그로성 제목</h2> 형태로 시작하세요. (인용구 등 다른 태그 절대 금지!)
+    2. 제공된 내용이 짧더라도, 당신의 배경 지식을 총동원하여 '왜 이 사건이 중요한지', '앞으로 어떻게 될 것인지' 깊이 있는 인사이트를 덧붙여 풍성하게 작성하세요.
+    3. 문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 줄바꿈을 넉넉하게 하세요.
+    4. 본문 중간중간에 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 정확하게 흩뿌려서 배치하세요.
+    5. 인용구는 본문의 뼈를 때리는 핵심 펀치라인이나 명언에만 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸주세요.
     """
     
-    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content}"}], temperature=0.85)
+    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n내용(참고자료): {ref_content}"}], temperature=0.85)
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
     # 기본 제목
     title = f"[{category.upper()}] 핵심 브리핑"
     
-    # ⭐️ 똑똑해진 <h2> 태그 추출기 (속성이 있거나 <b> 태그가 있어도 완벽하게 추출)
+    # <h2> 태그 추출기
     h2_match = re.search(r'<h2[^>]*>(.*?)</h2>', html_content, re.IGNORECASE | re.DOTALL)
     if h2_match:
         raw_title = h2_match.group(1).strip()
-        title = re.sub(r'<[^>]+>', '', raw_title) # 추출된 제목 안에 남아있는 모든 HTML 태그 싹쓸이
+        title = re.sub(r'<[^>]+>', '', raw_title) 
         html_content = re.sub(r'<h2[^>]*>.*?</h2>', '', html_content, count=1, flags=re.IGNORECASE | re.DOTALL).strip()
         
     # 절대 실패하지 않는 이미지 삽입 안전장치
@@ -208,11 +219,11 @@ if __name__ == "__main__":
     title, html_output = write_blog_post(category, images, ref_content, topic)
     
     if ref_url:
-        html_output += f'<br><br><hr><div style="text-align:center;"><p>🔗 <a href="{ref_url}" target="_blank">원본 콘텐츠 보기</a></p></div>'
+        html_output += f'<br><br><hr><div style="text-align:center;"><p>🔗 <a href="{ref_url}" target="_blank">관련 뉴스 원문 보기</a></p></div>'
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)
         if TELEGRAM_TOKEN and CHAT_ID:
-            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 포스팅 완료!\n📝 {title}\n👉 {post_url}"})
+            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 엣지 있는 포스팅 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:
         print(f"Error: {e}")

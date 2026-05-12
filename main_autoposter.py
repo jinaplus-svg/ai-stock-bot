@@ -39,7 +39,7 @@ xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 # ==========================================
-# 2. 크롤링 및 유튜브 자막 추출 (알맹이 추출 강화!)
+# 2. 크롤링 및 유튜브 자막 추출 (강력한 알맹이 추출!)
 # ==========================================
 def get_youtube_content(url):
     video_id = None
@@ -59,7 +59,7 @@ def get_youtube_content(url):
         soup = BeautifulSoup(res.text, 'html.parser')
         title = soup.title.string.replace(" - YouTube", "") if soup.title else "유튜브 영상 분석"
         
-        return f"[유튜브 자막 내용]:\n{transcript_text[:3500]}", title, url
+        return f"[유튜브 원본 스크립트]:\n{transcript_text[:4000]}", title, url
     except Exception as e:
         print(f"⚠️ 유튜브 자막 추출 실패: {e}")
         return "자막을 읽을 수 없는 영상입니다.", "유튜브 영상", url
@@ -70,23 +70,39 @@ def fetch_reference_content(url):
         return get_youtube_content(url)
         
     try:
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+        # ⭐️ 네이버 등 포털 사이트의 봇 차단을 뚫기 위한 강력한 사람 위장 헤더
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Referer": "https://search.naver.com/"
+        }
         res = requests.get(url, headers=headers, timeout=15)
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         
         title = (soup.find('meta', property='og:title') or soup.find('meta', name='title') or soup.title).get('content', soup.title.text if soup.title else "참조")
         
-        # ⭐️ 기사 본문(알맹이)만 쏙 빼내는 로직 (쓸데없는 메뉴/광고 텍스트 제외)
-        article_body = soup.find('div', id='dic_area') or soup.find('div', id='articeBody') or soup.find('div', class_='news_contents') or soup.find('article')
+        # ⭐️ 네이버 뉴스 및 주요 언론사 본문을 정확히 타겟팅하여 긁어옵니다.
+        article_body = (soup.find('article', id='dic_area') or 
+                        soup.find('div', id='dic_area') or 
+                        soup.find('div', id='articeBody') or 
+                        soup.find('div', id='newsct_article') or 
+                        soup.find('div', class_='news_contents') or 
+                        soup.find('article'))
         
         if article_body:
-            text_content = article_body.get_text(separator=' ', strip=True)
+            # 불필요한 태그 제거 (광고, 기자 정보 등)
+            for el in article_body.find_all(['script', 'style', 'em', 'span']):
+                if el.name == 'span' and 'end_photo_org' in el.get('class', []): continue
+                el.decompose()
+            text_content = article_body.get_text(separator='\n', strip=True)
         else:
             for script in soup(["script", "style", "nav", "footer", "header", "aside"]): script.decompose()
-            text_content = soup.get_text(separator=' ', strip=True)
+            text_content = soup.get_text(separator='\n', strip=True)
             
-        return f"[본문 핵심 내용]: {text_content[:3500]}", title, url
+        # 넉넉하게 4000자까지 긁어와서 GPT에게 팩트를 가득 먹여줍니다.
+        return f"[기사/본문 핵심 팩트 원문]:\n{text_content[:4000]}", title, url
     except Exception as e:
         print(f"⚠️ 크롤링 에러: {e}")
         return "", "", url
@@ -100,7 +116,7 @@ def generate_auto_topic(category):
         try:
             api_url = "https://openapi.naver.com/v1/search/news.json"
             headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
-            params = {"query": query, "display": 3, "sort": "sim"} # 관련도 높은 기사 3개 검색
+            params = {"query": query, "display": 3, "sort": "sim"}
             response = requests.get(api_url, headers=headers, params=params, timeout=10)
             
             if response.status_code == 200:
@@ -109,12 +125,11 @@ def generate_auto_topic(category):
                     link = item.get('originallink') or item['link']
                     topic_title = html.unescape(re.sub(r'<[^>]+>', '', item['title']))
                     
-                    # ⭐️ 단순히 요약만 가져오지 않고, 실제 기사 링크로 들어가서 3500자를 긁어옵니다!
                     ref_content, _, _ = fetch_reference_content(link)
                     
-                    # 알맹이가 충분히 있는 기사를 찾으면 즉시 채택!
+                    # 텍스트가 짧으면 거르고 알맹이가 꽉 찬 기사만 선별!
                     if len(ref_content) > 300:
-                        print(f"✅ 알맹이 확보 완료: {topic_title}")
+                        print(f"✅ 팩트 알맹이 확보 완료: {topic_title}")
                         return ref_content, topic_title, link
                         
         except Exception as e: 
@@ -156,22 +171,33 @@ def generate_and_split_images_xai(prompt):
         return []
 
 def write_blog_post(category, base64_images, ref_content="", topic=""):
-    blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 10px 15px; margin: 25px 0; background-color: #fff5f5; color: #333; font-weight: bold; border-radius: 0 8px 8px 0;"'
+    blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 15px 20px; margin: 30px 0; background-color: #fcf8f8; color: #111; font-weight: 800; font-size: 1.1em; border-radius: 0 8px 8px 0;"'
     
-    # ⭐️ GPT에게 수치와 팩트를 넣어 깊이 있는 '알맹이'를 쓰도록 강력하게 지시합니다!
+    # ⭐️ 밋밋한 텍스트를 날카로운 통찰과 팩트 폭격으로 바꿔줄 '엣지 있는' 프롬프트 세팅
     system_prompt = f"""
-    당신은 '{category}' 분야의 수석 에디터이자 심층 분석 블로거입니다. 스마트폰 가독성을 극대화하여 1:1 대화체로 작성하세요.
+    당신은 '{category}' 분야의 최고 전문가이자, 거침없고 날카로운 통찰력을 가진 1티어 인플루언서입니다.
+    기계적인 기사 요약은 절대 금지합니다. 독자들이 읽고 무릎을 탁 칠 만한 '엣지 있는 시각'과 '비판적/심층적 분석'을 제공해야 합니다.
+    스마트폰 가독성을 극대화하여 1:1 대화체(해요체/합쇼체 혼용)로 작성하세요.
     
-    [핵심 지시사항 - 알맹이 채우기]
-    1. 제공된 [내용]의 팩트, 수치, 구체적인 사실을 절대 누락하지 마세요. 
-    2. 단순 요약이 아니라, 독자가 얻어갈 수 있는 '인사이트'나 '깊이 있는 해설'을 덧붙여 풍성하게(최소 1000자 이상) 작성하세요.
-    3. 글의 제일 첫 줄에는 반드시 <h2>여기에 시선을 끄는 제목</h2> 형태로 제목을 작성하세요.
-    4. 문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 줄바꿈을 넉넉하게 하세요.
-    5. 본문 중간중간에 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 라는 텍스트를 정확하게 흩뿌려서 배치하세요.
-    6. 중요한 핵심 문장이나 인용구는 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸주세요.
+    [핵심 지시사항 - 엣지 있는 알맹이 채우기]
+    1. [팩트 폭격]: 제공된 기사 원문에서 구체적인 '수치', '통계', '고유명사', '발언'을 절대 누락하지 말고 본문 곳곳에 강력한 근거로 배치하세요.
+    2. [날카로운 인사이트]: 이 사건/이슈의 이면에는 어떤 진실이 있는지, 앞으로 우리에게 어떤 영향을 미칠지 본인만의 도발적이고 예리한 의견을 반드시 포함하세요.
+    3. [가독성 및 포맷]:
+       - 글의 제일 첫 줄에는 반드시 <h2>시선을 확 끄는 도발적인 제목</h2> 형태로 작성하세요.
+       - 문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 여백을 넉넉하게 주세요.
+       - 중요한 팩트나 강조할 문장은 <strong> 텍스트 </strong> 태그를 사용해 시각적으로 돋보이게 하세요.
+    4. 본문 내용 흐름에 맞춰 중간중간에 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 라는 텍스트를 자연스럽게 흩뿌려서 배치하세요.
+    5. 글의 마무리나 가장 뼈때리는 핵심 요약 한 줄은 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸서 강렬하게 마무리하세요.
     """
     
-    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n\n분석할 알맹이 내용:\n{ref_content}"}], temperature=0.85)
+    res = gpt_client.chat.completions.create(
+        model="gpt-4o-mini", 
+        messages=[
+            {"role": "system", "content": system_prompt}, 
+            {"role": "user", "content": f"주제: {topic}\n\n[분석할 기사 원문 팩트]:\n{ref_content}"}
+        ], 
+        temperature=0.85
+    )
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
     title = f"[{category.upper()}] 심층 브리핑"
@@ -182,12 +208,12 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
         
     if base64_images:
         for i, b64 in enumerate(base64_images):
-            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>'
+            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15);"></div>'
             
             if f"[IMAGE_{i+1}]" in html_content:
                 html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
             else:
-                html_content += f"<br>{img_tag}"
+                html_content += f"<br><br>{img_tag}"
                 
     return title, html_content
 
@@ -226,11 +252,11 @@ if __name__ == "__main__":
     title, html_output = write_blog_post(category, images, ref_content, topic)
     
     if ref_url:
-        html_output += f'<br><br><hr><div style="text-align:center;"><p>🔗 <a href="{ref_url}" target="_blank">관련 상세 기사 보러가기</a></p></div>'
+        html_output += f'<br><br><hr><div style="text-align:center; margin-top: 30px;"><p style="font-size: 1.1em; font-weight: bold;">🔗 <a href="{ref_url}" target="_blank" style="color: #0056b3; text-decoration: none;">관련 상세 기사 원문 보러가기</a></p></div>'
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)
         if TELEGRAM_TOKEN and CHAT_ID:
-            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 심층 포스팅 완료!\n📝 {title}\n👉 {post_url}"})
+            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 엣지있는 심층 포스팅 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:
         print(f"Error: {e}")

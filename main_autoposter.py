@@ -13,6 +13,7 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
+from bs4 import BeautifulSoup
 
 # ==========================================
 # 1. 설정 및 API 키 로드
@@ -22,7 +23,11 @@ XAI_API_KEY = os.environ.get("XAI")
 GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
+
+# 쌍끌이 엔진(Tavily + Naver) 키
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
+NAVER_CLIENT_ID = os.environ.get("NAVER_CLIENT_ID")
+NAVER_CLIENT_SECRET = os.environ.get("NAVER_CLIENT_SECRET")
 
 BLOG_REGISTRY = {
     "it": os.environ.get("IT_BLOG_ID"),
@@ -33,11 +38,11 @@ BLOG_REGISTRY = {
 }
 
 gpt_client = OpenAI(api_key=OPENAI_API_KEY)
-xai_client = OpenAI(api_key=XAI_API_KEY, base_url="[https://api.x.ai/v1](https://api.x.ai/v1)")
-SCOPES = ['[https://www.googleapis.com/auth/blogger](https://www.googleapis.com/auth/blogger)']
+xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
+SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 # ==========================================
-# 2. 강력한 Tavily AI 검색 엔진 (뉴스 탐색 최적화)
+# 2. 이중 방어 쌍끌이 뉴스 검색 엔진
 # ==========================================
 def fetch_reference_content(url):
     if not url: return "", "", ""
@@ -53,7 +58,7 @@ def fetch_reference_content(url):
     if TAVILY_API_KEY:
         try:
             payload = {"api_key": TAVILY_API_KEY, "query": url, "search_depth": "advanced", "include_raw_content": True}
-            res = requests.post("[https://api.tavily.com/search](https://api.tavily.com/search)", json=payload, timeout=20)
+            res = requests.post("https://api.tavily.com/search", json=payload, timeout=20)
             if res.status_code == 200:
                 data = res.json()
                 if data.get("results"):
@@ -63,61 +68,59 @@ def fetch_reference_content(url):
             print(f"URL 추출 에러: {e}")
     return "", "", url
 
-def generate_auto_topic_tavily(category):
-    print(f"🤖 [{category.upper()}] Tavily AI 검색 엔진으로 봇 차단 없이 최신 기사 원문 추출 중...")
-    
-    if not TAVILY_API_KEY:
-        print("⚠️ TAVILY_API_KEY가 설정되지 않았습니다.")
-        return "", "", ""
-
+def generate_auto_topic(category):
+    print(f"🤖 [{category.upper()}] 최신 기사 팩트 수집 중...")
     kst = datetime.timezone(datetime.timedelta(hours=9))
     today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
 
-    # ⭐️ 주말/휴일 등 뉴스가 없는 날을 대비해 검색어를 더 스마트하게 구성
-    search_queries = {
-        "news": f"{today_str} 한국 주요 정치 사회 핫이슈 뉴스", 
-        "it": f"{today_str} IT 테크 AI 신제품 혁신 기술 뉴스", 
-        "stock": f"{today_str} 주식 증시 경제 특징주 기업 실적 뉴스", 
-        "food": f"최신 한국 외식 식품 프랜차이즈 트렌드", 
-        "travel": f"최신 국내외 여행 관광 항공 핫플 트렌드"
-    }
-    query = search_queries.get(category, f"{today_str} 주요 핫이슈")
-    
-    headers = {"Content-Type": "application/json"}
-    payload = {
-        "api_key": TAVILY_API_KEY,
-        "query": query,
-        "search_depth": "advanced", 
-        "include_raw_content": True, 
-        "max_results": 5, 
-        "topic": "news", 
-        "days": 3 # ⭐️ 1일로 하면 주말에 뉴스가 없을 수 있으니 3일 내 특급 기사로 보장!
-    }
-    
-    try:
-        response = requests.post("[https://api.tavily.com/search](https://api.tavily.com/search)", json=payload, headers=headers, timeout=20)
-        
-        if response.status_code == 200:
-            data = response.json()
-            for result in data.get('results', []):
-                title = result.get('title', '제목 없음')
-                url = result.get('url', '')
-                raw_content = result.get('raw_content', '')
-                content = result.get('content', '')
-                
-                final_content = raw_content if len(raw_content) > 300 else content
-                
-                # ⭐️ 본문이 500자 이상 확보된 확실한 기사만 선택!
-                if len(final_content) > 500:
-                    print(f"✅ Tavily 최신 팩트 확보 완료: {title}")
-                    return f"[Tavily AI 추출 최신 기사 원문]:\n{final_content[:4000]}", title, url
-                    
-            print("⚠️ 조건에 맞는 충분히 긴 기사를 찾지 못했습니다.")
-        else:
-            print(f"⚠️ Tavily API 호출 실패: {response.status_code}")
-            
-    except Exception as e:
-        print(f"⚠️ Tavily 검색 중 에러: {e}")
+    # 1차 시도: Tavily AI 검색
+    if TAVILY_API_KEY:
+        try:
+            search_queries = {
+                "news": "한국 주요 정치 사회 속보 핫이슈", 
+                "it": "IT 테크 인공지능 스마트폰 신제품 혁신 기술", 
+                "stock": "주식 증시 특징주 경제 시황", 
+                "food": "한국 외식 식품 트렌드 인기 맛집", 
+                "travel": "국내외 여행 항공 관광 핫플 트렌드"
+            }
+            query = search_queries.get(category, "주요 핫이슈")
+            payload = {
+                "api_key": TAVILY_API_KEY, 
+                "query": f"{today_str} {query}", 
+                "search_depth": "advanced", 
+                "include_raw_content": True, 
+                "max_results": 3,
+                "days": 3 # 주말 고려 3일치 검색
+            }
+            res = requests.post("https://api.tavily.com/search", json=payload, timeout=15)
+            if res.status_code == 200:
+                for result in res.json().get('results', []):
+                    title = result.get('title', '제목 없음')
+                    content = result.get('raw_content') or result.get('content', '')
+                    if len(content) > 200:
+                        print(f"✅ [Tavily] 팩트 확보: {title}")
+                        return f"[최신 기사 원문]:\n{content[:4000]}", title, result.get('url', '')
+        except Exception as e:
+            print(f"⚠️ Tavily 검색 에러: {e}")
+
+    # 2차 시도: Tavily 실패 시 네이버 API 백업 출동
+    if NAVER_CLIENT_ID and NAVER_CLIENT_SECRET:
+        print("⚠️ Tavily 검색 실패. 네이버 API(백업)로 최신 뉴스를 검색합니다.")
+        try:
+            queries = {"news": "사회 속보", "it": "IT 신기술", "stock": "증시 특징주", "food": "맛집 핫플", "travel": "여행 가볼만한곳"}
+            headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
+            params = {"query": queries.get(category, "핫이슈"), "display": 3, "sort": "date"}
+            res = requests.get("https://openapi.naver.com/v1/search/news.json", headers=headers, params=params, timeout=10)
+            if res.status_code == 200:
+                for item in res.json().get('items', []):
+                    title = html.unescape(re.sub(r'<[^>]+>', '', item['title']))
+                    desc = html.unescape(re.sub(r'<[^>]+>', '', item['description']))
+                    link = item.get('originallink') or item['link']
+                    if len(desc) > 30:
+                        print(f"✅ [Naver] 백업 팩트 확보: {title}")
+                        return f"[네이버 최신 기사 요약]:\n{desc}\n\n이 기사를 바탕으로 깊이 있게 상상하여 전문가의 시각을 더해 아주 길게 작성하세요.", title, link
+        except Exception as e:
+            print(f"⚠️ 네이버 검색 에러: {e}")
             
     return "", "", ""
 
@@ -127,29 +130,18 @@ def generate_auto_topic_tavily(category):
 def create_photo_prompt(category, topic, ref_content):
     system_msg = f"""
     당신은 퓰리처상을 받은 보도사진 편집장입니다. 
-    다음 최신 기사 내용을 철저히 분석하여, 이 뉴스/이슈의 핵심 장면을 가장 직관적이고 상징적으로 보여주는 4분할 컷(4-panel photo collage)용 영문 프롬프트를 작성하세요.
-    - 기업명, 신기술, 경제 상황(상승/하락)의 뉘앙스를 시각적으로 정확히 묘사할 것. (자연 풍경 절대 금지)
-    - 3D CG, 일러스트레이션 금지. 8k 해상도의 극사실주의 실사(Photorealistic)로 묘사할 것.
-    - 텍스트나 글자는 사진에 포함되지 않게 할 것.
+    기사 내용을 분석하여 이슈의 핵심 장면을 보여주는 4분할 컷(4-panel photo collage)용 영문 프롬프트를 작성하세요.
+    - 3D CG, 일러스트레이션 금지. 8k 극사실주의 실사(Photorealistic)로 묘사할 것.
+    - 텍스트나 글자는 포함하지 말 것. 의미없는 풍경 금지.
     """
-    res = gpt_client.chat.completions.create(
-        model="gpt-4o-mini", 
-        messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n\n기사 팩트:\n{ref_content[:1500]}"}], 
-        temperature=0.7
-    )
+    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content[:1500]}"}], temperature=0.7)
     return res.choices[0].message.content.strip()
 
 def generate_and_split_images_xai(prompt):
     final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Photorealistic, cinematic lighting, no text, no borders."
     try:
-        response = xai_client.images.generate(
-            model="grok-imagine-image", 
-            prompt=final_prompt, 
-            extra_body={"aspect_ratio": "1:1", "resolution": "2k"}, 
-            n=1
-        )
-        img_data = requests.get(response.data[0].url).content
-        img = Image.open(BytesIO(img_data))
+        response = xai_client.images.generate(model="grok-imagine-image", prompt=final_prompt, extra_body={"aspect_ratio": "1:1", "resolution": "2k"}, n=1)
+        img = Image.open(BytesIO(requests.get(response.data[0].url).content))
         w, h = img.size
         cw, ch = w // 2, h // 2
         margin = 15
@@ -163,10 +155,8 @@ def generate_and_split_images_xai(prompt):
                 buf = BytesIO()
                 cropped.save(buf, format="JPEG", quality=88)
                 base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buf.getvalue()).decode()}")
-        print("✅ xAI 이미지 4장 생성 완료!")
         return base64_images
-    except Exception as e: 
-        print(f"❌ xAI 이미지 생성 실패: {e}")
+    except:
         return []
 
 def write_blog_post(category, base64_images, ref_content="", topic=""):
@@ -178,81 +168,66 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     kst = datetime.timezone(datetime.timedelta(hours=9))
     today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
     
-    # ⭐️ 초일류 유튜버/블로거 빙의 강력 프롬프트
     system_prompt = f"""
-    당신은 한국 최고의 탑티어 비즈니스/IT 트렌드 블로거이자 100만 유튜버 수준의 스토리텔러입니다. (예: 슈카월드, 삼프로TV 스타일)
-    절대 기계적인 기사 요약이나 딱딱한 뉴스처럼 쓰지 마세요. 독자가 옆에서 흥미진진한 썰을 듣는 것처럼 '재미있고 엣지있게' 풀어내야 합니다.
+    당신은 한국 최고의 탑티어 비즈니스/IT 트렌드 블로거이자 100만 유튜버 수준의 썰을 푸는 스토리텔러입니다. (예: 슈카월드 스타일)
+    기계적인 기사 요약은 절대 금지합니다. 독자가 옆에서 듣는 것처럼 흥미진진하고 엣지있게 파헤쳐주세요.
     
-    🚨 [초강력 금지 규칙 - 반드시 지킬 것!]
-    1. "markdown", "```html", "```" 같은 코드 블록 기호나 마크다운 문법(**, # 등)은 절대 출력하지 마세요! 오직 순수 HTML 태그와 텍스트로만 대답하세요.
-    2. 'A사', 'B사' 같은 익명 처리 절대 금지! 100% 실제 기업명, 인물명, 금액, 퍼센트 수치를 당당하게 그대로 쓰세요.
-    3. 글이 짧으면 안 됩니다. 최소 2000자 이상, 7~8개의 문단으로 아주 풍성하고 깊이 있게 썰을 푸세요.
+    🚨 [초강력 금지 규칙 - 위반 시 무조건 감점]
+    1. 마크다운 기호(```, markdown, html, **, #)는 절대로 출력하지 마세요! 오직 순수 HTML 태그와 텍스트만 사용.
+    2. "[도입부]", "[본론]", "[결론]", "도입부:" 같이 목차를 나타내는 괄호나 단어는 절대로 본문에 쓰지 마세요! 대화하듯 자연스럽게 이어가세요.
+    3. 'A사', 'B사' 같은 익명 처리 절대 금지! 100% 실제 기업명, 수치를 당당하게 명시.
+    4. 글은 최소 2000자 이상, 7개 이상의 문단으로 아주 길고 상세하게 썰을 푸세요.
     
     [완벽한 칼럼 포스팅 구조]
     - 첫 줄: <h2>시선을 훅 끄는 도발적이고 재미있는 제목</h2>
-    - [도입부 - 어그로 끌기]: "여러분, 혹시 오늘 이 난리 난 소식 들으셨나요?" 처럼 독자의 호기심을 극도로 자극하며 시작. 사건의 발단을 재미있게 설명.
-    - [본론 1 - 팩트 폭격]: 뉴스 원문에 있는 구체적 수치, 통계, 발언을 나열하며 사건의 스케일을 짚어줍니다.
-    - [본론 2 - 이면의 진실]: 언론에서 대충 넘어가는 진짜 속내, "도대체 왜 이런 일이 벌어졌을까?"에 대한 날카로운 뇌피셜과 분석.
-    - [시각적 자료 - 표]: 원문의 핵심 수치, 비교 데이터, 관련주 등을 반드시 1개 이상의 HTML <table> 태그로 깔끔하게 정리. (스타일 가이드 적용)
+    - "여러분, 혹시 오늘 이 소식 들으셨나요?" 처럼 어그로를 끌며 사건의 발단을 자연스럽게 시작.
+    - 뉴스 원문에 있는 구체적 수치, 통계를 나열하며 언론에서 대충 넘어가는 진짜 속내, 날카로운 분석 진행.
+    - 원문의 핵심 수치나 정보를 반드시 1개 이상의 HTML <table> 태그로 정리.
        <table {table_style}>
          <thead><tr><th {th_style}>항목1</th><th {th_style}>항목2</th></tr></thead>
-         <tbody><tr><td {td_style}>실제 데이터</td><td {td_style}>실제 수치</td></tr></tbody>
+         <tbody><tr><td {td_style}>데이터</td><td {td_style}>수치</td></tr></tbody>
        </table>
-    - [결론 - 그래서 우리는?]: "결론적으로 우리는 이렇게 대비해야 합니다"라는 뼈때리는 통찰과 조언.
-    - 마지막 줄: 글을 관통하는 가장 엣지있는 한 줄 요약을 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸서 강렬하게 마무리.
+    - 뼈때리는 통찰과 조언으로 마무리.
+    - 가장 마지막 줄: 엣지있는 한 줄 요약을 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸기.
     
-    [HTML 가독성 및 이미지 배치 규칙]
-    - 문단과 문단 사이는 반드시 <br><br> 태그를 넣어 여백을 시원하게 주세요.
-    - 중요한 단어나 숫자는 <strong style="color:#d32f2f;">텍스트</strong> 로 붉은색 강조를 주세요.
-    - [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 글의 흐름(서론, 본론, 결론)에 맞춰 골고루 흩뿌리세요. 한 곳에 몰려있으면 절대 안 됩니다.
+    [가독성 규칙]
+    - 문단 사이는 반드시 <br><br> 태그를 넣어 여백을 주세요.
+    - 강조할 단어는 <strong style="color:#d32f2f;">텍스트</strong> 로 붉은색 강조.
+    - [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 글의 흐름에 맞춰 골고루 흩뿌리세요.
     """
     
-    res = gpt_client.chat.completions.create(
-        model="gpt-4o", 
-        messages=[
-            {"role": "system", "content": system_prompt}, 
-            {"role": "user", "content": f"주제: {topic}\n\n[오늘자({today_str}) 최신 특급 기사 팩트 원문]:\n{ref_content}"}
-        ], 
-        temperature=0.85
-    )
+    res = gpt_client.chat.completions.create(model="gpt-4o", messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n\n[오늘자({today_str}) 최신 특급 기사 팩트 원문]:\n{ref_content}"}], temperature=0.85)
     
-    # ⭐️ 지긋지긋한 마크다운 찌꺼기 완벽 청소 로직
     html_content = res.choices[0].message.content.strip()
     
-    # ```html, ```markdown, ``` 등의 코드블럭 마커 완전 제거
-    html_content = re.sub(r'```[a-zA-Z]*\n?', '', html_content)
+    # ⭐️ 1. 마크다운 기호 완벽 청소
+    html_content = re.sub(r'^```[a-zA-Z]*\n', '', html_content)
+    html_content = re.sub(r'```$', '', html_content).strip()
     html_content = html_content.replace('```', '')
-    
-    # 텍스트 앞에 간혹 붙는 markdown 글자 제거
-    if html_content.lower().startswith('markdown'):
-        html_content = html_content[8:].strip()
-    if html_content.lower().startswith('html'):
-        html_content = html_content[4:].strip()
-        
-    # ** 굵은 글씨 마크다운 찌꺼기 제거 (안전장치)
+    if html_content.lower().startswith('markdown'): html_content = html_content[8:].strip()
+    if html_content.lower().startswith('html'): html_content = html_content[4:].strip()
     html_content = html_content.replace('**', '')
+    
+    # ⭐️ 2. 꼴보기 싫은 [도입부], [본론] 등 시스템 괄호 강제 삭제
+    html_content = re.sub(r'\[(도입부|본론|결론|본론\s?\d|팩트 체크 표|숨겨진 진실|분석)\]:?', '', html_content)
 
-    # 제목 추출 및 정리
     title = f"[{category.upper()}] 스페셜 브리핑"
     if h2_match := re.search(r'<h2>(.*?)</h2>', html_content):
-        title = h2_match.group(1).strip()
-        title = title.replace('*', '').replace('#', '') 
+        title = h2_match.group(1).strip().replace('#', '')
         html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
         
-    # 파이썬 강제 사진 분산 배치 (글이 길어져서 훨씬 자연스럽게 박힙니다)
+    # ⭐️ 3. 이미지 자연스러운 강제 분산 배치
     if base64_images:
         img_tags = [f'<div style="text-align:center; margin: 45px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.12);"></div>' for b64 in base64_images]
         
-        # 만약 GPT가 [IMAGE_X] 태그를 충실히 넣었다면 치환
         for i, tag in enumerate(img_tags):
             marker = f"[IMAGE_{i+1}]"
             if marker in html_content:
                 html_content = html_content.replace(marker, tag)
             else:
-                # 안 넣었으면 파이썬이 강제로 징검다리 배치
                 paragraphs = html_content.split('<br><br>')
                 if len(paragraphs) > 2:
-                    insert_idx = (len(paragraphs) // len(img_tags)) * i
+                    insert_idx = max(1, (len(paragraphs) // len(img_tags)) * i)
                     if insert_idx < len(paragraphs):
                         paragraphs[insert_idx] = tag + "<br><br>" + paragraphs[insert_idx]
                         html_content = '<br><br>'.join(paragraphs)
@@ -261,6 +236,9 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
                 else:
                     html_content += f"<br><br>{tag}"
 
+    # 처리 안된 마커 최종 삭제
+    for i in range(1, 5): html_content = html_content.replace(f"[IMAGE_{i}]", "")
+    
     return title, html_content
 
 def post_to_blogger(blog_id, title, content):
@@ -291,14 +269,11 @@ if __name__ == "__main__":
     if ref_url:
         ref_content, topic, _ = fetch_reference_content(ref_url)
     else:
-        # Tavily 엔진 호출
-        ref_content, topic, ref_url = generate_auto_topic_tavily(category)
+        ref_content, topic, ref_url = generate_auto_topic(category)
     
-    # ⭐️ 에러 방지: 크롤링 실패로 내용이 아예 없으면 포스팅 자체를 깔끔하게 취소합니다.
     if not ref_content:
         print("❌ 유효한 기사 팩트를 찾지 못해 포스팅을 중단합니다.")
-        if TELEGRAM_TOKEN and CHAT_ID:
-            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚠️ [{category.upper()}] 적합한 뉴스를 찾지 못해 포스팅을 건너뛰었습니다."})
+        if TELEGRAM_TOKEN and CHAT_ID: requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚠️ [{category.upper()}] 검색 엔진을 총동원했으나 적합한 뉴스를 찾지 못했습니다."})
         exit(0)
         
     photo_prompt = create_photo_prompt(category, topic, ref_content)

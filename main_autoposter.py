@@ -3,7 +3,6 @@ import json
 import argparse
 import base64
 import requests
-import xml.etree.ElementTree as ET
 import datetime
 import re
 import html
@@ -13,7 +12,6 @@ from openai import OpenAI
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
-from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 
 # ==========================================
@@ -24,6 +22,9 @@ XAI_API_KEY = os.environ.get("XAI")
 GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
+
+# ⭐️ Tavily API 키 로드 (시크릿에 있는 키 사용)
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 
 BLOG_REGISTRY = {
     "it": os.environ.get("IT_BLOG_ID"),
@@ -38,100 +39,86 @@ xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 # ==========================================
-# 2. 강력한 크롤링 & 구글 글로벌 뉴스 엔진
+# 2. 강력한 Tavily AI 검색 엔진
 # ==========================================
-def get_youtube_content(url):
-    video_id = None
-    if "youtu.be" in url:
-        video_id = url.split("/")[-1].split("?")[0]
-    elif "youtube.com" in url:
-        video_id = re.search(r"v=([a-zA-Z0-9_-]+)", url).group(1)
-    
-    if not video_id: return "", "유튜브 영상", url
-    print(f"📺 유튜브 영상 분석 중... (ID: {video_id})")
-    try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
-        transcript_text = " ".join([item['text'] for item in transcript_list])
-        
-        res = requests.get(url)
-        soup = BeautifulSoup(res.text, 'html.parser')
-        title = soup.title.string.replace(" - YouTube", "") if soup.title else "유튜브 영상 분석"
-        
-        return f"[유튜브 원본 스크립트]:\n{transcript_text[:4000]}", title, url
-    except Exception as e:
-        print(f"⚠️ 유튜브 자막 추출 실패: {e}")
-        return "자막을 읽을 수 없는 영상입니다.", "유튜브 영상", url
-
 def fetch_reference_content(url):
+    # 유튜브 링크 처리 유지
     if not url: return "", "", ""
     if "youtube.com" in url or "youtu.be" in url:
-        return get_youtube_content(url)
-        
-    try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-            "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-        }
-        res = requests.get(url, headers=headers, timeout=15)
-        res.encoding = 'utf-8'
-        soup = BeautifulSoup(res.text, 'html.parser')
-        
-        title = (soup.find('meta', property='og:title') or soup.find('meta', name='title') or soup.title).get('content', soup.title.text if soup.title else "참조 기사")
-        
-        # 쓸데없는 태그 제거
-        for script in soup(["script", "style", "nav", "footer", "header", "aside", "form"]): 
-            script.decompose()
+        try:
+            video_id = url.split("/")[-1].split("?")[0] if "youtu.be" in url else re.search(r"v=([a-zA-Z0-9_-]+)", url).group(1)
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+            transcript_text = " ".join([item['text'] for item in transcript_list])
+            return f"[유튜브 스크립트]:\n{transcript_text[:4000]}", "유튜브 분석", url
+        except:
+            return "자막 추출 실패", "유튜브", url
             
-        # 모든 p 태그를 긁어서 실제 '알맹이 문장'만 조립 (봇 차단 회피)
-        paragraphs = soup.find_all('p')
-        text_content = ""
-        if paragraphs:
-            valid_p = [p.get_text(strip=True) for p in paragraphs if len(p.get_text(strip=True)) > 30]
-            text_content = '\n'.join(valid_p)
-            
-        if len(text_content) < 200:
-            text_content = soup.get_text(separator='\n', strip=True)
-            
-        return text_content[:4000], title, url
-    except Exception as e:
-        print(f"⚠️ 크롤링 에러: {e}")
-        return "", "", url
+    # 일반 URL이 직접 들어오면 Tavily로 해당 URL의 본문을 긁어옴
+    if TAVILY_API_KEY:
+        try:
+            payload = {"api_key": TAVILY_API_KEY, "query": url, "search_depth": "advanced", "include_raw_content": True}
+            res = requests.post("https://api.tavily.com/search", json=payload, timeout=20)
+            if res.status_code == 200:
+                data = res.json()
+                if data.get("results"):
+                    content = data["results"][0].get("raw_content") or data["results"][0].get("content")
+                    return content[:4000], data["results"][0].get("title", "참고 기사"), url
+        except Exception as e:
+            print(f"URL 추출 에러: {e}")
+    return "", "", url
 
-def generate_auto_topic_google_news(category):
-    print(f"🤖 [{category.upper()}] 구글 글로벌 뉴스(RSS) 엔진으로 최신 기사 탐색 중...")
+def generate_auto_topic_tavily(category):
+    print(f"🤖 [{category.upper()}] Tavily AI 검색 엔진으로 봇 차단 없이 기사 원문 추출 중...")
     
-    # 구글 뉴스 검색어 세팅 (최근 1일 이내 데이터만)
+    if not TAVILY_API_KEY:
+        print("⚠️ TAVILY_API_KEY가 설정되지 않았습니다.")
+        return "API 키 누락", "키 설정 확인", ""
+
+    # Tavily 전용 검색 쿼리 (정확도 극대화)
     search_queries = {
-        "news": "사회 OR 정치 OR 속보 when:1d", 
-        "it": "IT OR 테크 OR 애플 OR 삼성 OR AI when:1d", 
-        "stock": "증시 OR 주가 OR 실적발표 OR 특징주 when:1d", 
-        "food": "맛집 OR 식품 OR 외식 트렌드 when:1d", 
-        "travel": "여행 OR 항공 OR 관광 when:1d"
+        "news": "오늘 한국 주요 속보 정치 사회 뉴스", 
+        "it": "오늘 IT 테크 기술 신제품 트렌드 뉴스", 
+        "stock": "오늘 주식 증시 특징주 경제 시황 뉴스", 
+        "food": "오늘 최신 외식 식품 맛집 트렌드", 
+        "travel": "최신 국내외 여행 관광 트렌드 뉴스"
     }
-    query = search_queries.get(category, "핫이슈 when:1d")
+    query = search_queries.get(category, "오늘 핫이슈 뉴스")
     
-    # 네이버 대신 구글 뉴스 RSS 활용 (차단 위험 낮고, 양질의 글로벌/국내 뉴스 확보)
-    rss_url = f"https://news.google.com/rss/search?q={query}&hl=ko&gl=KR&ceid=KR:ko"
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "api_key": TAVILY_API_KEY,
+        "query": query,
+        "search_depth": "advanced", # 심층 검색
+        "include_raw_content": True, # HTML 태그 없는 깨끗한 본문 전체 추출
+        "max_results": 3,
+        "topic": "news" # 뉴스 카테고리 고정
+    }
     
     try:
-        response = requests.get(rss_url, timeout=10)
-        root = ET.fromstring(response.content)
-        items = root.findall('.//item')
+        response = requests.post("https://api.tavily.com/search", json=payload, headers=headers, timeout=20)
         
-        for item in items[:5]: # 상위 5개 최신 기사 확인
-            topic_title = item.find('title').text
-            link = item.find('link').text
-            
-            # 구글 뉴스 리다이렉트 링크에서 원본 기사 추출
-            ref_content, _, final_url = fetch_reference_content(link)
-            
-            # 본문이 400자 이상 확보된 진짜 '알맹이 있는 기사'만 채택!
-            if len(ref_content) > 400:
-                print(f"✅ 구글 뉴스 팩트 확보 완료: {topic_title}")
-                return f"[구글 뉴스 최신 팩트]:\n{ref_content}", topic_title, final_url
+        if response.status_code == 200:
+            data = response.json()
+            for result in data.get('results', []):
+                title = result.get('title', '제목 없음')
+                url = result.get('url', '')
+                # raw_content(전체 본문)가 있으면 우선 사용, 없으면 content(요약) 사용
+                raw_content = result.get('raw_content', '')
+                content = result.get('content', '')
                 
+                final_content = raw_content if len(raw_content) > 300 else content
+                
+                # 확실한 알맹이가 있는 기사만 통과!
+                if len(final_content) > 400:
+                    print(f"✅ Tavily 팩트 확보 완료: {title}")
+                    return f"[Tavily AI 추출 기사 원문]:\n{final_content[:4000]}", title, url
+                    
+            print("⚠️ 검색은 성공했으나, 본문이 긴 기사가 없습니다.")
+        else:
+            print(f"⚠️ Tavily API 호출 실패: {response.status_code}")
+            
     except Exception as e:
-        print(f"⚠️ 구글 뉴스 RSS 에러: {e}")
+        print(f"⚠️ Tavily 검색 중 에러: {e}")
             
     return "[팩트]: 최근 유의미한 뉴스를 찾지 못했습니다.", f"[{category.upper()}] 주요 브리핑", ""
 
@@ -192,7 +179,6 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     kst = datetime.timezone(datetime.timedelta(hours=9))
     today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
     
-    # ⭐️ "월가 애널리스트" 빙의! 극강의 엣지를 위한 프롬프트 개조
     system_prompt = f"""
     당신은 실리콘밸리 탑티어 애널리스트이자, 대중들에게 팩트 폭격을 날리는 100만 구독자 칼럼니스트입니다.
     언론사의 기계적인 요약은 쓰레기통에 버리세요. 독자가 진짜 원하는 건 "그래서 이게 무슨 꿍꿍이인데?", "결국 누가 돈을 벌고 누가 망하는데?" 같은 날카롭고 뼈때리는 '인사이트'입니다.
@@ -217,10 +203,10 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     """
     
     res = gpt_client.chat.completions.create(
-        model="gpt-4o", # ⭐️ 추론 능력이 더 뛰어난 모델로 글의 퀄리티를 한 단계 올림
+        model="gpt-4o", 
         messages=[
             {"role": "system", "content": system_prompt}, 
-            {"role": "user", "content": f"주제: {topic}\n\n[오늘자 글로벌 최신 기사 팩트 원문]:\n{ref_content}"}
+            {"role": "user", "content": f"주제: {topic}\n\n[오늘자 최신 기사 팩트 원문]:\n{ref_content}"}
         ], 
         temperature=0.85
     )
@@ -231,7 +217,6 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
         title = h2_match.group(1).strip()
         html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
         
-    # 파이썬 강제 사진 분산 배치 로직 (절대 밑에 뭉치지 않음)
     if base64_images:
         img_tags = [f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);"></div>' for b64 in base64_images]
         paragraphs = html_content.split('<br><br>')
@@ -287,15 +272,15 @@ if __name__ == "__main__":
     if ref_url:
         ref_content, topic, _ = fetch_reference_content(ref_url)
     else:
-        # 네이버 대신 구글 뉴스 엔진 호출!
-        ref_content, topic, ref_url = generate_auto_topic_google_news(category)
+        # ⭐️ 크롤링 차단 없는 완벽한 Tavily 엔진 호출!
+        ref_content, topic, ref_url = generate_auto_topic_tavily(category)
     
     photo_prompt = create_photo_prompt(category, topic, ref_content)
     images = generate_and_split_images_xai(photo_prompt)
     title, html_output = write_blog_post(category, images, ref_content, topic)
     
     if ref_url:
-        html_output += f'<br><br><hr><div style="text-align:center; margin-top: 30px;"><p style="font-size: 1.1em; font-weight: bold;">🔗 <a href="{ref_url}" target="_blank" style="color: #0056b3; text-decoration: none;">관련 글로벌/국내 기사 원문 보기</a></p></div>'
+        html_output += f'<br><br><hr><div style="text-align:center; margin-top: 30px;"><p style="font-size: 1.1em; font-weight: bold;">🔗 <a href="{ref_url}" target="_blank" style="color: #0056b3; text-decoration: none;">기사 원문 보기</a></p></div>'
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)

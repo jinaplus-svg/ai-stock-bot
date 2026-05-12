@@ -2,7 +2,7 @@ name: Auto Blogger Poster
 
 on:
   schedule:
-    # 한국 시간 기준: 08시(23), 13시(4), 18시(9) 자동 실행 예시
+    # 봇이 스스로 포스팅하는 시간 (UTC 기준. 23시=한국 아침 8시, 4시=한국 오후 1시, 9시=한국 오후 6시)
     - cron: '0 23,4,9 * * *'
   workflow_dispatch:
     inputs:
@@ -34,13 +34,19 @@ jobs:
 
       - name: Run Auto Poster Script
         env:
+          # AI 및 기본 유틸리티 키
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           XAI: ${{ secrets.XAI }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-          # ⭐️ 아래에 Tavily API 키를 추가했습니다! 
+          
+          # 쌍끌이 검색 엔진(Tavily + Naver) 필수 키
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          
+          # 구글 블로그 카테고리별 ID
           IT_BLOG_ID: ${{ secrets.IT_BLOG_ID }}
           FOOD_BLOG_ID: ${{ secrets.FOOD_BLOG_ID }}
           NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}

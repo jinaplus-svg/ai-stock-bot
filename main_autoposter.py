@@ -95,8 +95,14 @@ def fetch_reference_content(url):
                 el.decompose()
             text_content = article_body.get_text(separator='\n', strip=True)
         else:
-            for script in soup(["script", "style", "nav", "footer", "header", "aside"]): script.decompose()
-            text_content = soup.get_text(separator='\n', strip=True)
+            # ⭐️ 사이드바/인기기사 등 쓰레기 데이터 방지용 스크래핑 강화 (p 태그 위주 추출)
+            for script in soup(["script", "style", "nav", "footer", "header", "aside", "form"]): 
+                script.decompose()
+            paragraphs = soup.find_all('p')
+            if paragraphs:
+                text_content = '\n'.join([p.get_text(strip=True) for p in paragraphs if len(p.get_text(strip=True)) > 20])
+            else:
+                text_content = soup.get_text(separator='\n', strip=True)
             
         return f"[기사/본문 핵심 팩트 원문]:\n{text_content[:4000]}", title, url
     except Exception as e:
@@ -105,8 +111,15 @@ def fetch_reference_content(url):
 
 def generate_auto_topic(category):
     print(f"🤖 [{category.upper()}] 네이버 API 검색 및 기사 본문 심층 분석 중...")
-    search_queries = {"news": "사회 속보", "it": "IT 신기술 트렌드", "stock": "증시 주식 특징주", "food": "인기 맛집 핫플", "travel": "여행 가볼만한곳 추천 숙소"}
-    query = search_queries.get(category, "핫이슈")
+    # ⭐️ 키워드에 '오늘'을 강제 삽입하여 최신 기사 정확도 향상
+    search_queries = {
+        "news": "오늘 주요 사회 뉴스", 
+        "it": "오늘 IT 기술 신제품 트렌드", 
+        "stock": "오늘 주식 증시 특징주 시황", 
+        "food": "최신 인기 맛집 리뷰", 
+        "travel": "최신 국내 여행 가볼만한곳"
+    }
+    query = search_queries.get(category, "오늘 핫이슈")
     
     if NAVER_CLIENT_ID and NAVER_CLIENT_SECRET:
         try:
@@ -195,10 +208,16 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     th_style = 'style="background-color: #222; color: #ffffff; text-align: center; padding: 12px 15px; font-weight: bold;"'
     td_style = 'style="padding: 12px 15px; border-bottom: 1px solid #eeeeee; text-align: center; color: #333;"'
     
-    # ⭐️ "A사, B사 금지" 및 "실제 이름과 수치 무조건 사용" 명령 추가!
+    # ⭐️ 한국 시간 기준 오늘 날짜 구하기
+    kst = datetime.timezone(datetime.timedelta(hours=9))
+    today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
+    
     system_prompt = f"""
     당신은 '{category}' 분야의 최고 전문가이자, 거침없고 날카로운 통찰력을 가진 1티어 인플루언서입니다.
     스마트폰 가독성을 극대화하여 1:1 대화체(해요체/합쇼체 혼용)로 작성하세요.
+    
+    🚨 [필독! 날짜 및 최신성 검증]: 오늘 날짜는 [{today_str}] 입니다. 
+    제공된 기사 원문에서 혹시라도 과거 연도(예: 2023년) 데이터가 섞여 있더라도 절대 그것을 메인 이슈로 착각하지 마세요. 반드시 오늘({today_str}) 기준의 가장 최신 근황과 팩트만을 다뤄야 합니다!
     
     [핵심 지시사항 - 엣지 있는 팩트 폭격 & 표 삽입]
     1. 🚨 [익명 처리 절대 금지 & 리얼한 팩트 노출]: 기사에 등장하는 기업명을 절대로 'A사', 'B사', '모 대기업' 등으로 뭉뚱그려 익명 처리하지 마세요! 

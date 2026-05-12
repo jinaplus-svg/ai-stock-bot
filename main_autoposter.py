@@ -95,7 +95,6 @@ def fetch_reference_content(url):
                 el.decompose()
             text_content = article_body.get_text(separator='\n', strip=True)
         else:
-            # ⭐️ 사이드바/인기기사 등 쓰레기 데이터 방지용 스크래핑 강화 (p 태그 위주 추출)
             for script in soup(["script", "style", "nav", "footer", "header", "aside", "form"]): 
                 script.decompose()
             paragraphs = soup.find_all('p')
@@ -104,20 +103,19 @@ def fetch_reference_content(url):
             else:
                 text_content = soup.get_text(separator='\n', strip=True)
             
-        return f"[기사/본문 핵심 팩트 원문]:\n{text_content[:4000]}", title, url
+        return text_content[:4000], title, url
     except Exception as e:
         print(f"⚠️ 크롤링 에러: {e}")
         return "", "", url
 
 def generate_auto_topic(category):
-    print(f"🤖 [{category.upper()}] 네이버 API 검색 및 기사 본문 심층 분석 중...")
-    # ⭐️ 키워드에 '오늘'을 강제 삽입하여 최신 기사 정확도 향상
+    print(f"🤖 [{category.upper()}] 네이버 API 최신 뉴스 검색 중...")
     search_queries = {
-        "news": "오늘 주요 사회 뉴스", 
-        "it": "오늘 IT 기술 신제품 트렌드", 
+        "news": "오늘 주요 사회 속보", 
+        "it": "오늘 IT 기술 신제품", 
         "stock": "오늘 주식 증시 특징주 시황", 
-        "food": "최신 인기 맛집 리뷰", 
-        "travel": "최신 국내 여행 가볼만한곳"
+        "food": "인기 맛집", 
+        "travel": "추천 국내 여행지"
     }
     query = search_queries.get(category, "오늘 핫이슈")
     
@@ -133,43 +131,53 @@ def generate_auto_topic(category):
                 for item in data.get('items', []):
                     link = item.get('originallink') or item['link']
                     topic_title = html.unescape(re.sub(r'<[^>]+>', '', item['title']))
+                    snippet = html.unescape(re.sub(r'<[^>]+>', '', item['description']))
                     
                     ref_content, _, _ = fetch_reference_content(link)
                     
-                    if len(ref_content) > 300:
-                        print(f"✅ 팩트 알맹이 확보 완료 (최신 기사): {topic_title}")
-                        return ref_content, topic_title, link
+                    # ⭐️ 본문 긁기에 실패하더라도, API가 주는 '기사 요약(snippet)'을 강제로 먹여서 환각 방지!
+                    if len(ref_content) < 200:
+                        ref_content = f"기사 핵심 요약: {snippet}"
+                        
+                    if len(ref_content) > 50:
+                        print(f"✅ 팩트 확보 완료: {topic_title}")
+                        return f"[최신 기사 팩트]:\n{ref_content}", topic_title, link
                         
         except Exception as e: 
-            print(f"⚠️ 네이버 API/크롤링 에러: {e}")
+            print(f"⚠️ 네이버 API 에러: {e}")
             
-    return "오늘의 주요 브리핑 내용입니다.", f"[{category.upper()}] 주요 브리핑", ""
+    return "[팩트]: 특별한 뉴스 없음", f"[{category.upper()}] 주요 브리핑", ""
 
 # ==========================================
 # 3. AI 이미지 생성 및 글 작성
 # ==========================================
 def create_photo_prompt(category, topic, ref_content):
+    # ⭐️ 의미 없는 자연 풍경화 절대 금지 및 기사 내용 강제 반영
     system_msg = f"""
     당신은 퓰리처상을 받은 보도사진 편집장입니다. 
-    다음 최신 기사 내용을 철저히 분석하여, 이 뉴스/이슈의 핵심 장면을 가장 직관적이고 상징적으로 보여주는 4분할 컷(4-panel photo collage)용 영문 프롬프트를 작성하세요.
+    다음 최신 기사 내용을 철저히 분석하여, 이 뉴스/이슈를 상징하는 4분할 컷(4-panel photo collage)용 영문 프롬프트를 작성하세요.
     
-    [필수 지시사항]
-    - 기사 본문에 특정 인물, 기업, 장소, 기술, 제품, 경제 상황(상승/하락)이 등장한다면 그 특징을 정확히 시각화하여 프롬프트에 반영할 것. 
-    - 3D CG, 일러스트레이션 절대 금지. 무조건 8k 해상도의 극사실주의 실사(Photorealistic)로 묘사할 것.
-    - 텍스트나 글자는 사진에 포함되지 않게 할 것.
+    [🚨 절대 금지 사항]
+    - 기사 내용과 무관한 자연 풍경(산, 바다, 사막, 숲)은 절대로 그리지 마세요!
+    - 3D CG, 텍스트(글자), 일러스트레이션 금지.
+    
+    [필수 포함 사항]
+    - IT/주식 기사라면: 도심 빌딩, 스마트폰, 노트북, 전광판, 주식 차트 뉘앙스, 기업 로고 형태 등 비즈니스 환경.
+    - 제품 기사라면: 해당 제품의 질감과 사용 환경.
+    무조건 8k 해상도의 극사실주의 실사(Photorealistic)로 피사체를 정확히 묘사하세요.
     """
     res = gpt_client.chat.completions.create(
         model="gpt-4o-mini", 
         messages=[
             {"role": "system", "content": system_msg},
-            {"role": "user", "content": f"주제: {topic}\n\n기사 핵심 내용:\n{ref_content[:1500]}"}
+            {"role": "user", "content": f"주제: {topic}\n\n기사 팩트:\n{ref_content[:1500]}"}
         ], 
         temperature=0.7
     )
     return res.choices[0].message.content.strip()
 
 def generate_and_split_images_xai(prompt):
-    final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Photorealistic, cinematic lighting, natural scenes, no text, no borders."
+    final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Photorealistic, cinematic lighting, no text, no borders."
     try:
         response = xai_client.images.generate(
             model="grok-imagine-image", 
@@ -203,64 +211,75 @@ def generate_and_split_images_xai(prompt):
 
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 15px 20px; margin: 30px 0; background-color: #fcf8f8; color: #111; font-weight: 800; font-size: 1.1em; border-radius: 0 8px 8px 0;"'
-    
     table_style = 'style="width: 100%; border-collapse: collapse; margin: 30px 0; font-size: 0.95em; font-family: sans-serif; box-shadow: 0 0 20px rgba(0, 0, 0, 0.05); border-radius: 8px; overflow: hidden;"'
     th_style = 'style="background-color: #222; color: #ffffff; text-align: center; padding: 12px 15px; font-weight: bold;"'
     td_style = 'style="padding: 12px 15px; border-bottom: 1px solid #eeeeee; text-align: center; color: #333;"'
     
-    # ⭐️ 한국 시간 기준 오늘 날짜 구하기
     kst = datetime.timezone(datetime.timedelta(hours=9))
     today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
     
+    # ⭐️ 마크다운(**) 절대 금지 & 분량 강제 프롬프트
     system_prompt = f"""
-    당신은 '{category}' 분야의 최고 전문가이자, 거침없고 날카로운 통찰력을 가진 1티어 인플루언서입니다.
-    스마트폰 가독성을 극대화하여 1:1 대화체(해요체/합쇼체 혼용)로 작성하세요.
+    당신은 '{category}' 분야의 최고 전문가이자 날카로운 1티어 인플루언서입니다.
     
-    🚨 [필독! 날짜 및 최신성 검증]: 오늘 날짜는 [{today_str}] 입니다. 
-    제공된 기사 원문에서 혹시라도 과거 연도(예: 2023년) 데이터가 섞여 있더라도 절대 그것을 메인 이슈로 착각하지 마세요. 반드시 오늘({today_str}) 기준의 가장 최신 근황과 팩트만을 다뤄야 합니다!
+    🚨 [가장 중요한 금지 규칙]
+    1. 마크다운 별표(**) 기호는 절대 사용 금지! 강조할 때는 반드시 HTML <strong>텍스트</strong> 태그만 사용하세요.
+    2. 'A사', '모 대기업' 등 익명 처리 절대 금지! 원문에 있는 실제 기업명(애플, 테슬라 등)과 구체적 수치를 100% 그대로 노출하세요.
+    3. 글을 짧게 쓰지 마세요. 최소 1500자 이상, 5개 이상의 문단으로 아주 길고 상세하게 팩트를 해설하세요.
     
-    [핵심 지시사항 - 엣지 있는 팩트 폭격 & 표 삽입]
-    1. 🚨 [익명 처리 절대 금지 & 리얼한 팩트 노출]: 기사에 등장하는 기업명을 절대로 'A사', 'B사', '모 대기업' 등으로 뭉뚱그려 익명 처리하지 마세요! 
-       원문에 있는 **실제 기업명(예: 삼성전자, 애플 등), 정확한 실명, 실제 수치(매출액, 주가, 퍼센트, 날짜 등)**를 가감 없이 100% 리얼하고 객관적으로 그대로 작성하세요.
-    2. [최신 트렌드 & 날카로운 인사이트]: 방금 나온 최신 뉴스입니다. 객관적 팩트를 바탕으로, 이 사건의 이면이나 향후 전망에 대해 본인만의 도발적이고 예리한 의견을 덧붙이세요.
-    3. [시각적 자료(표) 필수 활용]: 수치, 비교 데이터, 일정, 관련주/기업 목록 등은 반드시 HTML <table> 태그를 사용하여 가독성 높은 표로 1개 이상 정리하세요.
-       (표 스타일 가이드 적용 필수):
-       <table {table_style}>
-         <thead><tr><th {th_style}>항목1</th><th {th_style}>항목2</th></tr></thead>
-         <tbody><tr><td {td_style}>실제 기업명/데이터</td><td {td_style}>정확한 수치</td></tr></tbody>
-       </table>
-    4. [가독성 및 포맷]:
-       - 글의 첫 줄은 <h2>시선을 확 끄는 도발적인 제목</h2> 형태로 작성하세요.
-       - 문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 여백을 넉넉하게 주세요.
-       - 중요한 실제 기업명이나 핵심 수치는 <strong> 텍스트 </strong> 로 강조하세요.
-    5. 본문 내용 흐름에 맞춰 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 문맥에 맞게 골고루 흩뿌려서 배치하세요.
-    6. 글의 뼈때리는 핵심 요약 한 줄은 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸서 강렬하게 마무리하세요.
+    [작성 가이드]
+    - 오늘({today_str}) 기준의 가장 최신 뉴스 팩트만을 다룹니다.
+    - 글의 첫 줄은 반드시 <h2>시선을 확 끄는 도발적인 제목</h2> 형태로 시작하세요.
+    - 문단이 끝날 때마다 반드시 <br><br> 태그로 여백을 주세요.
+    - 데이터, 수치, 기업 목록 등이 있으면 HTML <table> 태그를 써서 표(Table)로 1개 이상 정리하세요.
+    - 글의 핵심 요약 한 줄은 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸서 강렬하게 마무리하세요.
     """
     
     res = gpt_client.chat.completions.create(
         model="gpt-4o-mini", 
         messages=[
             {"role": "system", "content": system_prompt}, 
-            {"role": "user", "content": f"주제: {topic}\n\n[분석할 최신 기사 원문 팩트]:\n{ref_content}"}
+            {"role": "user", "content": f"주제: {topic}\n\n[분석할 기사 팩트]:\n{ref_content}"}
         ], 
         temperature=0.85
     )
     html_content = res.choices[0].message.content.strip().replace("```html", "").replace("```", "")
     
     title = f"[{category.upper()}] 심층 브리핑"
-    
     if h2_match := re.search(r'<h2>(.*?)</h2>', html_content):
         title = h2_match.group(1).strip()
         html_content = re.sub(r'<h2>.*?</h2>', '', html_content, count=1).strip()
         
+    # ⭐️ 파이썬 강제 사진 분산 배치 로직 (GPT가 실패해도 무조건 사이사이에 들어감)
     if base64_images:
-        for i, b64 in enumerate(base64_images):
-            img_tag = f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15);"></div>'
-            
-            if f"[IMAGE_{i+1}]" in html_content:
-                html_content = html_content.replace(f"[IMAGE_{i+1}]", img_tag)
-            else:
-                html_content += f"<br><br>{img_tag}"
+        img_tags = [f'<div style="text-align:center; margin: 40px 0;"><img src="{b64}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15);"></div>' for b64 in base64_images]
+        
+        # GPT가 지시를 무시했거나 [IMAGE_x] 태그를 빼먹었을 경우를 대비해 본문을 <br><br> 기준으로 쪼갭니다.
+        paragraphs = html_content.split('<br><br>')
+        
+        # 문단이 충분히 길면 사진을 일정 간격으로 흩뿌립니다.
+        if len(paragraphs) >= len(img_tags):
+            step = len(paragraphs) // len(img_tags)
+            new_html = ""
+            img_idx = 0
+            for i, p in enumerate(paragraphs):
+                new_html += p + "<br><br>"
+                if i > 0 and i % step == 0 and img_idx < len(img_tags):
+                    new_html += img_tags[img_idx] + "<br><br>"
+                    img_idx += 1
+            # 혹시 남은 사진이 있으면 맨 밑에 추가
+            while img_idx < len(img_tags):
+                new_html += img_tags[img_idx] + "<br><br>"
+                img_idx += 1
+            html_content = new_html
+        else:
+            # 글이 너무 짧으면 어쩔 수 없이 하나씩 번갈아 가며 붙입니다.
+            new_html = ""
+            for i, p in enumerate(paragraphs):
+                new_html += p + "<br><br>"
+                if i < len(img_tags):
+                    new_html += img_tags[i] + "<br><br>"
+            html_content = new_html
                 
     return title, html_content
 
@@ -299,11 +318,11 @@ if __name__ == "__main__":
     title, html_output = write_blog_post(category, images, ref_content, topic)
     
     if ref_url:
-        html_output += f'<br><br><hr><div style="text-align:center; margin-top: 30px;"><p style="font-size: 1.1em; font-weight: bold;">🔗 <a href="{ref_url}" target="_blank" style="color: #0056b3; text-decoration: none;">관련 상세 기사 원문 보러가기</a></p></div>'
+        html_output += f'<br><br><hr><div style="text-align:center; margin-top: 30px;"><p style="font-size: 1.1em; font-weight: bold;">🔗 <a href="{ref_url}" target="_blank" style="color: #0056b3; text-decoration: none;">관련 기사 원문 확인하기</a></p></div>'
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)
         if TELEGRAM_TOKEN and CHAT_ID:
-            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 엣지있는 심층 포스팅 완료!\n📝 {title}\n👉 {post_url}"})
+            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 심층 포스팅 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:
         print(f"Error: {e}")

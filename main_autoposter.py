@@ -112,7 +112,7 @@ def generate_auto_topic(category):
         try:
             api_url = "https://openapi.naver.com/v1/search/news.json"
             headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
-            params = {"query": query, "display": 5, "sort": "date"} # 최신 기사순 정렬 유지
+            params = {"query": query, "display": 5, "sort": "date"}
             response = requests.get(api_url, headers=headers, params=params, timeout=10)
             
             if response.status_code == 200:
@@ -136,14 +136,12 @@ def generate_auto_topic(category):
 # 3. AI 이미지 생성 및 글 작성
 # ==========================================
 def create_photo_prompt(category, topic, ref_content):
-    # ⭐️ 기사 본문과 정확히 매칭되도록 시각적 디테일 강제 추출
     system_msg = f"""
     당신은 퓰리처상을 받은 보도사진 편집장입니다. 
     다음 최신 기사 내용을 철저히 분석하여, 이 뉴스/이슈의 핵심 장면을 가장 직관적이고 상징적으로 보여주는 4분할 컷(4-panel photo collage)용 영문 프롬프트를 작성하세요.
     
     [필수 지시사항]
     - 기사 본문에 특정 인물, 기업, 장소, 기술, 제품, 경제 상황(상승/하락)이 등장한다면 그 특징을 정확히 시각화하여 프롬프트에 반영할 것. 
-      (예: 테슬라 기사면 미래지향적 전기차와 일론 머스크를 연상시키는 실루엣, 부동산이면 현대적인 아파트 단지 전경 등)
     - 3D CG, 일러스트레이션 절대 금지. 무조건 8k 해상도의 극사실주의 실사(Photorealistic)로 묘사할 것.
     - 텍스트나 글자는 사진에 포함되지 않게 할 것.
     """
@@ -158,7 +156,6 @@ def create_photo_prompt(category, topic, ref_content):
     return res.choices[0].message.content.strip()
 
 def generate_and_split_images_xai(prompt):
-    # ⭐️ 2x2(4장) 비율 유지
     final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Photorealistic, cinematic lighting, natural scenes, no text, no borders."
     try:
         response = xai_client.images.generate(
@@ -194,29 +191,31 @@ def generate_and_split_images_xai(prompt):
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 15px 20px; margin: 30px 0; background-color: #fcf8f8; color: #111; font-weight: 800; font-size: 1.1em; border-radius: 0 8px 8px 0;"'
     
-    # 트렌디한 표(Table) 스타일 정의
     table_style = 'style="width: 100%; border-collapse: collapse; margin: 30px 0; font-size: 0.95em; font-family: sans-serif; box-shadow: 0 0 20px rgba(0, 0, 0, 0.05); border-radius: 8px; overflow: hidden;"'
     th_style = 'style="background-color: #222; color: #ffffff; text-align: center; padding: 12px 15px; font-weight: bold;"'
     td_style = 'style="padding: 12px 15px; border-bottom: 1px solid #eeeeee; text-align: center; color: #333;"'
     
+    # ⭐️ "A사, B사 금지" 및 "실제 이름과 수치 무조건 사용" 명령 추가!
     system_prompt = f"""
     당신은 '{category}' 분야의 최고 전문가이자, 거침없고 날카로운 통찰력을 가진 1티어 인플루언서입니다.
     스마트폰 가독성을 극대화하여 1:1 대화체(해요체/합쇼체 혼용)로 작성하세요.
     
-    [핵심 지시사항 - 엣지 있는 알맹이 채우기 & 표 삽입]
-    1. [최신 트렌드 & 팩트 폭격]: 제공된 원문은 방금 나온 최신 뉴스입니다. '수치', '통계', '고유명사'를 강력한 근거로 활용하여 도발적이고 예리한 인사이트를 제시하세요.
-    2. [시각적 자료(표) 필수 활용]: 기사 원문에 '수치, 비교 데이터, 일정, 관련주/기업 목록, 주요 요약' 등 표로 정리하기 좋은 정보가 있다면, 반드시 HTML <table> 태그를 사용하여 가독성 높은 표를 1개 이상 생성하세요.
+    [핵심 지시사항 - 엣지 있는 팩트 폭격 & 표 삽입]
+    1. 🚨 [익명 처리 절대 금지 & 리얼한 팩트 노출]: 기사에 등장하는 기업명을 절대로 'A사', 'B사', '모 대기업' 등으로 뭉뚱그려 익명 처리하지 마세요! 
+       원문에 있는 **실제 기업명(예: 삼성전자, 애플 등), 정확한 실명, 실제 수치(매출액, 주가, 퍼센트, 날짜 등)**를 가감 없이 100% 리얼하고 객관적으로 그대로 작성하세요.
+    2. [최신 트렌드 & 날카로운 인사이트]: 방금 나온 최신 뉴스입니다. 객관적 팩트를 바탕으로, 이 사건의 이면이나 향후 전망에 대해 본인만의 도발적이고 예리한 의견을 덧붙이세요.
+    3. [시각적 자료(표) 필수 활용]: 수치, 비교 데이터, 일정, 관련주/기업 목록 등은 반드시 HTML <table> 태그를 사용하여 가독성 높은 표로 1개 이상 정리하세요.
        (표 스타일 가이드 적용 필수):
        <table {table_style}>
          <thead><tr><th {th_style}>항목1</th><th {th_style}>항목2</th></tr></thead>
-         <tbody><tr><td {td_style}>내용1</td><td {td_style}>내용2</td></tr></tbody>
+         <tbody><tr><td {td_style}>실제 기업명/데이터</td><td {td_style}>정확한 수치</td></tr></tbody>
        </table>
-    3. [가독성 및 포맷]:
+    4. [가독성 및 포맷]:
        - 글의 첫 줄은 <h2>시선을 확 끄는 도발적인 제목</h2> 형태로 작성하세요.
        - 문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 여백을 넉넉하게 주세요.
-       - 중요한 팩트는 <strong> 텍스트 </strong> 로 강조하세요.
-    4. 본문 내용 흐름에 맞춰 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 문맥에 맞게 골고루 흩뿌려서 배치하세요.
-    5. 글의 핵심 요약 한 줄은 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸서 마무리하세요.
+       - 중요한 실제 기업명이나 핵심 수치는 <strong> 텍스트 </strong> 로 강조하세요.
+    5. 본문 내용 흐름에 맞춰 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 문맥에 맞게 골고루 흩뿌려서 배치하세요.
+    6. 글의 뼈때리는 핵심 요약 한 줄은 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸서 강렬하게 마무리하세요.
     """
     
     res = gpt_client.chat.completions.create(

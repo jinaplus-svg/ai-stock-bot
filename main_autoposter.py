@@ -23,7 +23,7 @@ GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 
-# ⭐️ Tavily API 키 로드 (시크릿에 있는 키 사용)
+# Tavily API 키 로드
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 
 BLOG_REGISTRY = {
@@ -39,10 +39,9 @@ xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
 
 # ==========================================
-# 2. 강력한 Tavily AI 검색 엔진
+# 2. 강력한 Tavily AI 검색 엔진 (최신성 강제)
 # ==========================================
 def fetch_reference_content(url):
-    # 유튜브 링크 처리 유지
     if not url: return "", "", ""
     if "youtube.com" in url or "youtu.be" in url:
         try:
@@ -53,7 +52,6 @@ def fetch_reference_content(url):
         except:
             return "자막 추출 실패", "유튜브", url
             
-    # 일반 URL이 직접 들어오면 Tavily로 해당 URL의 본문을 긁어옴
     if TAVILY_API_KEY:
         try:
             payload = {"api_key": TAVILY_API_KEY, "query": url, "search_depth": "advanced", "include_raw_content": True}
@@ -68,30 +66,34 @@ def fetch_reference_content(url):
     return "", "", url
 
 def generate_auto_topic_tavily(category):
-    print(f"🤖 [{category.upper()}] Tavily AI 검색 엔진으로 봇 차단 없이 기사 원문 추출 중...")
+    print(f"🤖 [{category.upper()}] Tavily AI 검색 엔진으로 봇 차단 없이 최신 기사 원문 추출 중...")
     
     if not TAVILY_API_KEY:
         print("⚠️ TAVILY_API_KEY가 설정되지 않았습니다.")
         return "API 키 누락", "키 설정 확인", ""
 
-    # Tavily 전용 검색 쿼리 (정확도 극대화)
+    # ⭐️ 한국 시간 기준 오늘 날짜를 구해서 검색어에 강제 주입
+    kst = datetime.timezone(datetime.timedelta(hours=9))
+    today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
+
     search_queries = {
-        "news": "오늘 한국 주요 속보 정치 사회 뉴스", 
-        "it": "오늘 IT 테크 기술 신제품 트렌드 뉴스", 
-        "stock": "오늘 주식 증시 특징주 경제 시황 뉴스", 
-        "food": "오늘 최신 외식 식품 맛집 트렌드", 
-        "travel": "최신 국내외 여행 관광 트렌드 뉴스"
+        "news": f"{today_str} 한국 주요 속보 정치 사회 최신 뉴스", 
+        "it": f"{today_str} IT 테크 기술 신제품 트렌드 최신 뉴스", 
+        "stock": f"{today_str} 주식 증시 특징주 경제 시황 최신 뉴스", 
+        "food": f"{today_str} 최신 외식 식품 맛집 트렌드 뉴스", 
+        "travel": f"{today_str} 최신 국내외 여행 관광 트렌드 뉴스"
     }
-    query = search_queries.get(category, "오늘 핫이슈 뉴스")
+    query = search_queries.get(category, f"{today_str} 핫이슈 뉴스")
     
     headers = {"Content-Type": "application/json"}
     payload = {
         "api_key": TAVILY_API_KEY,
         "query": query,
-        "search_depth": "advanced", # 심층 검색
-        "include_raw_content": True, # HTML 태그 없는 깨끗한 본문 전체 추출
+        "search_depth": "advanced", 
+        "include_raw_content": True, 
         "max_results": 3,
-        "topic": "news" # 뉴스 카테고리 고정
+        "topic": "news", 
+        "days": 1 # ⭐️ 핵심: 무조건 최근 24시간 이내 기사만 가져오도록 강제!
     }
     
     try:
@@ -102,18 +104,16 @@ def generate_auto_topic_tavily(category):
             for result in data.get('results', []):
                 title = result.get('title', '제목 없음')
                 url = result.get('url', '')
-                # raw_content(전체 본문)가 있으면 우선 사용, 없으면 content(요약) 사용
                 raw_content = result.get('raw_content', '')
                 content = result.get('content', '')
                 
                 final_content = raw_content if len(raw_content) > 300 else content
                 
-                # 확실한 알맹이가 있는 기사만 통과!
                 if len(final_content) > 400:
-                    print(f"✅ Tavily 팩트 확보 완료: {title}")
-                    return f"[Tavily AI 추출 기사 원문]:\n{final_content[:4000]}", title, url
+                    print(f"✅ Tavily 최신 팩트 확보 완료: {title}")
+                    return f"[Tavily AI 추출 최신 기사 원문]:\n{final_content[:4000]}", title, url
                     
-            print("⚠️ 검색은 성공했으나, 본문이 긴 기사가 없습니다.")
+            print("⚠️ 검색은 성공했으나, 본문이 긴 최신 기사가 없습니다.")
         else:
             print(f"⚠️ Tavily API 호출 실패: {response.status_code}")
             
@@ -185,8 +185,9 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     
     🚨 [절대 규칙]
     1. 마크다운 별표(**) 기호는 절대 사용 금지! 강조할 때는 무조건 HTML <strong>텍스트</strong> 태그만 쓰세요.
-    2. 'A사', 'B기업' 같은 촌스러운 익명 처리 절대 금지. 삼성전자, 애플, 테슬라 등 100% 실제 기업명과 실명을 그대로 쓰세요.
-    3. 어조는 전문가다운 확신에 찬 1:1 대화체(해요체/합쇼체 혼용)입니다.
+    2. 'A사', 'B기업' 같은 촌스러운 익명 처리 절대 금지. 100% 실제 기업명과 실명을 그대로 쓰세요.
+    3. 과거 기사를 지어내지 마세요! 제공된 문서는 철저히 오늘({today_str}) 기준의 최신 기사입니다. 과거 연도가 있더라도 지금 현재 이슈와 팩트에만 집중하세요.
+    4. 어조는 전문가다운 확신에 찬 1:1 대화체(해요체/합쇼체 혼용)입니다.
     
     [칼럼 작성 구조 - 이대로 작성하세요]
     - 첫 줄: <h2>시선을 확 끄는 도발적이고 직관적인 제목</h2>
@@ -272,7 +273,7 @@ if __name__ == "__main__":
     if ref_url:
         ref_content, topic, _ = fetch_reference_content(ref_url)
     else:
-        # ⭐️ 크롤링 차단 없는 완벽한 Tavily 엔진 호출!
+        # 크롤링 차단 없는 완벽한 Tavily 엔진 호출! (최신성 강제)
         ref_content, topic, ref_url = generate_auto_topic_tavily(category)
     
     photo_prompt = create_photo_prompt(category, topic, ref_content)
@@ -280,7 +281,7 @@ if __name__ == "__main__":
     title, html_output = write_blog_post(category, images, ref_content, topic)
     
     if ref_url:
-        html_output += f'<br><br><hr><div style="text-align:center; margin-top: 30px;"><p style="font-size: 1.1em; font-weight: bold;">🔗 <a href="{ref_url}" target="_blank" style="color: #0056b3; text-decoration: none;">기사 원문 보기</a></p></div>'
+        html_output += f'<br><br><hr><div style="text-align:center; margin-top: 30px;"><p style="font-size: 1.1em; font-weight: bold;">🔗 <a href="{ref_url}" target="_blank" style="color: #0056b3; text-decoration: none;">오늘의 최신 기사 원문 보기</a></p></div>'
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)

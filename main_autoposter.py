@@ -141,15 +141,14 @@ def generate_auto_topic(category):
 # 3. AI 이미지 생성 및 글 작성
 # ==========================================
 def create_photo_prompt(category, topic, ref_content):
-    # ⭐️ 기사 내용과 정확히 일치하는 사진을 그리기 위해 프롬프트를 획기적으로 개선했습니다.
+    # ⭐️ 다시 4분할(2x2)에 맞춰 프롬프트를 수정했습니다.
     system_msg = f"""
     당신은 퓰리처상을 받은 보도사진 편집장입니다. 
-    다음 기사 내용을 분석하여, 이 이슈를 가장 직관적으로 보여주는 6분할 컷(6-panel photo collage)용 영문 프롬프트를 작성하세요.
+    다음 기사 내용을 분석하여, 이 이슈를 가장 직관적으로 보여주는 4분할 컷(4-panel photo collage)용 영문 프롬프트를 작성하세요.
     - 기사 본문에 등장하는 핵심 키워드(특정 인물, 장소, 기술, 분위기, 상징물 등)를 반드시 시각적으로 묘사할 것.
     - 3D CG, 일러스트레이션 절대 금지. 무조건 8k 해상도의 극사실주의 실사(Photorealistic)로 묘사할 것.
     - 텍스트나 글자는 사진에 포함되지 않게 할 것.
     """
-    # 팩트를 알기 위해 ref_content를 함께 던져줍니다.
     res = gpt_client.chat.completions.create(
         model="gpt-4o-mini", 
         messages=[
@@ -161,27 +160,26 @@ def create_photo_prompt(category, topic, ref_content):
     return res.choices[0].message.content.strip()
 
 def generate_and_split_images_xai(prompt):
-    # ⭐️ 2x2(4장)에서 3x2(6장) 그리드로 업그레이드!
-    final_prompt = f"A seamless photo collage of 6 panels in a 3x2 grid. {prompt} Photorealistic, cinematic lighting, natural scenes, no text, no borders."
+    # ⭐️ 3x2(6장)에서 다시 2x2(4장) 비율(1:1)로 원상복구했습니다. 이미지가 잘리지 않습니다!
+    final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Photorealistic, cinematic lighting, natural scenes, no text, no borders."
     try:
-        # 비율을 3:2로 설정하면 3x2로 잘랐을 때 완벽한 정사각형 6장이 나옵니다.
         response = xai_client.images.generate(
             model="grok-imagine-image", 
             prompt=final_prompt, 
-            extra_body={"aspect_ratio": "3:2", "resolution": "2k"}, 
+            extra_body={"aspect_ratio": "1:1", "resolution": "2k"}, 
             n=1
         )
         img_data = requests.get(response.data[0].url).content
         img = Image.open(BytesIO(img_data))
         w, h = img.size
         
-        # 3칸(열), 2칸(행)으로 나눕니다.
-        cw, ch = w // 3, h // 2
+        # 2칸(열), 2칸(행)으로 나눕니다.
+        cw, ch = w // 2, h // 2
         margin = 15
         base64_images = []
         
         for r in range(2):
-            for c in range(3):
+            for c in range(2):
                 l, t = c * cw + margin, r * ch + margin
                 ri, b = l + cw - (margin * 2), t + ch - (margin * 2)
                 cropped = img.crop((l, t, ri, b)).resize((600, 600), Image.Resampling.LANCZOS)
@@ -190,7 +188,7 @@ def generate_and_split_images_xai(prompt):
                 cropped.save(buf, format="JPEG", quality=88)
                 base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buf.getvalue()).decode()}")
                 
-        print("✅ xAI 이미지 6장 생성 완료!")
+        print("✅ xAI 이미지 4장 생성 완료!")
         return base64_images
     except Exception as e: 
         print(f"❌ xAI 이미지 생성 실패: {e}")
@@ -199,6 +197,7 @@ def generate_and_split_images_xai(prompt):
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 4px solid #cc0000; padding: 15px 20px; margin: 30px 0; background-color: #fcf8f8; color: #111; font-weight: 800; font-size: 1.1em; border-radius: 0 8px 8px 0;"'
     
+    # ⭐️ 엣지 있는 텍스트 로직은 유지하되 사진만 4장 삽입으로 변경했습니다.
     system_prompt = f"""
     당신은 '{category}' 분야의 최고 전문가이자, 거침없고 날카로운 통찰력을 가진 1티어 인플루언서입니다.
     기계적인 기사 요약은 절대 금지합니다. 독자들이 읽고 무릎을 탁 칠 만한 '엣지 있는 시각'과 '비판적/심층적 분석'을 제공해야 합니다.
@@ -211,7 +210,7 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
        - 글의 제일 첫 줄에는 반드시 <h2>시선을 확 끄는 도발적인 제목</h2> 형태로 작성하세요.
        - 문단이 끝날 때마다 반드시 <br><br> 태그를 넣어 여백을 넉넉하게 주세요.
        - 중요한 팩트나 강조할 문장은 <strong> 텍스트 </strong> 태그를 사용해 시각적으로 돋보이게 하세요.
-    4. ⭐️ 본문 내용 흐름에 맞춰 중간중간에 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4], [IMAGE_5], [IMAGE_6] 이라는 텍스트를 문맥에 맞게 골고루 흩뿌려서 배치하세요.
+    4. ⭐️ 본문 내용 흐름에 맞춰 중간중간에 [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 라는 텍스트를 문맥에 맞게 골고루 흩뿌려서 배치하세요.
     5. 글의 마무리나 가장 뼈때리는 핵심 요약 한 줄은 <blockquote {blockquote_style}> 여기에 </blockquote> 로 감싸서 강렬하게 마무리하세요.
     """
     

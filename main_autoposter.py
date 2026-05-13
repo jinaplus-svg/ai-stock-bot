@@ -83,7 +83,7 @@ def generate_auto_topic(category):
             }
             query = search_queries.get(category, "오늘 주요 속보")
             
-            # ⭐️ 최신성 보장 핵심 옵션: days=2 (최근 48시간), topic=news (뉴스 기사만)
+            # 최신성 보장 핵심 옵션: days=2 (최근 48시간), topic=news (뉴스 기사만)
             payload = {
                 "api_key": TAVILY_API_KEY, 
                 "query": f"{today_str} {query}", 
@@ -137,14 +137,23 @@ def create_photo_prompt(category, topic, ref_content):
     - ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY, NO LOGOS, NO SIGNS!
     - 3D CG, 일러스트레이션, 자연 풍경 금지. 오직 8k 극사실주의 실사(Photorealistic)로 피사체의 형태와 분위기만 묘사할 것.
     """
-    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content}"}], temperature=0.7)
+    res = gpt_client.chat.completions.create(
+        model="gpt-4o-mini", 
+        messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content}"}], 
+        temperature=0.7
+    )
     return res.choices[0].message.content.strip()
 
 def generate_and_split_images_xai(prompt):
     # API에도 텍스트 금지 다시 한번 강조
     final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Photorealistic, cinematic lighting, ABSOLUTELY NO TEXT, NO WORDS, NO LOGOS, NO LETTERS, no signs, no borders."
     try:
-        response = xai_client.images.generate(model="grok-imagine-image", prompt=final_prompt, extra_body={"aspect_ratio": "1:1", "resolution": "2k"}, n=1)
+        response = xai_client.images.generate(
+            model="grok-imagine-image", 
+            prompt=final_prompt, 
+            extra_body={"aspect_ratio": "1:1", "resolution": "2k"}, 
+            n=1
+        )
         img = Image.open(BytesIO(requests.get(response.data[0].url).content))
         w, h = img.size
         cw, ch = w // 2, h // 2
@@ -204,7 +213,11 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     - [IMAGE_1], [IMAGE_2], [IMAGE_3], [IMAGE_4] 텍스트를 글 사이사이에 골고루 흩뿌리기.
     """
     
-    res = gpt_client.chat.completions.create(model="gpt-4o", messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n\n[최근 48시간 내 최신 특급 기사 팩트 원문]:\n{ref_content}"}], temperature=0.85)
+    res = gpt_client.chat.completions.create(
+        model="gpt-4o", 
+        messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n\n[최근 48시간 내 최신 특급 기사 팩트 원문]:\n{ref_content}"}], 
+        temperature=0.85
+    )
     
     html_content = res.choices[0].message.content.strip()
     html_content = re.sub(r'^```[a-zA-Z]*\n', '', html_content)
@@ -270,7 +283,7 @@ if __name__ == "__main__":
     
     if not ref_content:
         print("❌ 유효한 기사 팩트를 찾지 못해 포스팅을 중단합니다.")
-        # ⭐️ 텔레그램 발송 URL 오류 완벽히 수정됨 (마크다운 기호 제거)
+        # 에러 방지: 완벽하고 깔끔한 텔레그램 API URL
         if TELEGRAM_TOKEN and CHAT_ID: 
             requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚠️ [{category.upper()}] 백업 엔진까지 가동했으나 최근 48시간 이내의 적합한 뉴스를 찾지 못했습니다."})
         exit(0)
@@ -284,7 +297,7 @@ if __name__ == "__main__":
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)
-        # ⭐️ 텔레그램 발송 URL 오류 완벽히 수정됨 (마크다운 기호 제거)
+        # 에러 방지: 완벽하고 깔끔한 텔레그램 API URL
         if TELEGRAM_TOKEN and CHAT_ID:
             requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 최신 심층 분석 칼럼 발행 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:

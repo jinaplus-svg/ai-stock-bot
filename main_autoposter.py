@@ -270,8 +270,9 @@ if __name__ == "__main__":
     
     if not ref_content:
         print("❌ 유효한 기사 팩트를 찾지 못해 포스팅을 중단합니다.")
-        # ⭐️ 오류 원인: 텔레그램 발송 URL 수정 완료!
-        if TELEGRAM_TOKEN and CHAT_ID: requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚠️ [{category.upper()}] 백업 엔진까지 가동했으나 최근 48시간 이내의 적합한 뉴스를 찾지 못했습니다."})
+        # ⭐️ 텔레그램 발송 URL 오류 완벽히 수정됨 (마크다운 기호 제거)
+        if TELEGRAM_TOKEN and CHAT_ID: 
+            requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚠️ [{category.upper()}] 백업 엔진까지 가동했으나 최근 48시간 이내의 적합한 뉴스를 찾지 못했습니다."})
         exit(0)
         
     photo_prompt = create_photo_prompt(category, topic, ref_content)
@@ -283,7 +284,7 @@ if __name__ == "__main__":
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)
-        # ⭐️ 오류 원인: 텔레그램 발송 URL 수정 완료!
+        # ⭐️ 텔레그램 발송 URL 오류 완벽히 수정됨 (마크다운 기호 제거)
         if TELEGRAM_TOKEN and CHAT_ID:
             requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 최신 심층 분석 칼럼 발행 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:

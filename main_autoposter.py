@@ -13,7 +13,6 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
-from bs4 import BeautifulSoup
 
 # ==========================================
 # 1. 설정 및 API 키 로드
@@ -53,7 +52,7 @@ def fetch_reference_content(url):
             return f"[유튜브 스크립트]:\n{transcript_text[:4000]}", "유튜브 분석", url
         except:
             return "자막 추출 실패", "유튜브", url
-            
+
     if TAVILY_API_KEY:
         try:
             payload = {"api_key": TAVILY_API_KEY, "query": url, "search_depth": "advanced", "include_raw_content": True}
@@ -276,6 +275,7 @@ if __name__ == "__main__":
     if not blog_id: exit(1)
         
     ref_url = args.reference_url
+
     if ref_url:
         ref_content, topic, _ = fetch_reference_content(ref_url)
     else:
@@ -283,9 +283,9 @@ if __name__ == "__main__":
     
     if not ref_content:
         print("❌ 유효한 기사 팩트를 찾지 못해 포스팅을 중단합니다.")
-        # 에러 방지: 완벽하고 깔끔한 텔레그램 API URL
+        # [수정 완료] 에러 방지: 완벽하고 깔끔한 텔레그램 API URL
         if TELEGRAM_TOKEN and CHAT_ID: 
-            requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚠️ [{category.upper()}] 백업 엔진까지 가동했으나 최근 48시간 이내의 적합한 뉴스를 찾지 못했습니다."})
+            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚠️ [{category.upper()}] 백업 엔진까지 가동했으나 최근 48시간 이내의 적합한 뉴스를 찾지 못했습니다."})
         exit(0)
         
     photo_prompt = create_photo_prompt(category, topic, ref_content)
@@ -297,9 +297,9 @@ if __name__ == "__main__":
         
     try:
         post_url = post_to_blogger(blog_id, title, html_output)
-        # 에러 방지: 완벽하고 깔끔한 텔레그램 API URL
+        # [수정 완료] 에러 방지: 완벽하고 깔끔한 텔레그램 API URL
         if TELEGRAM_TOKEN and CHAT_ID:
-            requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 최신 심층 분석 칼럼 발행 완료!\n📝 {title}\n👉 {post_url}"})
+            requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 최신 심층 분석 칼럼 발행 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:
         print(f"❌ 최종 업로드/알림 에러: {e}")
         exit(1)

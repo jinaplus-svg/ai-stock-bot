@@ -136,7 +136,7 @@ def create_photo_prompt(category, topic, ref_content):
     - ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY, NO LOGOS, NO SIGNS!
     - 3D CG, 일러스트레이션, 자연 풍경 금지. 오직 8k 극사실주의 실사(Photorealistic)로 피사체의 형태와 분위기만 묘사할 것.
     """
-    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content[:1500]하기}"}], temperature=0.7)
+    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content[:1500]}"}], temperature=0.7)
     return res.choices[0].message.content.strip()
 
 def generate_and_split_images_xai(prompt):

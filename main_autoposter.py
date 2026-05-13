@@ -13,6 +13,7 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
+from bs4 import BeautifulSoup
 
 # ==========================================
 # 1. 설정 및 API 키 로드
@@ -108,7 +109,7 @@ def generate_auto_topic(category):
         try:
             queries = {"news": "사회 최신 속보", "it": "IT 신기술 최신 속보", "stock": "증시 특징주 최신 속보", "food": "외식 트렌드 최신 뉴스", "travel": "여행 관광 최신 뉴스"}
             headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
-            params = {"query": queries.get(category, "최신 속보"), "display": 3, "sort": "date"} # sort=date로 무조건 최신순
+            params = {"query": queries.get(category, "최신 속보"), "display": 3, "sort": "date"}
             res = requests.get("https://openapi.naver.com/v1/search/news.json", headers=headers, params=params, timeout=10)
             if res.status_code == 200:
                 for item in res.json().get('items', []):
@@ -136,7 +137,7 @@ def create_photo_prompt(category, topic, ref_content):
     - ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY, NO LOGOS, NO SIGNS!
     - 3D CG, 일러스트레이션, 자연 풍경 금지. 오직 8k 극사실주의 실사(Photorealistic)로 피사체의 형태와 분위기만 묘사할 것.
     """
-    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content[:1500]}"}], temperature=0.7)
+    res = gpt_client.chat.completions.create(model="gpt-4o-mini", messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content}"}], temperature=0.7)
     return res.choices[0].message.content.strip()
 
 def generate_and_split_images_xai(prompt):
@@ -176,7 +177,7 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     
     🚨 [초강력 지시 사항 - 최신성 보장]
     - 오늘 날짜는 {today_str} 입니다. 제공된 기사는 무조건 최근 48시간 이내에 터진 가장 따끈따끈한 이슈입니다!
-    - 혹시 기사 내용에 과거(예: 4월) 행사가 언급되어 있더라도, 그 과거 행사를 메인으로 잡지 말고 "그래서 {today_str} 오늘 현재 이 이슈가 왜 다시 화제인가?", "앞으로의 파급력은 무엇인가?" 에 초점을 맞춰 오늘 시점의 최신 통찰력을 발휘하세요.
+    - 혹시 기사 내용에 과거 행사가 언급되어 있더라도, 그 과거 행사를 메인으로 잡지 말고 "그래서 {today_str} 오늘 현재 이 이슈가 왜 다시 화제인가?", "앞으로의 파급력은 무엇인가?" 에 초점을 맞춰 오늘 시점의 최신 통찰력을 발휘하세요.
     
     🚨 [초강력 금지 규칙]
     1. 마크다운 기호(```, markdown, html, **, #)는 절대로 출력하지 마세요! 오직 순수 HTML 태그만 사용.
@@ -284,4 +285,5 @@ if __name__ == "__main__":
         if TELEGRAM_TOKEN and CHAT_ID:
             requests.post(f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TELEGRAM_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": f"⚡ [{category.upper()}] 최신 심층 분석 칼럼 발행 완료!\n📝 {title}\n👉 {post_url}"})
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"❌ 최종 업로드/알림 에러: {e}")
+        exit(1)

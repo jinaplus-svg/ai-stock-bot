@@ -1,56 +1,53 @@
-name: Auto Blogger Poster
+name: Integrated Blog Auto Poster
 
 on:
   schedule:
-    # 봇이 스스로 포스팅하는 시간 (UTC 기준. 23시=한국 아침 8시, 4시=한국 오후 1시, 9시=한국 오후 6시)
-    - cron: '0 23,4,9 * * *'
+    - cron: '0 23 * * *' # IT (오전 8시)
+    - cron: '0 3 * * *'  # 맛집 (오후 12시)
+    # KST 기준 오전 7시부터 밤 10시까지 매시간 정각에 실행 (총 16회)
+    - cron: '0 22,23,0,1,2,3,4,5,6,7,8,9,10,11,12,13 * * *'
   workflow_dispatch:
     inputs:
       category:
-        description: '포스팅 카테고리 (news, it, stock, travel, food)'
+        description: 'it, food, news, stock, youtube'
         required: true
-        default: 'auto'
+      topic:
+        description: '주제 (수동용)'
+        description: '주제 (수동 실행용)'
+        required: true
       reference_url:
-        description: '참고할 기사 또는 유튜브 URL (선택사항)'
+        description: '참조할 외부 URL'
         required: false
         default: ''
 
 jobs:
-  post:
+  run-autoposter:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: '3.11' # google.api_core 경고 해결을 위해 3.11로 업그레이드
-
+          python-version: '3.11'
       - name: Install Dependencies
+        # beautifulsoup4 를 추가했습니다!
+        run: pip install openai google-api-python-client google-auth-oauthlib requests Pillow beautifulsoup4
+      - name: Run Autoposter
         run: |
-          python -m pip install --upgrade pip
-          pip install openai google-api-python-client google-auth-oauthlib requests Pillow beautifulsoup4 youtube-transcript-api
-
-      - name: Run Auto Poster Script
+          # 카테고리가 입력되지 않은 자동 스케줄 실행 시 'auto'를 전달하여 파이썬 코드가 알아서 분배하게 합니다.
+          python main_autoposter.py \
+            --category "${{ github.event.inputs.category || (github.event.schedule == '0 23 * * *' && 'it' || 'food') }}" \
+            --topic "${{ github.event.inputs.topic || '오늘의 이슈' }}" \
+            --category "${{ github.event.inputs.category || 'auto' }}" \
+            --topic "${{ github.event.inputs.topic || '오늘의 핫이슈' }}" \
+            --reference_url "${{ github.event.inputs.reference_url }}"
         env:
-          # AI 및 기본 유틸리티 키
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           XAI: ${{ secrets.XAI }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
-          
-          # 쌍끌이 검색 엔진(Tavily + Naver) 필수 키
-          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
-          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
-          
-          # 구글 블로그 카테고리별 ID
           IT_BLOG_ID: ${{ secrets.IT_BLOG_ID }}
           FOOD_BLOG_ID: ${{ secrets.FOOD_BLOG_ID }}
           NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}
           STOCK_BLOG_ID: ${{ secrets.STOCK_BLOG_ID }}
-          TRAVEL_BLOG_ID: ${{ secrets.TRAVEL_BLOG_ID }}
-        run: |
-          python main_autoposter.py --category "${{ github.event.inputs.category || 'auto' }}" --reference_url "${{ github.event.inputs.reference_url || '' }}"
+          YOUTUBE_BLOG_ID: ${{ secrets.YOUTUBE_BLOG_ID }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}

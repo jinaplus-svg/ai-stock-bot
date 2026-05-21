@@ -1,6 +1,9 @@
 name: Integrated Blog Auto Poster
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # KST 07:00~22:00 매시간 실행
     - cron: '0 22,23,0,1,2,3,4,5,6,7,8,9,10,11,12,13 * * *'
@@ -34,6 +37,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install openai google-api-python-client google-auth-oauthlib google-auth requests Pillow beautifulsoup4 youtube-transcript-api
+
+      - name: Patch Autoposter Runtime
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('main_autoposter.py')
+          s = p.read_text(encoding='utf-8')
+          bad = '[' + 'https://api.' + 'telegram.org/bot' + '](' + 'https://api.' + 'telegram.org/bot' + ')'
+          good = 'https://api.' + 'telegram.org/bot'
+          s = s.replace(bad, good)
+          p.write_text(s, encoding='utf-8')
+          print('Runtime patch completed')
+          PY
 
       - name: Run Autoposter
         run: |

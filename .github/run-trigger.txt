@@ -1,0 +1,1 @@
+trigger autoposter workflow after telegram runtime patch

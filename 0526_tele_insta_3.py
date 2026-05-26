@@ -42,7 +42,7 @@ IMAGE_SECONDS = int(os.environ.get("IMAGE_SECONDS", "3"))
 VIDEO_WIDTH = int(os.environ.get("VIDEO_WIDTH", "1080"))
 VIDEO_HEIGHT = int(os.environ.get("VIDEO_HEIGHT", "1920"))
 FPS = int(os.environ.get("FPS", "30"))
-CAPTION_FONT_SIZE = int(os.environ.get("CAPTION_FONT_SIZE", "68"))
+CAPTION_FONT_SIZE = int(os.environ.get("CAPTION_FONT_SIZE", "88"))
 AUTO_CAPTION = os.environ.get("AUTO_CAPTION", "true").lower() in {"1", "true", "yes", "y"}
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 GEMINI_KEYS = [
@@ -95,7 +95,7 @@ def write_caption_file(src_path: Path, caption: str):
     if not caption:
         return
     caption = caption.replace("\r", " ").replace("\t", " ")
-    wrapped = "\n".join(textwrap.wrap(caption, width=16))
+    wrapped = "\n".join(textwrap.wrap(caption, width=14))
     get_caption_path(src_path).write_text(wrapped, encoding="utf-8")
 
 
@@ -182,11 +182,11 @@ def build_video_filter(src_path: Path) -> str:
     drawtext = (
         f"drawtext=fontfile='{FONT_FILE}':"
         f"textfile='{caption_file}':"
-        f"fontcolor=white:fontsize={CAPTION_FONT_SIZE}:"
-        f"borderw=7:bordercolor=black:"
-        f"line_spacing=14:"
-        f"x=(w-text_w)/2:y=h-text_h-230:"
-        f"box=1:boxcolor=black@0.55:boxborderw=30"
+        f"fontcolor=yellow:fontsize={CAPTION_FONT_SIZE}:"
+        f"borderw=10:bordercolor=black:"
+        f"line_spacing=18:"
+        f"x=(w-text_w)/2:y=(h-text_h)/2:"
+        f"box=1:boxcolor=black@0.72:boxborderw=35"
     )
     return f"{base_filter},{drawtext}"
 
@@ -273,22 +273,26 @@ def ensure_ai_captions(media_files):
     report = []
     if not AUTO_CAPTION:
         return ["AI 자막: AUTO_CAPTION=false라서 건너뜀"]
-    if not GEMINI_KEYS:
-        return ["AI 자막: Gemini API Key 없음. GEMINI_KEY_MAIN 또는 GEMINI_API_KEY를 등록하세요."]
 
     for src_path in media_files:
         existing = get_caption_text(src_path)
         if existing:
             report.append(f"{src_path.name}: 기존 자막 사용 - {existing}")
             continue
-        caption = generate_ai_caption(src_path)
+
+        caption = ""
+        if GEMINI_KEYS:
+            caption = generate_ai_caption(src_path)
+        else:
+            report.append(f"{src_path.name}: Gemini API Key 없음")
+
         if caption:
             write_caption_file(src_path, caption)
             report.append(f"{src_path.name}: AI 자막 생성 - {caption}")
         else:
             fallback = "오늘의 순간"
             write_caption_file(src_path, fallback)
-            report.append(f"{src_path.name}: AI 실패, 기본 자막 사용 - {fallback}")
+            report.append(f"{src_path.name}: 기본 자막 사용 - {fallback}")
     return report
 
 
@@ -369,7 +373,6 @@ def save_telegram_file(message, file_id, filename):
         return
 
     file_info = bot.get_file(file_id)
-    # 여러 장을 동시에 올릴 때 초 단위 파일명이 충돌해서 일부가 덮어써지는 문제 방지
     unique = f"{time.time_ns()}_{message.message_id}"
     save_path = INPUT_DIR / f"{unique}_{safe_filename(filename)}"
     downloaded = bot.download_file(file_info.file_path)

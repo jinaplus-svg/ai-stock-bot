@@ -12,10 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install ffmpeg
+      - name: Install ffmpeg and Korean fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg fonts-noto-cjk
+          fc-cache -f -v
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,10 +40,10 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: |
           if [ -z "$INSTA_BOT_TOKEN" ] && [ -z "$BOT_TOKEN" ] && [ -z "$TELEGRAM_BOT_TOKEN" ] && [ -z "$TELEGRAM_TOKEN" ]; then
-            echo "❌ Telegram bot token secret is missing. Add Repository secret: INSTA_BOT_TOKEN"
+            echo "Telegram bot token secret is missing. Add Repository secret: INSTA_BOT_TOKEN"
             exit 1
           fi
-          echo "✅ Telegram token secret found"
+          echo "Telegram token secret found"
 
       - name: Run Telegram bot renderer
         env:

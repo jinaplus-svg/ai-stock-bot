@@ -1,76 +1,21 @@
-name: Integrated Blog Auto Poster
+name: Integrated Blog Auto Poster - DISABLED
+
+# 자동 블로그 중복 발행 방지를 위해 자동 실행(push/schedule)을 비활성화했습니다.
+# 다시 수동으로만 실행하고 싶으면 아래 workflow_dispatch 주석을 해제하세요.
 
 on:
-  push:
-    branches:
-      - main
-  schedule:
-    # KST 07:00~22:00 매시간 실행
-    - cron: '0 22,23,0,1,2,3,4,5,6,7,8,9,10,11,12,13 * * *'
   workflow_dispatch:
     inputs:
-      category:
-        description: 'auto, it, food, news, stock, travel'
+      disabled_notice:
+        description: 'This workflow is disabled to prevent duplicate blog posts.'
         required: false
-        default: 'auto'
-      topic:
-        description: '주제 (수동 실행용)'
-        required: false
-        default: '오늘의 핫이슈'
-      reference_url:
-        description: '참조할 외부 URL'
-        required: false
-        default: ''
+        default: 'disabled'
 
 jobs:
-  run-autoposter:
+  disabled:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Dependencies
+      - name: Disabled
         run: |
-          python -m pip install --upgrade pip
-          pip install openai google-api-python-client google-auth-oauthlib google-auth requests Pillow beautifulsoup4 youtube-transcript-api
-
-      - name: Patch Autoposter Runtime
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('main_autoposter.py')
-          s = p.read_text(encoding='utf-8')
-          bad = '[' + 'https://api.' + 'telegram.org/bot' + '](' + 'https://api.' + 'telegram.org/bot' + ')'
-          good = 'https://api.' + 'telegram.org/bot'
-          s = s.replace(bad, good)
-          p.write_text(s, encoding='utf-8')
-          print('Runtime patch completed')
-          PY
-
-      - name: Run Autoposter
-        run: |
-          python main_autoposter.py \
-            --category "${{ github.event.inputs.category || 'auto' }}" \
-            --topic "${{ github.event.inputs.topic || '오늘의 핫이슈' }}" \
-            --reference_url "${{ github.event.inputs.reference_url || '' }}"
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          XAI: ${{ secrets.XAI }}
-          GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
-
-          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
-          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
-
-          IT_BLOG_ID: ${{ secrets.IT_BLOG_ID }}
-          FOOD_BLOG_ID: ${{ secrets.FOOD_BLOG_ID }}
-          NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}
-          STOCK_BLOG_ID: ${{ secrets.STOCK_BLOG_ID }}
-          TRAVEL_BLOG_ID: ${{ secrets.TRAVEL_BLOG_ID }}
-
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
+          echo "This blog auto poster workflow is disabled to prevent duplicate posts."
+          echo "No blog article will be generated or posted."

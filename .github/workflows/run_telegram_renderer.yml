@@ -1,0 +1,42 @@
+name: Run Telegram Renderer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create working folders
+        run: |
+          mkdir -p input_media temp outputs
+
+      - name: Run Telegram bot renderer
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          GEMINI_KEY_MAIN: ${{ secrets.GEMINI_KEY_MAIN }}
+          GEMINI_KEY_SPARE: ${{ secrets.GEMINI_KEY_SPARE }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: |
+          python 0526_tele_insta_3.py

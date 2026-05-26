@@ -42,9 +42,9 @@ IMAGE_SECONDS = int(os.environ.get("IMAGE_SECONDS", "3"))
 VIDEO_WIDTH = int(os.environ.get("VIDEO_WIDTH", "1080"))
 VIDEO_HEIGHT = int(os.environ.get("VIDEO_HEIGHT", "1920"))
 FPS = int(os.environ.get("FPS", "30"))
-CAPTION_FONT_SIZE = int(os.environ.get("CAPTION_FONT_SIZE", "54"))
+CAPTION_FONT_SIZE = int(os.environ.get("CAPTION_FONT_SIZE", "68"))
 AUTO_CAPTION = os.environ.get("AUTO_CAPTION", "true").lower() in {"1", "true", "yes", "y"}
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 GEMINI_KEYS = [
     os.environ.get("GEMINI_API_KEY"),
     os.environ.get("GOOGLE_API_KEY"),
@@ -95,12 +95,12 @@ def write_caption_file(src_path: Path, caption: str):
     if not caption:
         return
     caption = caption.replace("\r", " ").replace("\t", " ")
-    wrapped = "\n".join(textwrap.wrap(caption, width=18))
+    wrapped = "\n".join(textwrap.wrap(caption, width=16))
     get_caption_path(src_path).write_text(wrapped, encoding="utf-8")
 
 
 def extract_video_frame(video_path: Path) -> Path:
-    frame_path = TEMP_DIR / f"frame_{video_path.stem}_{int(time.time())}.jpg"
+    frame_path = TEMP_DIR / f"frame_{video_path.stem}_{time.time_ns()}.jpg"
     cmd = [
         "ffmpeg", "-y",
         "-ss", "00:00:01",
@@ -122,7 +122,6 @@ def clean_ai_caption(text: str) -> str:
     text = text.replace("```", "").replace('"', "").replace("'", "")
     lines = [line.strip(" -•\t") for line in text.splitlines() if line.strip()]
     text = " ".join(lines)
-    # 너무 길면 쇼츠 자막에 맞게 짧게 제한
     if len(text) > 55:
         text = text[:55].rstrip() + "..."
     return text
@@ -133,10 +132,8 @@ def generate_ai_caption(src_path: Path) -> str:
         return ""
 
     analysis_image = src_path
-    temp_frame = None
     if src_path.suffix.lower() in VIDEO_EXTS:
-        temp_frame = extract_video_frame(src_path)
-        analysis_image = temp_frame
+        analysis_image = extract_video_frame(src_path)
 
     prompt = (
         "너는 인스타 릴스/유튜브 쇼츠 자막 카피라이터야. "
@@ -145,7 +142,7 @@ def generate_ai_caption(src_path: Path) -> str:
     )
 
     models = []
-    for m in [GEMINI_MODEL, "gemini-2.5-flash", "gemini-1.5-flash"]:
+    for m in [GEMINI_MODEL, "gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest"]:
         if m and m not in models:
             models.append(m)
 
@@ -186,10 +183,10 @@ def build_video_filter(src_path: Path) -> str:
         f"drawtext=fontfile='{FONT_FILE}':"
         f"textfile='{caption_file}':"
         f"fontcolor=white:fontsize={CAPTION_FONT_SIZE}:"
-        f"borderw=5:bordercolor=black:"
-        f"line_spacing=12:"
-        f"x=(w-text_w)/2:y=h-text_h-190:"
-        f"box=1:boxcolor=black@0.35:boxborderw=28"
+        f"borderw=7:bordercolor=black:"
+        f"line_spacing=14:"
+        f"x=(w-text_w)/2:y=h-text_h-230:"
+        f"box=1:boxcolor=black@0.55:boxborderw=30"
     )
     return f"{base_filter},{drawtext}"
 
@@ -273,18 +270,26 @@ def merge_videos(video_paths, output_path: Path):
 
 
 def ensure_ai_captions(media_files):
+    report = []
     if not AUTO_CAPTION:
-        return
+        return ["AI 자막: AUTO_CAPTION=false라서 건너뜀"]
     if not GEMINI_KEYS:
-        print("⚠️ Gemini API Key가 없어 AI 자막 생성을 건너뜁니다.")
-        return
+        return ["AI 자막: Gemini API Key 없음. GEMINI_KEY_MAIN 또는 GEMINI_API_KEY를 등록하세요."]
 
     for src_path in media_files:
-        if get_caption_text(src_path):
+        existing = get_caption_text(src_path)
+        if existing:
+            report.append(f"{src_path.name}: 기존 자막 사용 - {existing}")
             continue
         caption = generate_ai_caption(src_path)
         if caption:
             write_caption_file(src_path, caption)
+            report.append(f"{src_path.name}: AI 자막 생성 - {caption}")
+        else:
+            fallback = "오늘의 순간"
+            write_caption_file(src_path, fallback)
+            report.append(f"{src_path.name}: AI 실패, 기본 자막 사용 - {fallback}")
+    return report
 
 
 def main():
@@ -295,11 +300,13 @@ def main():
     if not media_files:
         raise RuntimeError("input_media 폴더에 이미지/영상이 없습니다. 텔레그램으로 먼저 업로드하세요.")
 
-    ensure_ai_captions(media_files)
+    caption_report = ensure_ai_captions(media_files)
 
     print(f"📥 입력 파일 {len(media_files)}개 감지")
     for p in media_files:
         print(f" - {p.name}")
+    for line in caption_report:
+        print(f"📝 {line}")
 
     scene_videos = []
     indexed_files = list(enumerate(media_files, start=1))
@@ -314,7 +321,7 @@ def main():
 
     final_video = OUTPUTS_DIR / "Final_Video.mp4"
     merge_videos(sorted(scene_videos), final_video)
-    return final_video
+    return final_video, caption_report, len(media_files), len(scene_videos)
 
 
 @bot.message_handler(commands=["start", "help"])
@@ -362,8 +369,9 @@ def save_telegram_file(message, file_id, filename):
         return
 
     file_info = bot.get_file(file_id)
-    count = len(collect_media_files()) + 1
-    save_path = INPUT_DIR / f"{count:03d}_{safe_filename(filename)}"
+    # 여러 장을 동시에 올릴 때 초 단위 파일명이 충돌해서 일부가 덮어써지는 문제 방지
+    unique = f"{time.time_ns()}_{message.message_id}"
+    save_path = INPUT_DIR / f"{unique}_{safe_filename(filename)}"
     downloaded = bot.download_file(file_info.file_path)
     with open(save_path, "wb") as f:
         f.write(downloaded)
@@ -371,11 +379,10 @@ def save_telegram_file(message, file_id, filename):
     manual_caption = getattr(message, "caption", None)
     if manual_caption:
         write_caption_file(save_path, manual_caption)
-        bot.reply_to(message, f"✅ 파일 수신 완료 ({count}개): {save_path.name} / 수동 자막 저장")
-    elif AUTO_CAPTION and GEMINI_KEYS:
-        bot.reply_to(message, f"✅ 파일 수신 완료 ({count}개): {save_path.name}\n🧠 /run 실행 시 Gemini가 자막을 자동 생성합니다.")
-    else:
-        bot.reply_to(message, f"✅ 파일 수신 완료 ({count}개): {save_path.name} / 자막 없음")
+
+    total = len(collect_media_files())
+    cap_status = "수동 자막 저장" if manual_caption else "AI 자막 생성 예정"
+    bot.reply_to(message, f"✅ 파일 수신 완료: {save_path.name}\n📦 현재 총 {total}개 / {cap_status}")
 
 
 @bot.message_handler(content_types=["photo"])
@@ -398,11 +405,19 @@ def handle_document(message):
 @bot.message_handler(commands=["run"])
 def run_render(message):
     chat_id = message.chat.id
-    bot.reply_to(message, "⚙️ 렌더링 시작... 캡션이 없으면 Gemini가 자막을 자동 생성합니다.")
+    bot.reply_to(message, "⚙️ 렌더링 시작... 누락 방지를 위해 업로드 파일 수와 자막 생성 결과를 같이 보고합니다.")
     try:
-        final_video = main()
+        final_video, caption_report, input_count, scene_count = main()
         size_mb = final_video.stat().st_size / 1024 / 1024
-        bot.send_message(chat_id, f"✅ 렌더링 완료: {final_video.name} ({size_mb:.1f}MB)")
+        report_text = "\n".join(caption_report[:12])
+        if len(caption_report) > 12:
+            report_text += f"\n...외 {len(caption_report) - 12}개"
+        bot.send_message(
+            chat_id,
+            f"✅ 렌더링 완료: {final_video.name} ({size_mb:.1f}MB)\n"
+            f"📦 입력 {input_count}개 / 생성 씬 {scene_count}개\n\n"
+            f"📝 자막 결과\n{report_text}"
+        )
         with open(final_video, "rb") as f:
             bot.send_document(chat_id, f, visible_file_name="Final_Video.mp4")
     except Exception as e:

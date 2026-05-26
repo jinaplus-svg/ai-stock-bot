@@ -1,6 +1,7 @@
 import os
 import subprocess
 import time
+import textwrap
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -39,6 +40,15 @@ IMAGE_SECONDS = int(os.environ.get("IMAGE_SECONDS", "3"))
 VIDEO_WIDTH = int(os.environ.get("VIDEO_WIDTH", "1080"))
 VIDEO_HEIGHT = int(os.environ.get("VIDEO_HEIGHT", "1920"))
 FPS = int(os.environ.get("FPS", "30"))
+CAPTION_FONT_SIZE = int(os.environ.get("CAPTION_FONT_SIZE", "54"))
+
+FONT_CANDIDATES = [
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+]
+FONT_FILE = next((p for p in FONT_CANDIDATES if Path(p).exists()), FONT_CANDIDATES[-1])
 
 
 def run_cmd(cmd, label="ffmpeg"):
@@ -58,12 +68,51 @@ def collect_media_files():
     return [p for p in sorted(INPUT_DIR.iterdir()) if p.is_file() and p.suffix.lower() in ALL_EXTS]
 
 
-def make_image_scene(src_path: Path, out_path: Path):
-    vf = (
+def get_caption_path(src_path: Path) -> Path:
+    return src_path.with_suffix(src_path.suffix + ".caption.txt")
+
+
+def get_caption_text(src_path: Path) -> str:
+    caption_path = get_caption_path(src_path)
+    if caption_path.exists():
+        return caption_path.read_text(encoding="utf-8").strip()
+    return ""
+
+
+def write_caption_file(src_path: Path, caption: str):
+    caption = (caption or "").strip()
+    if not caption:
+        return
+    wrapped = "\n".join(textwrap.wrap(caption, width=18))
+    get_caption_path(src_path).write_text(wrapped, encoding="utf-8")
+
+
+def build_video_filter(src_path: Path) -> str:
+    base_filter = (
         f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,"
         f"pad={VIDEO_WIDTH}:{VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2,"
         f"fps={FPS},format=yuv420p"
     )
+    caption_text = get_caption_text(src_path)
+    if not caption_text:
+        return base_filter
+
+    caption_file = get_caption_path(src_path).resolve().as_posix()
+    # 텔레그램 caption을 하단 자막처럼 표시합니다.
+    drawtext = (
+        f"drawtext=fontfile='{FONT_FILE}':"
+        f"textfile='{caption_file}':"
+        f"fontcolor=white:fontsize={CAPTION_FONT_SIZE}:"
+        f"borderw=5:bordercolor=black:"
+        f"line_spacing=12:"
+        f"x=(w-text_w)/2:y=h-text_h-190:"
+        f"box=1:boxcolor=black@0.35:boxborderw=28"
+    )
+    return f"{base_filter},{drawtext}"
+
+
+def make_image_scene(src_path: Path, out_path: Path):
+    vf = build_video_filter(src_path)
     cmd = [
         "ffmpeg", "-y",
         "-loop", "1", "-t", str(IMAGE_SECONDS),
@@ -81,11 +130,7 @@ def make_image_scene(src_path: Path, out_path: Path):
 
 
 def make_video_scene(src_path: Path, out_path: Path):
-    vf = (
-        f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,"
-        f"pad={VIDEO_WIDTH}:{VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2,"
-        f"fps={FPS},format=yuv420p"
-    )
+    vf = build_video_filter(src_path)
     cmd = [
         "ffmpeg", "-y",
         "-i", str(src_path),
@@ -178,8 +223,9 @@ def handle_start(message):
         message,
         "✅ 텔레그램 영상 렌더러가 실행 중입니다.\n\n"
         "1) 사진/영상/파일을 여러 개 보내세요.\n"
-        "2) 모두 보낸 뒤 /run 을 입력하세요.\n"
-        "3) 초기화는 /clear, 상태확인은 /status 입니다.\n\n"
+        "2) 각 사진/영상에 캡션을 달면 그 문구가 자막으로 들어갑니다.\n"
+        "3) 모두 보낸 뒤 /run 을 입력하세요.\n"
+        "4) 초기화는 /clear, 상태확인은 /status 입니다.\n\n"
         "지원: jpg, png, webp, mp4, mov, m4v, avi, mkv, webm"
     )
 
@@ -199,9 +245,13 @@ def handle_status(message):
     if not files:
         bot.reply_to(message, "📦 현재 입력 파일: 0개")
         return
-    file_list = "\n".join([f"- {p.name}" for p in files[:30]])
+    lines = []
+    for p in files[:30]:
+        cap = get_caption_text(p)
+        cap_mark = " / 자막 있음" if cap else " / 자막 없음"
+        lines.append(f"- {p.name}{cap_mark}")
     more = "" if len(files) <= 30 else f"\n...외 {len(files) - 30}개"
-    bot.reply_to(message, f"📦 현재 입력 파일: {len(files)}개\n{file_list}{more}")
+    bot.reply_to(message, f"📦 현재 입력 파일: {len(files)}개\n" + "\n".join(lines) + more)
 
 
 def save_telegram_file(message, file_id, filename):
@@ -216,7 +266,10 @@ def save_telegram_file(message, file_id, filename):
     downloaded = bot.download_file(file_info.file_path)
     with open(save_path, "wb") as f:
         f.write(downloaded)
-    bot.reply_to(message, f"✅ 파일 수신 완료 ({count}개): {save_path.name}")
+
+    write_caption_file(save_path, getattr(message, "caption", None))
+    caption_msg = " / 자막 저장" if get_caption_text(save_path) else ""
+    bot.reply_to(message, f"✅ 파일 수신 완료 ({count}개): {save_path.name}{caption_msg}")
 
 
 @bot.message_handler(content_types=["photo"])
@@ -239,7 +292,7 @@ def handle_document(message):
 @bot.message_handler(commands=["run"])
 def run_render(message):
     chat_id = message.chat.id
-    bot.reply_to(message, "⚙️ 렌더링 시작... 이미지/영상 변환 후 최종 mp4로 합칩니다.")
+    bot.reply_to(message, "⚙️ 렌더링 시작... 캡션이 있으면 하단 자막으로 넣습니다.")
     try:
         final_video = main()
         size_mb = final_video.stat().st_size / 1024 / 1024

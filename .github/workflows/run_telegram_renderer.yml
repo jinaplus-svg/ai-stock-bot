@@ -31,9 +31,23 @@ jobs:
         run: |
           mkdir -p input_media temp outputs
 
+      - name: Check required secrets
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        run: |
+          if [ -z "$BOT_TOKEN" ] && [ -z "$TELEGRAM_BOT_TOKEN" ] && [ -z "$TELEGRAM_TOKEN" ]; then
+            echo "❌ Telegram bot token secret is missing. Add one of these Repository secrets: BOT_TOKEN, TELEGRAM_BOT_TOKEN, or TELEGRAM_TOKEN"
+            exit 1
+          fi
+          echo "✅ Telegram token secret found"
+
       - name: Run Telegram bot renderer
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
           GEMINI_KEY_MAIN: ${{ secrets.GEMINI_KEY_MAIN }}
           GEMINI_KEY_SPARE: ${{ secrets.GEMINI_KEY_SPARE }}

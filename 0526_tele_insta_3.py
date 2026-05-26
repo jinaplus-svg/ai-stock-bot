@@ -9,9 +9,15 @@ import telebot
 # ==========================================
 # 1. 기본 설정
 # ==========================================
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
+BOT_TOKEN = (
+    os.environ.get("BOT_TOKEN")
+    or os.environ.get("TELEGRAM_BOT_TOKEN")
+    or os.environ.get("TELEGRAM_TOKEN")
+)
 if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN이 필요합니다. GitHub Secrets에 BOT_TOKEN을 등록하세요.")
+    raise RuntimeError(
+        "Telegram Bot Token이 필요합니다. GitHub Secrets에 BOT_TOKEN, TELEGRAM_BOT_TOKEN, TELEGRAM_TOKEN 중 하나를 등록하세요."
+    )
 
 bot = telebot.TeleBot(BOT_TOKEN)
 

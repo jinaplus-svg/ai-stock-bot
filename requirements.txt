@@ -1,0 +1,9 @@
+pyTelegramBotAPI
+Pillow
+requests
+mutagen
+google-generativeai
+edge-tts
+youtube-transcript-api
+google-api-python-client
+google-auth-oauthlib

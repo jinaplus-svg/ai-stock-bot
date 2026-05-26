@@ -10,13 +10,14 @@ import telebot
 # 1. 기본 설정
 # ==========================================
 BOT_TOKEN = (
-    os.environ.get("BOT_TOKEN")
+    os.environ.get("INSTA_BOT_TOKEN")
+    or os.environ.get("BOT_TOKEN")
     or os.environ.get("TELEGRAM_BOT_TOKEN")
     or os.environ.get("TELEGRAM_TOKEN")
 )
 if not BOT_TOKEN:
     raise RuntimeError(
-        "Telegram Bot Token이 필요합니다. GitHub Secrets에 BOT_TOKEN, TELEGRAM_BOT_TOKEN, TELEGRAM_TOKEN 중 하나를 등록하세요."
+        "Telegram Bot Token이 필요합니다. GitHub Secrets에 INSTA_BOT_TOKEN, BOT_TOKEN, TELEGRAM_BOT_TOKEN, TELEGRAM_TOKEN 중 하나를 등록하세요."
     )
 
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -33,7 +34,6 @@ IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 VIDEO_EXTS = {".mp4", ".mov", ".m4v", ".avi", ".mkv", ".webm"}
 ALL_EXTS = IMAGE_EXTS | VIDEO_EXTS
 
-# GitHub Actions CPU 환경에서는 2가 안정적입니다. 필요하면 Secrets/Variables에 MAX_WORKERS=3 등으로 조정하세요.
 MAX_WORKERS = int(os.environ.get("MAX_WORKERS", "2"))
 IMAGE_SECONDS = int(os.environ.get("IMAGE_SECONDS", "3"))
 VIDEO_WIDTH = int(os.environ.get("VIDEO_WIDTH", "1080"))
@@ -59,7 +59,6 @@ def collect_media_files():
 
 
 def make_image_scene(src_path: Path, out_path: Path):
-    """이미지 1장을 세로 쇼츠 규격 mp4로 변환합니다."""
     vf = (
         f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,"
         f"pad={VIDEO_WIDTH}:{VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2,"
@@ -82,7 +81,6 @@ def make_image_scene(src_path: Path, out_path: Path):
 
 
 def make_video_scene(src_path: Path, out_path: Path):
-    """업로드된 영상을 세로 쇼츠 규격 mp4로 정규화합니다."""
     vf = (
         f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,"
         f"pad={VIDEO_WIDTH}:{VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2,"
@@ -106,7 +104,6 @@ def render_one_media(index_and_path):
     idx, src_path = index_and_path
     out_path = TEMP_DIR / f"scene_{idx:03d}.mp4"
     ext = src_path.suffix.lower()
-
     if ext in IMAGE_EXTS:
         return make_image_scene(src_path, out_path)
     if ext in VIDEO_EXTS:
@@ -121,10 +118,8 @@ def merge_videos(video_paths, output_path: Path):
     list_file = TEMP_DIR / "list_vid.txt"
     with open(list_file, "w", encoding="utf-8") as f:
         for vp in sorted(video_paths):
-            # concat demuxer 안정성을 위해 절대경로 사용
             f.write(f"file '{Path(vp).resolve().as_posix()}'\n")
 
-    # 모든 씬을 동일 규격으로 만들었으므로 우선 copy 병합
     cmd_copy = [
         "ffmpeg", "-y",
         "-f", "concat", "-safe", "0",
@@ -133,11 +128,9 @@ def merge_videos(video_paths, output_path: Path):
         "-movflags", "+faststart",
         str(output_path),
     ]
-
     try:
         run_cmd(cmd_copy, "최종 병합(copy)")
     except Exception:
-        # 혹시 타임베이스/코덱 불일치가 있으면 재인코딩 병합으로 복구
         cmd_reencode = [
             "ffmpeg", "-y",
             "-f", "concat", "-safe", "0",
@@ -148,12 +141,10 @@ def merge_videos(video_paths, output_path: Path):
             str(output_path),
         ]
         run_cmd(cmd_reencode, "최종 병합(re-encode)")
-
     return output_path
 
 
 def main():
-    # 이전 중간 결과 정리
     for p in TEMP_DIR.glob("scene_*.mp4"):
         p.unlink(missing_ok=True)
 
@@ -176,15 +167,11 @@ def main():
             if result and Path(result).exists():
                 scene_videos.append(Path(result))
 
-    scene_videos = sorted(scene_videos)
     final_video = OUTPUTS_DIR / "Final_Video.mp4"
-    merge_videos(scene_videos, final_video)
+    merge_videos(sorted(scene_videos), final_video)
     return final_video
 
 
-# ==========================================
-# 2. 텔레그램 핸들러
-# ==========================================
 @bot.message_handler(commands=["start", "help"])
 def handle_start(message):
     bot.reply_to(
@@ -226,11 +213,9 @@ def save_telegram_file(message, file_id, filename):
     file_info = bot.get_file(file_id)
     count = len(collect_media_files()) + 1
     save_path = INPUT_DIR / f"{count:03d}_{safe_filename(filename)}"
-
     downloaded = bot.download_file(file_info.file_path)
     with open(save_path, "wb") as f:
         f.write(downloaded)
-
     bot.reply_to(message, f"✅ 파일 수신 완료 ({count}개): {save_path.name}")
 
 
@@ -255,16 +240,12 @@ def handle_document(message):
 def run_render(message):
     chat_id = message.chat.id
     bot.reply_to(message, "⚙️ 렌더링 시작... 이미지/영상 변환 후 최종 mp4로 합칩니다.")
-
     try:
         final_video = main()
         size_mb = final_video.stat().st_size / 1024 / 1024
         bot.send_message(chat_id, f"✅ 렌더링 완료: {final_video.name} ({size_mb:.1f}MB)")
-
         with open(final_video, "rb") as f:
-            # 용량이 큰 경우 send_video보다 send_document가 안정적입니다.
             bot.send_document(chat_id, f, visible_file_name="Final_Video.mp4")
-
     except Exception as e:
         bot.send_message(chat_id, f"❌ 렌더링 실패:\n{str(e)[:3500]}")
 

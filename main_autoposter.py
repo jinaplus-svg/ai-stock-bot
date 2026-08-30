@@ -66,7 +66,8 @@ def fetch_reference_content(url):
     if "youtube.com" in url or "youtu.be" in url:
         try:
             video_id = url.split("/")[-1].split("?")[0] if "youtu.be" in url else re.search(r"v=([a-zA-Z0-9_-]+)", url).group(1)
-            transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+            # [FIX] youtube-transcript-api 1.x부터 get_transcript() 클래스메서드가 제거됨 -> 인스턴스 fetch()로 교체
+            transcript_list = YouTubeTranscriptApi().fetch(video_id, languages=['ko', 'en']).to_raw_data()
             transcript_text = " ".join([item['text'] for item in transcript_list])
             return f"[유튜브 스크립트]:\n{transcript_text[:4000]}", "유튜브 분석", url
         except:
@@ -106,7 +107,8 @@ def fetch_youtube_trending_topic(category):
             video_id = item["id"]["videoId"]
             title = item["snippet"]["title"]
             try:
-                transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=["ko", "en"])
+                # [FIX] youtube-transcript-api 1.x 인스턴스 fetch() API로 교체 (get_transcript()는 제거됨)
+                transcript = YouTubeTranscriptApi().fetch(video_id, languages=["ko", "en"]).to_raw_data()
                 text = " ".join(t["text"] for t in transcript)[:4000]
             except Exception:
                 text = item["snippet"].get("description", "")[:2000]

@@ -7,3 +7,5 @@ edge-tts
 youtube-transcript-api
 google-api-python-client
 google-auth-oauthlib
+openai
+beautifulsoup4

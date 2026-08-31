@@ -31,7 +31,7 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 GEMINI_MODEL = "gemini-2.5-flash"
 XAI_API_KEY = os.environ.get("XAI")
 
-GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
+GOOGLE_OAUTH_TOKEN_STR = os.environ.get("SOLO_GOOGLE_TOKEN")  # [FIX] 5개 카테고리 블로그와 계정이 달라서 별도 시크릿 사용
 SOLO_BLOG_ID = os.environ.get("SOLO_BLOG_ID")
 SCOPES = ["https://www.googleapis.com/auth/blogger"]
 

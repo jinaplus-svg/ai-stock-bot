@@ -430,18 +430,29 @@ def build_mascot_sheet_prompt(poses):
     )
 
 
-def chromakey_cutout(image_path, green_dominance=25):
-    """[FIX] xAI가 그린 초록 배경은 JPEG 압축 노이즈 때문에 완벽히 균일하지 않아서, 단순 RGB
-    근접값 비교(0822 원본 방식)로는 초록 잔점이 많이 남는 문제가 있었음. 대신 'G값이 R/B보다
-    확실히 우세한 픽셀만 투명 처리'하는 방식으로 바꿔서 노이즈에 훨씬 강건하게 만듦
-    (흰색/검정/피부톤처럼 R≈G≈B인 캐릭터 픽셀은 자연스럽게 보존됨)."""
+def chromakey_cutout(image_path, green_dominance=25, spill_dominance=6):
+    """xAI가 그린 초록 배경은 완벽히 균일하지 않아서(JPEG 노이즈), 단순 배경 제거만으로는
+    캐릭터 가장자리에 초록기가 '스며든'(color spill) 얼룩이 남는 문제가 있었음. 그래서 2단계로 처리:
+    1) G가 R/B보다 확실히 우세한 픽셀 -> 완전 투명 처리 (배경)
+    2) 남은 픽셀 중 G가 살짝이라도 우세한 픽셀 -> 투명 처리는 안 하되 G값을 max(R,B)로 눌러서
+       초록 얼룩(스필)만 제거 (흰색/검정/피부톤 등 캐릭터 색상은 그대로 유지)."""
     from PIL import Image
     import numpy as np
     img = Image.open(image_path).convert("RGBA")
-    arr = np.array(img)
-    r, g, b = arr[:, :, 0].astype(int), arr[:, :, 1].astype(int), arr[:, :, 2].astype(int)
-    is_green = (g - np.maximum(r, b)) > green_dominance
-    arr[:, :, 3] = np.where(is_green, 0, 255)
+    arr = np.array(img).astype(int)
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+    max_rb = np.maximum(r, b)
+    dominance = g - max_rb
+
+    is_bg = dominance > green_dominance
+    is_spill = (dominance > spill_dominance) & (~is_bg)
+
+    g_fixed = np.where(is_spill, max_rb, g)
+    alpha = np.where(is_bg, 0, 255)
+
+    arr[:, :, 1] = g_fixed
+    arr[:, :, 3] = alpha
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
     return Image.fromarray(arr, "RGBA")
 
 

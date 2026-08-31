@@ -167,15 +167,35 @@ BLOG_SYSTEM_PROMPT = """당신은 '자취템' 블로그(soloitems.blogspot.com)�
 - meta_description: 검색결과에 노출될 요약 (80자 내외)
 
 [이미지 - 비용 절감을 위해 2x2 그리드 1장만 생성]
-"grid_image_prompt" 필드에, 4칸 각각이 완전히 독립된 사진처럼 보이도록 구체적으로 작성하세요.
+"grid_image_prompt" 필드에 아래 형식으로, 4칸 각각이 완전히 독립된 사진처럼 보이도록 구체적으로 작성하세요.
+4칸이 하나로 이어지는 파노라마처럼 보이면 안 됩니다 (서로 다른 장소/구도/사물이어야 함).
+
 형식: "A perfectly seamless 2x2 grid of 4 completely independent, unrelated photographs,
-absolutely NO borders, NO white frames, NO margins between panels. Top-left: [intro 장면],
-Top-right: [problem 장면], Bottom-left: [solution - 상품이 자연스럽게 쓰이는 장면],
-Bottom-right: [tips 장면]. Style: clean modern editorial photography, soft natural lighting,
-cozy modern one-room apartment interior, realistic, no text, no logos, no readable text."
+absolutely NO borders, NO white frames, NO margins between panels, each panel is a separate
+photo with its own distinct location and subject. Top-left: [intro 섹션에 어울리는 구체적 장면],
+Top-right: [problem 섹션에 어울리는 구체적 장면], Bottom-left: [solution 섹션 - 상품이 자연스럽게
+쓰이는 장면], Bottom-right: [tips 섹션에 어울리는 구체적 장면]. Style: clean modern editorial
+photography, soft natural lighting, cozy modern one-room apartment interior, minimal and
+uncluttered composition, realistic, contemporary 2020s interior and lifestyle, no text, no logos,
+no visible brand names, no readable text of any kind in the image.
+IMPORTANT mixed-style rule: the background, room, furniture, and product itself must be
+photorealistic (real photography). But if any human figure appears in a panel, that person must be
+rendered in a simple clean flat cartoon/illustration style (like a modern minimal webtoon character
+— smooth flat colors, simple linework, no photorealistic skin/face), NOT photorealistic. This
+creates a deliberate contrast: realistic environment and product + illustrated cartoon person.
+Panels with no person in them (empty room, close-up of the product, hands only, etc.) should stay
+100 percent photorealistic with no illustration at all. Apply this mixed-style rule to EVERY panel
+that contains a person — all 4 panels, not just some."
 
 [핵심 - 실제 상품 스펙]
 [상품 정보]에 실제 스펙이 있으면 그대로 specs에 반영, 없으면 specs는 빈 배열 []로 (지어내지 말 것).
+
+[핵심 - 형태 정확성 (이미지 할루시네이션 방지)]
+이미지 생성 AI는 실제 상품 사진을 보지 못하고 이 프롬프트의 텍스트만 보고 그림을 그립니다.
+그래서 "세탁기", "청소기"처럼 뭉뚱그려 쓰면 흔한 형태로 잘못 그리기 쉽습니다.
+[상품 정보]에 "[형태 확인]" 섹션이 주어졌다면, 그 내용을 grid_image_prompt의 solution 패널
+설명에 영어로 그대로(또는 매우 가깝게) 반영하고, 명시된 유사 형태는 "Do NOT draw ~" 식으로
+명확히 배제하세요.
 
 [출력 규칙]
 특수문자(마크다운 강조기호 **, *, _, #) 쓰지 말 것. 순수 JSON만 출력.
@@ -253,11 +273,41 @@ def fetch_product_specs_via_search(product_name):
         return ""
 
 
+# 🌟 이미지 생성 AI가 헷갈리기 쉬운 형태(하위 유형)를 상품명에서 미리 감지해서,
+# "이 형태다 / 저 형태는 절대 아니다"를 명시적으로 프롬프트에 못박기 위한 사전.
+SHAPE_HINT_KEYWORDS = {
+    "통돌이": "This is a TOP-LOADING vertical washing machine — the lid opens from the TOP, "
+              "drum is seen from above. Do NOT draw a front-loading drum washer with a round glass door.",
+    "드럼": "This is a FRONT-LOADING drum washing machine with a round glass door on the front. "
+            "Do NOT draw a top-loading vertical washer.",
+    "벽걸이": "This unit is WALL-MOUNTED, fixed to the wall. Do NOT draw it as a freestanding "
+              "floor unit.",
+    "로봇청소기": "This is a low, flat, round disc-shaped ROBOT vacuum sitting on the floor. "
+                "Do NOT draw an upright or stick vacuum being held by a person.",
+    "스틱청소기": "This is an UPRIGHT STICK vacuum held by a person's hand while standing. "
+                "Do NOT draw a round robot vacuum on the floor.",
+    "무선": "This device is CORDLESS — no visible power cable connected to it.",
+    "미니": "This is a COMPACT/SMALL-SIZED unit, notably smaller than standard full-size versions "
+            "of this appliance type.",
+}
+
+
+def get_shape_hint(product_name):
+    hints = [v for k, v in SHAPE_HINT_KEYWORDS.items() if k in (product_name or "")]
+    return " ".join(hints)
+
+
 def generate_blog_script(product, specs_text=""):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
     product_info = f"상품명: {product['name']}\n가격: {product['price']}원\n카테고리: {product['category']}"
     if specs_text:
         product_info += f"\n\n[웹 검색으로 확인된 실제 스펙]\n{specs_text}"
+    shape_hint = get_shape_hint(product.get("name", ""))
+    if shape_hint:
+        product_info += (
+            f"\n\n[형태 확인 - grid_image_prompt의 solution 패널에 이 내용을 영어로 그대로 반영, "
+            f"헷갈리는 유사 형태는 절대 그리지 않도록 명시]\n{shape_hint}"
+        )
     full_prompt = f"{BLOG_SYSTEM_PROMPT}\n\n[상품 정보]\n{product_info}"
     payload = {
         "contents": [{"parts": [{"text": full_prompt}]}],

@@ -1,0 +1,64 @@
+name: Content Pilot (Blog + Longform Script)
+
+on:
+  workflow_dispatch:
+    inputs:
+      category:
+        description: "발행할 카테고리"
+        required: true
+        default: "stock"
+        type: choice
+        options:
+          - stock
+          - it
+          - food
+          - news
+          - travel
+      with_longform:
+        description: "같은 소재로 롱폼 대본도 생성해서 텔레그램으로 보낼지"
+        required: false
+        default: "true"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Content pilot
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          XAI: ${{ secrets.XAI }}
+          GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+          IT_BLOG_ID: ${{ secrets.IT_BLOG_ID }}
+          FOOD_BLOG_ID: ${{ secrets.FOOD_BLOG_ID }}
+          NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}
+          STOCK_BLOG_ID: ${{ secrets.STOCK_BLOG_ID }}
+          TRAVEL_BLOG_ID: ${{ secrets.TRAVEL_BLOG_ID }}
+        run: |
+          if [ "${{ github.event.inputs.with_longform }}" = "true" ]; then
+            python main_autoposter.py --category "${{ github.event.inputs.category }}" --with_longform
+          else
+            python main_autoposter.py --category "${{ github.event.inputs.category }}"
+          fi

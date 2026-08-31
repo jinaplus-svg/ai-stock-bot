@@ -1,6 +1,8 @@
 name: Soloitems Pilot (Coupang Auto Blog)
 
 on:
+  schedule:
+    - cron: '0 6 * * *'   # 매일 15:00 KST (UTC 06:00)
   workflow_dispatch:
 
 jobs:

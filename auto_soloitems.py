@@ -424,47 +424,73 @@ def upload_to_blogger(title, content_html):
 # 메인
 # ==========================================
 def main():
+    print("1) 최근 포스트 조회 중...")
     recent_titles = get_recent_post_titles(SOLO_BLOG_ID)
+    print(f"   최근 제목 {len(recent_titles)}건 확보")
 
+    print("2) 쿠팡 인기상품 스캔 중...")
     candidates = scan_trending_products(top_n=8)
+    print(f"   후보 {len(candidates)}건")
     if not candidates:
+        print("❌ 후보 없음")
         send_telegram("❌ [자취템] 쿠팡 인기상품을 가져오지 못했습니다.")
         return
 
     product = pick_product_auto(candidates, recent_titles)
-    print(f"✅ 선택된 상품: {product['name']}")
+    print(f"✅ 3) 선택된 상품: {product['name']}")
 
+    print("4) 상품 스펙 검색 중...")
     specs_text = fetch_product_specs_via_search(product["name"])
+    print(f"   스펙 텍스트 길이: {len(specs_text)}")
+
+    print("5) Gemini 블로그 대본 생성 중...")
     script_data, err = generate_blog_script(product, specs_text)
     if err or not script_data:
+        print(f"❌ 대본 생성 실패: {err}")
         send_telegram(f"❌ [자취템] 대본 생성 실패: {err}")
         return
+    print(f"   제목: {script_data.get('title')}")
 
     job_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     sections = script_data.get("sections", [])
     grid_prompt = script_data.get("grid_image_prompt", "")
     section_images = [None] * len(sections)
 
+    print("6) xAI 그리드 이미지 생성 중...")
     if grid_prompt:
         grid_path = f"./_bloggrid_{job_id}.jpg"
         if generate_xai_image(grid_prompt, grid_path, aspect_ratio="16:9"):
+            print("   이미지 생성 성공, 4분할 중...")
             crop_paths = split_grid_2x2(grid_path, job_id)
             crop_urls = [image_file_to_data_uri(cp) for cp in crop_paths]
             grid_order = ["intro", "problem", "solution", "tips"]
             for i, sec in enumerate(sections):
                 if sec.get("section_type") in grid_order:
                     section_images[i] = crop_urls[grid_order.index(sec.get("section_type"))]
+        else:
+            print("⚠️ 이미지 생성 실패, 이미지 없이 진행")
+    else:
+        print("⚠️ grid_image_prompt 없음")
 
     deeplink = product.get("url", "")
     content_html = build_blog_html(script_data, section_images, product, deeplink)
     title = script_data.get("title", product["name"])
+    print(f"7) HTML 조립 완료 (길이 {len(content_html)})")
 
+    print("8) 블로거 발행 중...")
     try:
         link = upload_to_blogger(title, content_html)
+        print(f"✅ 발행 완료: {link}")
         send_telegram(f"✅ [자취템] 자동 발행 완료!\n📦 상품: {product['name']}\n📝 {title}\n👉 {link}")
     except Exception as e:
+        print(f"❌ 발행 실패: {e}")
         send_telegram(f"❌ [자취템] 발행 실패: {e}")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        raise

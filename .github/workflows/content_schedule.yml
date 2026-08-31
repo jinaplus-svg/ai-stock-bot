@@ -5,6 +5,9 @@ on:
     - cron: '0 22 * * *'   # 매일 07:00 KST (UTC 전날 22:00)
   workflow_dispatch:        # 필요하면 수동으로도 트리거 가능
 
+permissions:
+  contents: write  # longform_creator_history.json 커밋을 위해 필요
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -48,3 +51,11 @@ jobs:
             python main_autoposter.py --category "$cat" --with_longform || echo "⚠️ $cat 실패, 다음 카테고리로 계속"
             sleep 5
           done
+
+      - name: Commit longform creator history (dedup state)
+        run: |
+          git config user.name "content-schedule-bot"
+          git config user.email "content-schedule-bot@users.noreply.github.com"
+          git add longform_creator_history.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "chore: update longform creator history [skip ci]"
+          git push || true

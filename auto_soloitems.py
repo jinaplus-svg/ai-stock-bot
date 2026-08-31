@@ -1,0 +1,470 @@
+import os
+import re
+import sys
+import json
+import time
+import base64
+import hmac
+import hashlib
+import datetime
+import unicodedata
+import requests
+from urllib.parse import quote
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+# ==========================================
+# 설정 — 자취템(soloitems) 쿠팡 상품 블로그 자동화
+# 로컬 0817_blog_coupang_1.py의 파이프라인을 그대로 재사용하되,
+# 텔레그램 버튼 선택 대신 "전일 미중복 + 랭킹 1순위 자동 채택"으로 완전자동화함.
+# ==========================================
+COUPANG_ACCESS_KEY = os.environ.get("COUPANG_ACCESS_KEY")
+COUPANG_SECRET_KEY = os.environ.get("COUPANG_SECRET_KEY")
+COUPANG_DOMAIN = "https://api-gateway.coupang.com"
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+GEMINI_MODEL = "gemini-2.5-flash"
+XAI_API_KEY = os.environ.get("XAI")
+
+GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
+SOLO_BLOG_ID = os.environ.get("SOLO_BLOG_ID")
+SCOPES = ["https://www.googleapis.com/auth/blogger"]
+
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
+
+TREND_KEYWORDS = [
+    "원룸 가전", "미니 냉장고", "1인용 밥솥", "소형 세탁기", "원룸 수납",
+    "휴대용 인덕션", "미니 건조기", "1인가구 전자레인지", "협탁 겸용 수납장",
+    "원룸 커튼", "무선 청소기", "미니 전기밥솥", "접이식 테이블", "옷걸이 행거",
+]
+
+
+def send_telegram(text):
+    if not (TELEGRAM_TOKEN and CHAT_ID):
+        print(text)
+        return
+    try:
+        requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                      data={"chat_id": CHAT_ID, "text": text}, timeout=15)
+    except Exception as e:
+        print(f"⚠️ 텔레그램 전송 실패: {e}")
+
+
+# ==========================================
+# 1. 쿠팡 API
+# ==========================================
+def _coupang_signature(method, path, query=""):
+    dt = datetime.datetime.now(datetime.timezone.utc).strftime("%y%m%d") + "T" + \
+         datetime.datetime.now(datetime.timezone.utc).strftime("%H%M%S") + "Z"
+    message = dt + method + path + query
+    signature = hmac.new(COUPANG_SECRET_KEY.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
+    return f"CEA algorithm=HmacSHA256, access-key={COUPANG_ACCESS_KEY}, signed-date={dt}, signature={signature}"
+
+
+def coupang_search_products(keyword, limit=5):
+    path = "/v2/providers/affiliate_open_api/apis/openapi/products/search"
+    query = f"keyword={quote(keyword)}&limit={limit}"
+    try:
+        headers = {"Authorization": _coupang_signature("GET", path, query), "Content-Type": "application/json;charset=UTF-8"}
+        res = requests.get(f"{COUPANG_DOMAIN}{path}?{query}", headers=headers, timeout=15)
+        res.raise_for_status()
+        return res.json().get("data", {}).get("productData", [])
+    except Exception as e:
+        print(f"⚠️ 쿠팡 상품 검색 실패({keyword}): {e}")
+        return []
+
+
+def scan_trending_products(top_n=8):
+    import random
+    candidates, seen_names = [], set()
+    chosen_keywords = random.sample(TREND_KEYWORDS, k=min(3, len(TREND_KEYWORDS)))
+    for kw in chosen_keywords:
+        for p in coupang_search_products(kw, limit=5):
+            name = p.get("productName", "")
+            if not name or name in seen_names:
+                continue
+            seen_names.add(name)
+            candidates.append({
+                "name": name, "price": p.get("productPrice", 0), "url": p.get("productUrl", ""),
+                "image": p.get("productImage", ""), "category": kw, "rank": p.get("rank") or 999,
+            })
+    candidates.sort(key=lambda c: c["rank"])
+    return candidates[:top_n]
+
+
+# ==========================================
+# 2. 전일 중복 체크 (main_autoposter.py와 동일한 방식)
+# ==========================================
+def _get_blogger_service():
+    token_info = json.loads(GOOGLE_OAUTH_TOKEN_STR)
+    creds = Credentials.from_authorized_user_info(token_info, SCOPES)
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    return build("blogger", "v3", credentials=creds)
+
+
+def get_recent_post_titles(blog_id, max_results=8):
+    try:
+        service = _get_blogger_service()
+        posts = service.posts().list(blogId=blog_id, maxResults=max_results, fetchBodies=False).execute()
+        return [p.get("title", "") for p in posts.get("items", [])]
+    except Exception as e:
+        print(f"⚠️ 최근 포스트 조회 실패(중복체크 건너뜀): {e}")
+        return []
+
+
+def _text_trigrams(text):
+    t = re.sub(r"\s+", "", text or "")
+    return {t[i:i + 3] for i in range(len(t) - 2)} or {t}
+
+
+def is_recent_duplicate(name, recent_titles, threshold=0.35):
+    if not name or not recent_titles:
+        return False
+    name_grams = _text_trigrams(name)
+    for title in recent_titles:
+        title_grams = _text_trigrams(title)
+        if not name_grams or not title_grams:
+            continue
+        overlap = len(name_grams & title_grams) / max(1, len(name_grams | title_grams))
+        if overlap >= threshold:
+            return True
+    return False
+
+
+def pick_product_auto(candidates, recent_titles):
+    for c in candidates:
+        if not is_recent_duplicate(c["name"], recent_titles):
+            return c
+    return candidates[0] if candidates else None
+
+
+# ==========================================
+# 3. Gemini 블로그 대본 생성 (0817과 동일 프롬프트)
+# ==========================================
+BLOG_SYSTEM_PROMPT = """당신은 '자취템' 블로그(soloitems.blogspot.com)의 전문 카피라이터입니다.
+타겟 독자는 1인가구/자취/원룸 생활을 하는 20~30대이며, 실용적인 정보와 솔직한 제품 추천을 원합니다.
+
+[입력]
+아래에 쿠팡 인기상품 정보(상품명, 가격, 카테고리)가 주어집니다. 이 상품을 자연스럽게 소개하는
+블로그 글을 작성하되, 노골적인 광고 느낌이 아니라 "자취 생활 꿀팁/문제 해결" 관점에서 접근하세요.
+
+[글 구조 - 반드시 이 순서]
+1. intro: 자취/원룸 생활에서 흔한 불편함이나 고민을 공감가게 던지는 도입부 (100~150자)
+2. problem: 그 문제를 조금 더 구체적으로 짚어주는 섹션 (150~200자)
+3. solution: 해당 상품이 왜 이 문제의 해결책이 되는지 자연스럽게 소개 (200~250자, 상품명 자연스럽게 1~2회 언급)
+4. tips: 실제 사용 팁이나 함께 쓰면 좋은 것들 (150~200자)
+5. conclusion: 요약 + 담백한 마무리 (80~120자)
+
+[SEO/GEO]
+- seo_keywords: 이 글이 타겟할 검색 키워드 5개
+- meta_description: 검색결과에 노출될 요약 (80자 내외)
+
+[이미지 - 비용 절감을 위해 2x2 그리드 1장만 생성]
+"grid_image_prompt" 필드에, 4칸 각각이 완전히 독립된 사진처럼 보이도록 구체적으로 작성하세요.
+형식: "A perfectly seamless 2x2 grid of 4 completely independent, unrelated photographs,
+absolutely NO borders, NO white frames, NO margins between panels. Top-left: [intro 장면],
+Top-right: [problem 장면], Bottom-left: [solution - 상품이 자연스럽게 쓰이는 장면],
+Bottom-right: [tips 장면]. Style: clean modern editorial photography, soft natural lighting,
+cozy modern one-room apartment interior, realistic, no text, no logos, no readable text."
+
+[핵심 - 실제 상품 스펙]
+[상품 정보]에 실제 스펙이 있으면 그대로 specs에 반영, 없으면 specs는 빈 배열 []로 (지어내지 말 것).
+
+[출력 규칙]
+특수문자(마크다운 강조기호 **, *, _, #) 쓰지 말 것. 순수 JSON만 출력.
+
+{
+  "title": "...", "meta_description": "...", "seo_keywords": ["...", "..."],
+  "grid_image_prompt": "...", "specs": [{"label": "용량", "value": "4kg"}],
+  "sections": [
+    {"section_type": "intro", "heading": "...", "text": "..."},
+    {"section_type": "problem", "heading": "...", "text": "..."},
+    {"section_type": "solution", "heading": "...", "text": "..."},
+    {"section_type": "tips", "heading": "...", "text": "..."},
+    {"section_type": "conclusion", "heading": "...", "text": "..."}
+  ]
+}"""
+
+
+def extract_pure_json(text):
+    start = text.find("{")
+    if start == -1:
+        return None
+    count = 0
+    for i in range(start, len(text)):
+        if text[i] == "{":
+            count += 1
+        elif text[i] == "}":
+            count -= 1
+            if count == 0:
+                try:
+                    return json.loads(text[start:i + 1])
+                except Exception:
+                    return None
+    return None
+
+
+def post_with_retry(url, payload, timeout=60, retries=3):
+    last_exc = None
+    for attempt in range(1, retries + 1):
+        try:
+            res = requests.post(url, json=payload, timeout=timeout)
+            if res.status_code == 429:
+                wait_s = 8 * attempt
+                print(f"⚠️ Gemini 429, {wait_s}초 대기 후 재시도")
+                time.sleep(wait_s)
+                continue
+            res.raise_for_status()
+            return res
+        except requests.exceptions.HTTPError as e:
+            last_exc = e
+            if res.status_code >= 500:
+                time.sleep(5 * attempt)
+                continue
+            raise
+        except Exception as e:
+            last_exc = e
+            time.sleep(3)
+    raise last_exc or RuntimeError("Gemini API 호출 실패")
+
+
+def fetch_product_specs_via_search(product_name):
+    if not GEMINI_API_KEY:
+        return ""
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+    prompt = (
+        f"'{product_name}' 실제 판매 중인 상품의 정확한 스펙을 웹에서 검색해서 알려주세요.\n"
+        "용량/사이즈/전력/무게/주요 기능 등 확인 가능한 항목만 4~6개, '항목명: 값' 형식으로 한 줄씩.\n"
+        "확실하지 않은 항목은 빼세요. 목록만 출력하세요."
+    )
+    payload = {"contents": [{"parts": [{"text": prompt}]}], "tools": [{"google_search": {}}]}
+    try:
+        res = post_with_retry(url, payload, timeout=60)
+        return res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+    except Exception as e:
+        print(f"⚠️ 스펙 검색 실패(스펙 없이 진행): {e}")
+        return ""
+
+
+def generate_blog_script(product, specs_text=""):
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+    product_info = f"상품명: {product['name']}\n가격: {product['price']}원\n카테고리: {product['category']}"
+    if specs_text:
+        product_info += f"\n\n[웹 검색으로 확인된 실제 스펙]\n{specs_text}"
+    full_prompt = f"{BLOG_SYSTEM_PROMPT}\n\n[상품 정보]\n{product_info}"
+    payload = {
+        "contents": [{"parts": [{"text": full_prompt}]}],
+        "generationConfig": {"response_mime_type": "application/json", "temperature": 0.9, "maxOutputTokens": 8192},
+    }
+    try:
+        res = post_with_retry(url, payload, timeout=120)
+        text = res.json()["candidates"][0]["content"]["parts"][0]["text"]
+        json_data = extract_pure_json(text)
+        if not json_data:
+            return None, f"JSON 파싱 실패: {text[-300:]}"
+        return json_data, None
+    except Exception as e:
+        return None, str(e)
+
+
+def sanitize_text(text):
+    if not text:
+        return text
+    normalized = unicodedata.normalize("NFC", text)
+    cleaned = re.sub(r"[*_~`#‘’“”]+", "", normalized)
+    return re.sub(r"\s+", " ", cleaned).strip()
+
+
+def to_hashtag(keyword):
+    if not keyword:
+        return ""
+    cleaned = re.sub(r"[^0-9A-Za-z가-힣]", "", re.sub(r"\s+", "", keyword))
+    return f"#{cleaned}" if cleaned else ""
+
+
+# ==========================================
+# 4. 이미지 생성 (xAI) — base64 직접 임베딩 (외부 호스팅 미사용: 과거 이미지 미노출 문제 재발 방지)
+# ==========================================
+def generate_xai_image(prompt, save_path, aspect_ratio="16:9", resolution="2k"):
+    if not XAI_API_KEY:
+        return False
+    for attempt in range(3):
+        try:
+            headers = {"Authorization": f"Bearer {XAI_API_KEY}", "Content-Type": "application/json"}
+            payload = {"model": "grok-imagine-image", "prompt": prompt, "aspect_ratio": aspect_ratio,
+                       "resolution": resolution, "n": 1}
+            res = requests.post("https://api.x.ai/v1/images/generations", headers=headers, json=payload, timeout=60)
+            if res.status_code == 200:
+                img_data = requests.get(res.json()["data"][0]["url"]).content
+                with open(save_path, "wb") as f:
+                    f.write(img_data)
+                return True
+            print(f"⚠️ xAI 이미지 생성 실패(시도 {attempt+1}/3): HTTP {res.status_code}")
+        except Exception as e:
+            print(f"⚠️ xAI 이미지 생성 예외(시도 {attempt+1}/3): {e}")
+        time.sleep(3)
+    return False
+
+
+def split_grid_2x2(image_path, job_id):
+    from PIL import Image
+    img = Image.open(image_path)
+    w, h = img.size
+    half_w, half_h = w // 2, h // 2
+    margin = 8
+    boxes = [
+        (margin, margin, half_w - margin, half_h - margin),
+        (half_w + margin, margin, w - margin, half_h - margin),
+        (margin, half_h + margin, half_w - margin, h - margin),
+        (half_w + margin, half_h + margin, w - margin, h - margin),
+    ]
+    out_paths = []
+    for i, box in enumerate(boxes):
+        cropped = img.crop(box).resize((720, 405), Image.Resampling.LANCZOS)
+        out_path = f"./_grid_{job_id}_{i}.jpg"
+        cropped.save(out_path, quality=82)
+        out_paths.append(out_path)
+    return out_paths
+
+
+def image_file_to_data_uri(path):
+    try:
+        with open(path, "rb") as f:
+            raw = f.read()
+        return f"data:image/jpeg;base64,{base64.b64encode(raw).decode('utf-8')}"
+    except Exception as e:
+        print(f"⚠️ base64 인코딩 실패({path}): {e}")
+        return None
+
+
+# ==========================================
+# 5. HTML 조립
+# ==========================================
+FTC_DISCLOSURE = (
+    "<p style='font-size:13px;color:#888;'>"
+    "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+    "</p>"
+)
+
+
+def build_json_ld(title, description, image_url):
+    ld = {"@context": "https://schema.org", "@type": "Article", "headline": title,
+          "description": description, "image": image_url or "", "author": {"@type": "Organization", "name": "자취템"}}
+    return f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
+
+
+def build_blog_html(script_data, section_images, product, deeplink):
+    title = script_data.get("title", product["name"])
+    desc = script_data.get("meta_description", "")
+    sections = script_data.get("sections", [])
+
+    parts = [FTC_DISCLOSURE, build_json_ld(title, desc, product.get("image", ""))]
+
+    for i, sec in enumerate(sections):
+        heading = sanitize_text(sec.get("heading", ""))
+        text = sanitize_text(sec.get("text", ""))
+        parts.append(f"<h3>{heading}</h3>")
+        parts.append(f"<p>{text}</p>")
+        if i < len(section_images) and section_images[i]:
+            parts.append(f'<p><img src="{section_images[i]}" style="max-width:100%;height:auto;" /></p>')
+        if sec.get("section_type") == "solution" and deeplink:
+            price_str = f"{product['price']:,}원" if product.get("price") else ""
+            product_img = product.get("image", "")
+            img_html = (f'<img src="{product_img}" style="width:100%;display:block;object-fit:cover;max-height:320px;" />'
+                        if product_img else "")
+            specs = script_data.get("specs", [])
+            specs_html = ""
+            if specs:
+                rows = "".join(
+                    f"<tr><td style='padding:4px 10px 4px 0;color:#888;white-space:nowrap;'>{sanitize_text(s.get('label',''))}</td>"
+                    f"<td style='padding:4px 0;color:#333;'>{sanitize_text(s.get('value',''))}</td></tr>"
+                    for s in specs if s.get("label") and s.get("value")
+                )
+                if rows:
+                    specs_html = f"<table style='font-size:14px;margin:8px 0 10px 0;border-collapse:collapse;'>{rows}</table>"
+            parts.append(
+                "<a href='" + deeplink + "' target='_blank' rel='nofollow noopener sponsored' style='text-decoration:none;color:inherit;'>"
+                "<div style='border:1px solid #e5e5e5;border-radius:14px;overflow:hidden;margin:20px 0;max-width:520px;"
+                "box-shadow:0 1px 4px rgba(0,0,0,0.06);'>"
+                f"{img_html}<div style='padding:14px 16px;'>"
+                f"<p style='font-weight:bold;font-size:16px;margin:0 0 6px 0;'>{product['name']}</p>"
+                f"<p style='font-size:15px;color:#555;margin:0 0 4px 0;'>{price_str}</p>{specs_html}"
+                "<p style='font-size:13px;color:#3182f6;margin:4px 0 0 0;'>쿠팡에서 확인하기 →</p></div></a>"
+            )
+
+    if deeplink:
+        parts.append(
+            "<p style='margin:26px 0 10px 0;text-align:center;'>"
+            f"<a href='{deeplink}' target='_blank' rel='nofollow noopener sponsored' "
+            "style='display:inline-block;background:#3182f6;color:#fff;padding:13px 22px;border-radius:8px;"
+            f"text-decoration:none;font-weight:bold;font-size:15px;'>🛒 {product['name']} 최저가 확인하기</a></p>"
+        )
+
+    hashtags = " ".join(to_hashtag(k) for k in script_data.get("seo_keywords", []) if to_hashtag(k))
+    if hashtags:
+        parts.append(f"<p style='font-size:13px;color:#3182f6;'>{hashtags}</p>")
+
+    return "\n".join(parts)
+
+
+def upload_to_blogger(title, content_html):
+    service = _get_blogger_service()
+    post = service.posts().insert(blogId=SOLO_BLOG_ID, body={"title": title, "content": content_html}).execute()
+    return post.get("url")
+
+
+# ==========================================
+# 메인
+# ==========================================
+def main():
+    recent_titles = get_recent_post_titles(SOLO_BLOG_ID)
+
+    candidates = scan_trending_products(top_n=8)
+    if not candidates:
+        send_telegram("❌ [자취템] 쿠팡 인기상품을 가져오지 못했습니다.")
+        return
+
+    product = pick_product_auto(candidates, recent_titles)
+    print(f"✅ 선택된 상품: {product['name']}")
+
+    specs_text = fetch_product_specs_via_search(product["name"])
+    script_data, err = generate_blog_script(product, specs_text)
+    if err or not script_data:
+        send_telegram(f"❌ [자취템] 대본 생성 실패: {err}")
+        return
+
+    job_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    sections = script_data.get("sections", [])
+    grid_prompt = script_data.get("grid_image_prompt", "")
+    section_images = [None] * len(sections)
+
+    if grid_prompt:
+        grid_path = f"./_bloggrid_{job_id}.jpg"
+        if generate_xai_image(grid_prompt, grid_path, aspect_ratio="16:9"):
+            crop_paths = split_grid_2x2(grid_path, job_id)
+            crop_urls = [image_file_to_data_uri(cp) for cp in crop_paths]
+            grid_order = ["intro", "problem", "solution", "tips"]
+            for i, sec in enumerate(sections):
+                if sec.get("section_type") in grid_order:
+                    section_images[i] = crop_urls[grid_order.index(sec.get("section_type"))]
+
+    deeplink = product.get("url", "")
+    content_html = build_blog_html(script_data, section_images, product, deeplink)
+    title = script_data.get("title", product["name"])
+
+    try:
+        link = upload_to_blogger(title, content_html)
+        send_telegram(f"✅ [자취템] 자동 발행 완료!\n📦 상품: {product['name']}\n📝 {title}\n👉 {link}")
+    except Exception as e:
+        send_telegram(f"❌ [자취템] 발행 실패: {e}")
+
+
+if __name__ == "__main__":
+    main()

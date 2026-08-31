@@ -1,0 +1,50 @@
+name: Content Schedule (Daily Auto Publish - All Categories)
+
+on:
+  schedule:
+    - cron: '0 22 * * *'   # 매일 07:00 KST (UTC 전날 22:00)
+  workflow_dispatch:        # 필요하면 수동으로도 트리거 가능
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run all categories
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          XAI: ${{ secrets.XAI }}
+          GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+          IT_BLOG_ID: ${{ secrets.IT_BLOG_ID }}
+          FOOD_BLOG_ID: ${{ secrets.FOOD_BLOG_ID }}
+          NEWS_BLOG_ID: ${{ secrets.NEWS_BLOG_ID }}
+          STOCK_BLOG_ID: ${{ secrets.STOCK_BLOG_ID }}
+          TRAVEL_BLOG_ID: ${{ secrets.TRAVEL_BLOG_ID }}
+        run: |
+          for cat in stock it food news travel; do
+            echo "===== $cat ====="
+            python main_autoposter.py --category "$cat" --with_longform || echo "⚠️ $cat 실패, 다음 카테고리로 계속"
+            sleep 5
+          done

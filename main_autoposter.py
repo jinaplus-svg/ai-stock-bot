@@ -225,8 +225,10 @@ def create_photo_prompt(category, topic, ref_content):
 
     🚨 [절대 금지 사항 - CRITICAL]
     - 현존 AI 기술 한계상 이미지 내 텍스트는 무조건 깨집니다. 따라서 ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY, NO LOGOS, NO SIGNS!
-    - 영어든 한글이든 글자는 단 1개도 들어가선 안 됩니다. 글자가 필요한 간판이나 화면 대신 사람의 표정, 제품의 형태, 상황의 분위기에만 집중하세요.
+    - 영어든 한글이든 글자는 단 1개도 들어가선 안 됩니다. 글자가 필요한 간판이나 화면 대신 제품/사물의 형태, 상황의 분위기에만 집중하세요.
     - 3D CG, 일러스트레이션 금지. 오직 8k 극사실주의 보도사진(Photorealistic, documentary photography) 스타일로 묘사할 것.
+    - [NEW] 사람/인물/손 등 신체 부위를 절대 그리지 마세요 (실내/사물/현장 풍경만). 캐릭터 마스코트가 별도로 합성되므로,
+      배경에 사람이 있으면 시각적으로 충돌합니다.
     """
     res = gpt_client.chat.completions.create(
         model="gpt-4o",  # Mini에서 고성능 모델로 업그레이드 (맥락 파악 강화)
@@ -235,7 +237,41 @@ def create_photo_prompt(category, topic, ref_content):
     )
     return res.choices[0].message.content.strip()
 
-def generate_and_split_images_xai(prompt):
+
+def generate_mascot_poses(category, topic, ref_content):
+    """[NEW] 4컷(오프닝/팩트/분석/전망)에 어울리는 마스코트 포즈·표정을 짧게 생성 (저렴한 mini 모델, 별도 호출)."""
+    prompt = f"""
+    아래 주제로 4컷짜리 뉴스 카드뉴스에 들어갈 마스코트 캐릭터의 포즈/표정을 영문으로 짧게 4개 작성하세요.
+    순서: 1)흥미로운 도입 리액션 2)사실을 짚어보는 진지한 자세 3)날카로운 분석/비판 표정 4)미래를 내다보는 자신감 있는 자세.
+    캐릭터 자체의 포즈·표정·제스처만 묘사하고, 실제 상품/기업 로고/특정 인물 묘사는 절대 하지 마세요
+    (예: "pointing at a chart" 대신 "pointing excitedly at empty space").
+    반드시 JSON 배열 4개 문자열로만 답하세요. 예: ["...", "...", "...", "..."]
+
+    주제: {topic}
+    내용: {ref_content[:1000]}
+    """
+    try:
+        res = gpt_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.8,
+        )
+        text = res.choices[0].message.content.strip()
+        text = re.sub(r"^```[a-zA-Z]*\n?", "", text)
+        text = re.sub(r"```$", "", text).strip()
+        poses = json.loads(text)
+        if isinstance(poses, list) and len(poses) >= 4:
+            return poses[:4]
+    except Exception as e:
+        print(f"⚠️ 마스코트 포즈 생성 실패: {e}")
+    return ["curious and surprised expression, leaning forward",
+            "serious focused expression, arms crossed",
+            "skeptical raised-eyebrow expression, one hand on chin",
+            "confident smile, thumbs up"]
+
+
+def generate_and_split_images_xai(prompt, out_dir="."):
+    """[CHANGED] base64 대신 파일 경로 리스트를 반환하도록 변경 (마스코트 합성을 위해 파일이 필요)."""
     final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Highly highly realistic, documentary photography, cinematic lighting, ABSOLUTELY NO TEXT, NO WORDS, NO LOGOS, NO LETTERS, no signs, no typography, clean visual only."
     try:
         response = xai_client.images.generate(
@@ -248,19 +284,138 @@ def generate_and_split_images_xai(prompt):
         w, h = img.size
         cw, ch = w // 2, h // 2
         margin = 15
-        base64_images = []
+        job_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        out_paths = []
         for r in range(2):
             for c in range(2):
                 l, t = c * cw + margin, r * ch + margin
                 ri, b = l + cw - (margin * 2), t + ch - (margin * 2)
                 cropped = img.crop((l, t, ri, b)).resize((600, 600), Image.Resampling.LANCZOS)
                 if cropped.mode in ('RGBA', 'P'): cropped = cropped.convert('RGB')
-                buf = BytesIO()
-                cropped.save(buf, format="JPEG", quality=88)
-                base64_images.append(f"data:image/jpeg;base64,{base64.b64encode(buf.getvalue()).decode()}")
-        return base64_images
-    except:
+                out_path = os.path.join(out_dir, f"_bgcrop_{job_id}_{len(out_paths)}.jpg")
+                cropped.save(out_path, quality=88)
+                out_paths.append(out_path)
+        return out_paths
+    except Exception as e:
+        print(f"⚠️ 배경 이미지 생성 실패: {e}")
         return []
+
+
+# ==========================================
+# 3.5b [NEW] 고정 마스코트 캐릭터 — 자취템(auto_soloitems.py)과 동일한 캐릭터시트+크로마키 방식
+# ==========================================
+MASCOT_STYLE = (
+    "Simple clean 2D cartoon/webtoon character design, thick black outline, flat colors, "
+    "plain solid bright green background (chroma key green #00FF00, perfectly flat and uniform, "
+    "no shadows or gradients on the background), dynamic and expressive full-body or half-body "
+    "pose filling most of the panel, no text, no watermark, no logos. IMPORTANT: do NOT draw any "
+    "household appliance, electronics, chart, screen, or product/logo icon of any kind (these would "
+    "visually conflict with the separately composited real background). Small generic hand props "
+    "(a newspaper, a magnifying glass, a coffee cup) are fine, but never draw a specific product, "
+    "company logo, or real person's likeness."
+)
+
+
+def build_mascot_sheet_prompt(poses):
+    labels = ["Top-left", "Top-right", "Bottom-left", "Bottom-right"]
+    parts = [f"{label}: {pose}" for label, pose in zip(labels, poses)]
+    return (
+        "A perfectly seamless 2x2 grid of 4 panels, absolutely NO borders, NO white frames, "
+        "NO margins between panels. The EXACT SAME single cartoon character (same face, same "
+        "outfit, same art style, same character design) appears in all 4 panels — only the pose "
+        "and facial expression changes per panel as described below. " + MASCOT_STYLE + " "
+        + " | ".join(parts)
+    )
+
+
+def chromakey_cutout(image_path, green_dominance=25, spill_dominance=6):
+    """배경 제거 + 잔여 초록기(스필) 제거 (auto_soloitems.py와 동일 로직)."""
+    import numpy as np
+    img = Image.open(image_path).convert("RGBA")
+    arr = np.array(img).astype(int)
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+    max_rb = np.maximum(r, b)
+    dominance = g - max_rb
+    is_bg = dominance > green_dominance
+    is_spill = (dominance > spill_dominance) & (~is_bg)
+    arr[:, :, 1] = np.where(is_spill, max_rb, g)
+    arr[:, :, 3] = np.where(is_bg, 0, 255)
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+    return Image.fromarray(arr, "RGBA")
+
+
+def composite_mascot_on_background(bg_path, mascot_cutout_img, out_path, scale=0.62):
+    bg = Image.open(bg_path).convert("RGBA")
+    bw, bh = bg.size
+    mascot = mascot_cutout_img.copy()
+    mw, mh = mascot.size
+    new_h = int(bh * scale)
+    new_w = int(mw * (new_h / mh))
+    mascot = mascot.resize((new_w, new_h), Image.Resampling.LANCZOS)
+    x = (bw - new_w) // 2
+    y = bh - new_h
+    bg.alpha_composite(mascot, (x, y))
+    bg.convert("RGB").save(out_path, quality=85)
+    return out_path
+
+
+def split_grid_2x2_generic(image_path, out_dir, job_id):
+    img = Image.open(image_path)
+    w, h = img.size
+    half_w, half_h = w // 2, h // 2
+    margin = 8
+    boxes = [
+        (margin, margin, half_w - margin, half_h - margin),
+        (half_w + margin, margin, w - margin, half_h - margin),
+        (margin, half_h + margin, half_w - margin, h - margin),
+        (half_w + margin, half_h + margin, w - margin, h - margin),
+    ]
+    out_paths = []
+    for i, box in enumerate(boxes):
+        cropped = img.crop(box).resize((720, 405), Image.Resampling.LANCZOS)
+        out_path = os.path.join(out_dir, f"_mgrid_{job_id}_{i}.jpg")
+        cropped.save(out_path, quality=82)
+        out_paths.append(out_path)
+    return out_paths
+
+
+def generate_mascot_composited_images(background_crop_paths, poses):
+    """배경 4장(파일경로) + 포즈 4개 -> 마스코트 합성 후 base64 리스트로 반환.
+    마스코트 생성/합성이 실패하면 배경만이라도 그대로 base64로 반환 (완전 실패 방지)."""
+    def to_b64(path):
+        with open(path, "rb") as f:
+            return f"data:image/jpeg;base64,{base64.b64encode(f.read()).decode()}"
+
+    if not background_crop_paths:
+        return []
+
+    try:
+        job_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        mascot_sheet_path = f"_mascot_{job_id}.jpg"
+        mascot_prompt = build_mascot_sheet_prompt(poses)
+        res = xai_client.images.generate(
+            model="grok-imagine-image", prompt=mascot_prompt,
+            extra_body={"aspect_ratio": "16:9", "resolution": "2k"}, n=1
+        )
+        img_data = requests.get(res.data[0].url).content
+        with open(mascot_sheet_path, "wb") as f:
+            f.write(img_data)
+        mascot_crops = split_grid_2x2_generic(mascot_sheet_path, ".", job_id)
+        cutouts = [chromakey_cutout(p) for p in mascot_crops]
+
+        final_b64 = []
+        for i, bg_path in enumerate(background_crop_paths):
+            try:
+                out_path = f"_composited_{job_id}_{i}.jpg"
+                composite_mascot_on_background(bg_path, cutouts[i], out_path)
+                final_b64.append(to_b64(out_path))
+            except Exception as e:
+                print(f"⚠️ {i}번 마스코트 합성 실패, 배경만 사용: {e}")
+                final_b64.append(to_b64(bg_path))
+        return final_b64
+    except Exception as e:
+        print(f"⚠️ 마스코트 생성 실패, 배경 이미지만 사용: {e}")
+        return [to_b64(p) for p in background_crop_paths]
 
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 5px solid #d32f2f; padding: 18px 25px; margin: 35px 0; background-color: #fff9f9; color: #111; font-weight: 800; font-size: 1.15em; border-radius: 0 10px 10px 0; line-height: 1.6;"'
@@ -272,7 +427,8 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
 
     system_prompt = f"""
-    당신은 한국 최고의 탑티어 비즈니스/IT/경제/여행 분야를 아우르는 날카로운 시각의 칼럼니스트입니다.
+    당신은 한국 최고의 탑티어 비즈니스/IT/경제/여행 분야를 아우르는 날카로운 시각의 칼럼니스트이자,
+    동시에 네이버/구글 검색 상위노출과 클릭을 부르는 카피라이팅에 능한 에디터입니다.
 
     🚨 [핵심 지시 사항 - 전문가의 통찰과 구체성]
     1. 익명 처리(A사, 모 기업 등) 절대 금지! 원문에 등장하는 **실제 기업명, 인물명, 구체적 수치, 투자 금액, 확률 등 데이터**를 무조건 그대로 명시하세요.
@@ -280,15 +436,26 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     3. 나머지 80%는 전문가적 관점에서의 **날카로운 비평, 이면의 의도 분석, 경쟁사와의 비교, 향후 산업/우리 실생활에 미칠 파급력에 대한 심층 뇌피셜**로 꽉 채우세요. (최소 2500자 이상 작성)
     4. 마크다운 기호(```, markdown, html, **, #) 절대 금지! 오직 순수 HTML 태그만 사용.
 
+    🚨 [조회수/가독성을 위한 글쓰기 규칙 - 매우 중요]
+    - 제목: 핵심 키워드(회사명/종목명/사건명)를 앞쪽에 배치하고, 숫자·손실회피·반전 중 하나의 후킹 장치를 결합하세요.
+      (예: "OO전자 -12%, 그런데 개미들은 오히려 사고 있다" 처럼 구체적 수치+의외성)
+    - 도입부(첫 2문단)에서 "이거 알고 계셨나요?" 같은 뻔한 문장 대신, 독자가 당장 겪고 있을 법한 상황이나
+      숫자로 시작해서 3초 안에 "이건 나랑 관련있다"고 느끼게 만드세요.
+    - 문단은 3~4문장을 넘기지 마세요. 한 문단이 길어지면 가독성이 떨어져 이탈이 늘어납니다.
+    - 각 섹션 사이사이에 "그런데 여기서 진짜 문제는", "하지만 숫자를 뜯어보면" 같은 짧은 전환 문장으로
+      다음 문단을 계속 읽고 싶게 만드세요 (클리프행어 기법).
+    - 상투적 문구("주목받고 있습니다", "관심이 집중되고 있습니다" 등 어디서나 보이는 뉴스 클리셰)는 피하고,
+      칼럼니스트 본인의 관점이 드러나는 구체적 문장으로 쓰세요.
+
     🚨 [글 구조 및 이미지 템플릿 - 반드시 아래 순서와 마커를 100% 지키세요!]
     이미지가 들어갈 자리를 본문 사이에 [IMAGE_1], [IMAGE_2] 텍스트로 정확히 명시해야 합니다. 절대 빼먹지 마세요.
 
-    <h2>시선을 훅 끄는 도발적인 제목</h2>
-    (독자에게 말을 건네듯 "여러분 혹시 오늘 이 소식 들으셨나요?" 로 시작하며 이슈의 핵심을 던지는 흥미진진한 도입부 2~3문단)
+    <h2>핵심 키워드 + 후킹 장치가 결합된 제목</h2>
+    (독자가 겪는 상황/숫자로 3초 안에 몰입시키는 도입부 2~3문단, 문단당 3~4문장)
     <br><br>
     [IMAGE_1]
     <br><br>
-    (표면적인 기사 내용의 팩트와 등장 기업/수치에 대한 구체적 설명 2~3문단)
+    (표면적인 기사 내용의 팩트와 등장 기업/수치에 대한 구체적 설명 2~3문단, 문단당 3~4문장)
     <br><br>
     <table {table_style}>
       <thead><tr><th {th_style}>핵심 지표 / 비교 항목</th><th {th_style}>구체적 수치 및 전문가 코멘트</th></tr></thead>
@@ -297,7 +464,7 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     <br><br>
     [IMAGE_2]
     <br><br>
-    (이 이슈의 이면에 숨겨진 의도, 경쟁사들의 대응, 그리고 칼럼니스트로서의 날카로운 비판이나 긍정적 평가 3~4문단)
+    (이 이슈의 이면에 숨겨진 의도, 경쟁사들의 대응, 그리고 칼럼니스트로서의 날카로운 비판이나 긍정적 평가 3~4문단, 문단당 3~4문장)
     <br><br>
     [IMAGE_3]
     <br><br>
@@ -603,7 +770,9 @@ if __name__ == "__main__":
         exit(0)
 
     photo_prompt = create_photo_prompt(category, topic, ref_content)
-    images = generate_and_split_images_xai(photo_prompt)
+    bg_crop_paths = generate_and_split_images_xai(photo_prompt)
+    mascot_poses = generate_mascot_poses(category, topic, ref_content)
+    images = generate_mascot_composited_images(bg_crop_paths, mascot_poses)
     title, html_output = write_blog_post(category, images, ref_content, topic)
 
     # [NEW] 쿠팡 관련 상품 섹션 삽입 (본문 출처 링크보다 먼저)

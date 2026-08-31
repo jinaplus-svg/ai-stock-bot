@@ -8,6 +8,7 @@ import re
 import html
 import hmac
 import hashlib
+import random
 from urllib.parse import quote
 from io import BytesIO
 from PIL import Image
@@ -451,11 +452,97 @@ def generate_longform_script(category, topic, ref_content):
     return res.choices[0].message.content.strip()
 
 
-def send_longform_script_telegram(category, topic, script_text):
-    header = f"🎬 [{category.upper()}] 오늘의 롱폼 대본 — {topic}\n(같은 소재로 자동 생성됨. 로컬 롱폼 파이프라인에 넣어서 렌더링하세요)\n\n"
+def send_longform_script_telegram(category, topic, script_text, source_note=""):
+    header = f"🎬 [{category.upper()}] 오늘의 롱폼 대본 — {topic}\n{source_note}(로컬 롱폼 파이프라인에 넣어서 렌더링하세요)\n\n"
     body = header + script_text
     for i in range(0, len(body), 3800):
         send_telegram(body[i:i + 3800])
+
+
+# ==========================================
+# 3.7 [NEW] 분야별 지정 유튜버(슈카월드/삼프로TV 등) 영상 자막 → 재가공 롱폼
+# ==========================================
+CREATOR_CHANNELS = {
+    "stock": [("슈카월드", "UCsJ6RuBiTVWRX156FVbeaGg"), ("삼프로TV", "UChlv4GSd7OQl3js-jkLOnFA")],
+    "news": [("슈카월드", "UCsJ6RuBiTVWRX156FVbeaGg"), ("삼프로TV", "UChlv4GSd7OQl3js-jkLOnFA")],
+}
+CREATOR_HISTORY_FILE = "longform_creator_history.json"
+
+
+def _load_creator_history():
+    if not os.path.exists(CREATOR_HISTORY_FILE):
+        return {"used_video_ids": []}
+    try:
+        with open(CREATOR_HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {"used_video_ids": []}
+
+
+def _save_creator_history(history):
+    history["used_video_ids"] = history.get("used_video_ids", [])[-50:]
+    with open(CREATOR_HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+
+def fetch_creator_recent_videos(channel_id, max_results=5):
+    if not YOUTUBE_API_KEY:
+        return []
+    try:
+        youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
+        res = youtube.search().list(part="snippet", channelId=channel_id, order="date",
+                                     type="video", maxResults=max_results).execute()
+        return res.get("items", [])
+    except Exception as e:
+        print(f"⚠️ 채널 최신영상 조회 실패: {e}")
+        return []
+
+
+def pick_creator_source(category):
+    """[NEW] 지정 채널들의 최신 영상 중 아직 안 쓴 것 하나를 골라 자막을 뽑는다."""
+    channels = list(CREATOR_CHANNELS.get(category, []))
+    if not channels:
+        return None
+    random.shuffle(channels)
+
+    history = _load_creator_history()
+    used_ids = set(history.get("used_video_ids", []))
+
+    for creator_name, channel_id in channels:
+        for item in fetch_creator_recent_videos(channel_id):
+            video_id = item["id"]["videoId"]
+            if video_id in used_ids:
+                continue
+            title = html.unescape(item["snippet"]["title"])
+            try:
+                transcript = YouTubeTranscriptApi().fetch(video_id, languages=["ko", "en"]).to_raw_data()
+                text = " ".join(t["text"] for t in transcript)
+            except Exception as e:
+                print(f"⚠️ 자막 추출 실패({title}): {e}")
+                continue
+            if len(text) < 300:
+                continue
+            history.setdefault("used_video_ids", []).append(video_id)
+            _save_creator_history(history)
+            return {"creator": creator_name, "title": title, "transcript": text[:6000],
+                    "url": f"https://www.youtube.com/watch?v={video_id}"}
+    return None
+
+
+def generate_longform_script_from_transcript(source):
+    system_prompt = (
+        "당신은 유튜브 롱폼(5~8분) 영상 대본 작가입니다. 아래는 다른 유튜버 영상의 자막 원문입니다. "
+        "이 내용을 그대로 베끼지 말고, 핵심 정보/인사이트만 참고해서 완전히 새로운 관점과 표현, "
+        "새로운 구성으로 재구성한 오리지널 대본을 작성하세요. 원문 문장을 그대로 가져오지 마세요(표절 금지). "
+        "각 씬은 '씬 N: (화면 설명) / 대사: ...' 형식으로 8~12개 씬, 도입부 후킹 → 본론 3~4개 포인트 → 마무리 요약 순서."
+    )
+    res = gpt_client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "system", "content": system_prompt},
+                  {"role": "user", "content": f"참고 영상: {source['creator']} - {source['title']}\n\n자막 원문:\n{source['transcript']}"}],
+        temperature=0.85,
+    )
+    return res.choices[0].message.content.strip()
 
 
 # ==========================================
@@ -532,10 +619,19 @@ if __name__ == "__main__":
         print(f"❌ 최종 업로드/알림 에러: {e}")
         exit(1)
 
-    # [NEW] 같은 소재로 롱폼 대본도 만들어서 텔레그램 전달 (렌더링은 로컬 파이프라인에서)
+    # [NEW] 롱폼 대본 생성 — 지정 유튜버 채널이 있는 카테고리는 그 채널 최신 영상을 재가공,
+    # 없으면 기존처럼 블로그와 같은 소재로 생성
     if args.with_longform:
         try:
-            script = generate_longform_script(category, topic, ref_content)
-            send_longform_script_telegram(category, topic, script)
+            creator_source = pick_creator_source(category)
+            if creator_source:
+                script = generate_longform_script_from_transcript(creator_source)
+                send_longform_script_telegram(
+                    category, creator_source["title"], script,
+                    source_note=f"(출처: {creator_source['creator']} 영상 재가공 — {creator_source['url']})\n"
+                )
+            else:
+                script = generate_longform_script(category, topic, ref_content)
+                send_longform_script_telegram(category, topic, script, source_note="(블로그와 같은 소재로 자동 생성됨)\n")
         except Exception as e:
             print(f"⚠️ 롱폼 대본 생성/전송 실패: {e}")

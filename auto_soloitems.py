@@ -177,20 +177,23 @@ Top-right: [problem 섹션에 어울리는 구체적 장면], Bottom-left: [solu
 놓인 장면], Bottom-right: [tips 섹션에 어울리는 구체적 장면]. Style: clean modern editorial
 photography, soft natural lighting, cozy modern one-room apartment interior, minimal and
 uncluttered composition, 100 percent photorealistic, contemporary 2020s interior and lifestyle,
-no text, no logos, no visible brand names, no readable text of any kind in the image.
-IMPORTANT: absolutely NO human figures, NO people, NO hands, NO body parts of any kind in ANY
-of the 4 panels — only empty rooms, furniture, and the product itself. A separate cartoon
-mascot character will be composited on top afterward, so the background must stay completely
-people-free and fully photorealistic in all 4 panels."
+no text, no logos, no visible brand names, no readable text of any kind in the image."
 
-[마스코트 캐릭터 - 매번 다른 디자인으로 그려지는 것을 방지하기 위해 별도 캐릭터시트로 생성]
-"mascot_poses" 필드에 4개 문자열 배열로, intro/problem/solution/tips 순서에 맞춰 그 섹션의
-감정/상황에 어울리는 마스코트의 포즈와 표정을 영어로 짧게 묘사하세요 (예: "worried expression,
-looking at a huge pile of dirty laundry, hands on cheeks"). 배경 얘기는 하지 말고 캐릭터의
-포즈·표정·동작만 묘사하세요 (배경은 별도 이미지에 합성되므로 무관합니다). 단, **실제 리뷰 상품(가전제품
-자체)을 직접 가리키거나 안고 있거나 조작하는 묘사는 절대 하지 마세요** — 실제 상품 사진과 그려진
-그림이 겹쳐서 시각적으로 충돌합니다. 대신 빈 허공을 가리키거나, 감탄하는 표정만으로 표현하세요.
-(빨래더미, 양동이 같은 일반 소품은 괜찮음 — 오직 "리뷰 대상 가전제품 자체"만 피하면 됩니다.)
+[캐릭터 통합 - 매우 중요, 별도 합성 없이 이미지 생성 시점에 같이 그림]
+4칸 전부에 하나의 일관된 카툰 캐릭터가 그 실사 배경 속에 자연스럽게 녹아들어 등장해야 합니다
+(배경만 있는 칸은 안 됩니다). grid_image_prompt 문장 안에 이 내용을 함께 녹여서 작성하세요:
+- 캐릭터 스타일: 스튜디오 지브리(Ghibli) 애니메이션풍의 부드러운 셀 셰이딩, 따뜻하고 자연스러운
+  색감의 페인터리 카툰이어야 합니다. 평면적인 흰색 단색 실루엣이나 두꺼운 검은 윤곽선의 심플
+  라인아트는 절대 금지 — 배경의 조명/그림자와 어울리는 부드러운 채색과 음영이 있어야 합니다.
+- 캐릭터가 반드시 전신으로 나올 필요는 없습니다. 손, 상반신, 뒷모습, 프레임 구석의 작은 인물 등
+  장면에 자연스럽게 녹아드는 구도면 충분합니다.
+- 각 칸(intro/problem/solution/tips)의 감정/상황에 어울리는 캐릭터의 반응(공감, 고민, 놀람,
+  만족 등)을 표현하되, **실제 리뷰 상품(가전제품 자체)을 직접 가리키거나 안고 있거나 조작하는
+  묘사는 절대 하지 마세요** — solution 칸에는 실제 상품 사진이 별도 카드로 삽입되므로, 그림 속
+  캐릭터가 상품을 만지거나 들고 있으면 시각적으로 충돌합니다. 대신 빈 허공을 가리키거나 감탄하는
+  표정만으로 표현하세요 (빨래더미, 양동이 같은 일반 소품은 괜찮음).
+- 얼굴/헤어스타일/의상 등 캐릭터 디자인 자체는 4칸 내내 동일하게 유지하고, 포즈/표정/구도만
+  칸마다 다르게 하세요.
 
 [핵심 - 실제 상품 스펙]
 [상품 정보]에 실제 스펙이 있으면 그대로 specs에 반영, 없으면 specs는 빈 배열 []로 (지어내지 말 것).
@@ -208,7 +211,6 @@ looking at a huge pile of dirty laundry, hands on cheeks"). 배경 얘기는 하
 {
   "title": "...", "meta_description": "...", "seo_keywords": ["...", "..."],
   "grid_image_prompt": "...", "specs": [{"label": "용량", "value": "4kg"}],
-  "mascot_poses": ["intro 포즈/표정 영문 묘사", "problem 포즈/표정", "solution 포즈/표정", "tips 포즈/표정"],
   "sections": [
     {"section_type": "intro", "heading": "...", "text": "..."},
     {"section_type": "problem", "heading": "...", "text": "..."},
@@ -401,83 +403,6 @@ def image_file_to_data_uri(path):
 
 
 # ==========================================
-# 4.5 [NEW] 고정 마스코트 캐릭터 — 롱폼 영상(0822)의 "캐릭터시트+크로마키" 방식을 블로그 이미지에도 적용.
-# 배경(위 grid_image_prompt)과 캐릭터를 완전히 분리해서 각각 생성한 뒤 합성 — 매번 인물 디자인이
-# 달라지던 문제(사람이 실사로 나오거나 스타일이 컷마다 바뀌는 문제)를 근본적으로 해결.
-# ==========================================
-MASCOT_STYLE = (
-    "Simple clean 2D cartoon/webtoon character design, thick black outline, flat colors, "
-    "plain solid bright green background (chroma key green #00FF00, perfectly flat and uniform, "
-    "no shadows or gradients on the background), dynamic and expressive full-body or half-body "
-    "pose filling most of the panel, no text, no watermark, no logos. IMPORTANT: do NOT draw any "
-    "household appliance, electronics, or product icon of any kind (these will be composited "
-    "separately from a real product photo, so a drawn version would visually conflict with it). "
-    "Small generic hand props unrelated to the product (a cloth, a bucket, a bottle) are fine if "
-    "the pose mentions them, but never draw the appliance/product itself — the character may just "
-    "gesture toward empty space instead."
-)
-
-
-def build_mascot_sheet_prompt(poses):
-    labels = ["Top-left", "Top-right", "Bottom-left", "Bottom-right"]
-    parts = [f"{label}: {pose}" for label, pose in zip(labels, poses)]
-    return (
-        "A perfectly seamless 2x2 grid of 4 panels, absolutely NO borders, NO white frames, "
-        "NO margins between panels. The EXACT SAME single cartoon character (same face, same "
-        "outfit, same art style, same character design) appears in all 4 panels — only the pose "
-        "and facial expression changes per panel as described below. " + MASCOT_STYLE + " "
-        + " | ".join(parts)
-    )
-
-
-def chromakey_cutout(image_path, green_dominance=25, spill_dominance=6):
-    """xAI가 그린 초록 배경은 완벽히 균일하지 않아서(JPEG 노이즈), 단순 배경 제거만으로는
-    캐릭터 가장자리에 초록기가 '스며든'(color spill) 얼룩이 남는 문제가 있었음. 그래서 2단계로 처리:
-    1) G가 R/B보다 확실히 우세한 픽셀 -> 완전 투명 처리 (배경)
-    2) 남은 픽셀 중 G가 살짝이라도 우세한 픽셀 -> 투명 처리는 안 하되 G값을 max(R,B)로 눌러서
-       초록 얼룩(스필)만 제거 (흰색/검정/피부톤 등 캐릭터 색상은 그대로 유지)."""
-    from PIL import Image
-    import numpy as np
-    img = Image.open(image_path).convert("RGBA")
-    arr = np.array(img).astype(int)
-    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
-    max_rb = np.maximum(r, b)
-    dominance = g - max_rb
-
-    is_bg = dominance > green_dominance
-    is_spill = (dominance > spill_dominance) & (~is_bg)
-
-    g_fixed = np.where(is_spill, max_rb, g)
-    alpha = np.where(is_bg, 0, 255)
-
-    arr[:, :, 1] = g_fixed
-    arr[:, :, 3] = alpha
-    arr = np.clip(arr, 0, 255).astype(np.uint8)
-    return Image.fromarray(arr, "RGBA")
-
-
-def composite_mascot_on_background(bg_path, mascot_cutout_img, out_path, scale=0.62):
-    """배경 이미지 하단 중앙에 마스코트 캐릭터를 겹쳐서 합성."""
-    from PIL import Image
-    bg = Image.open(bg_path).convert("RGBA")
-    bw, bh = bg.size
-
-    mascot = mascot_cutout_img.copy()
-    mw, mh = mascot.size
-    new_h = int(bh * scale)
-    new_w = int(mw * (new_h / mh))
-    mascot = mascot.resize((new_w, new_h), Image.Resampling.LANCZOS)
-
-    x = (bw - new_w) // 2
-    y = bh - new_h  # 하단에 딱 붙임
-    bg.alpha_composite(mascot, (x, y))
-
-    final = bg.convert("RGB")
-    final.save(out_path, quality=85)
-    return out_path
-
-
-# ==========================================
 # 5. HTML 조립
 # ==========================================
 FTC_DISCLOSURE = (
@@ -603,35 +528,9 @@ def main():
     else:
         print("⚠️ grid_image_prompt 없음")
 
-    # [NEW] 마스코트 캐릭터시트 — 배경과 별도로 생성해서 매번 인물 디자인이 바뀌는 문제 방지
-    mascot_cutouts = None
-    mascot_poses = script_data.get("mascot_poses", [])
-    if crop_paths and mascot_poses and len(mascot_poses) >= 4:
-        print("6.5) 마스코트 캐릭터시트 생성 중...")
-        mascot_sheet_path = f"./_mascot_{job_id}.jpg"
-        mascot_prompt = build_mascot_sheet_prompt(mascot_poses[:4])
-        if generate_xai_image(mascot_prompt, mascot_sheet_path, aspect_ratio="16:9"):
-            mascot_crop_paths = split_grid_2x2(mascot_sheet_path, f"mascot_{job_id}")
-            try:
-                mascot_cutouts = [chromakey_cutout(p) for p in mascot_crop_paths]
-                print("   마스코트 크로마키 처리 완료")
-            except Exception as e:
-                print(f"⚠️ 마스코트 크로마키 처리 실패: {e}")
-                mascot_cutouts = None
-        else:
-            print("⚠️ 마스코트 생성 실패, 배경 이미지만 사용")
-
     if crop_paths:
-        final_paths = list(crop_paths)
-        if mascot_cutouts:
-            for i, bg_path in enumerate(crop_paths):
-                try:
-                    composited_path = f"./_composited_{job_id}_{i}.jpg"
-                    composite_mascot_on_background(bg_path, mascot_cutouts[i], composited_path)
-                    final_paths[i] = composited_path
-                except Exception as e:
-                    print(f"⚠️ {i}번 이미지 합성 실패, 배경만 사용: {e}")
-        crop_urls = [image_file_to_data_uri(fp) for fp in final_paths]
+        # 캐릭터가 이미지 생성 시점에 배경과 같이 그려지므로, 별도 합성 없이 그대로 인코딩만 한다.
+        crop_urls = [image_file_to_data_uri(fp) for fp in crop_paths]
         for i, sec in enumerate(sections):
             if sec.get("section_type") in grid_order:
                 section_images[i] = crop_urls[grid_order.index(sec.get("section_type"))]

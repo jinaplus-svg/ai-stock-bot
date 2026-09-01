@@ -219,16 +219,32 @@ def generate_auto_topic(category, recent_titles=None):
 # 3. AI 이미지 생성 및 글 작성
 # ==========================================
 def create_photo_prompt(category, topic, ref_content):
+    """
+    [v2] 예전엔 배경(실사)과 마스코트(초록배경 카툰)를 따로 생성해서 크로마키로 합성했음 —
+    두 이미지의 화풍/조명이 안 맞아 캐릭터가 배경 위에 "붙여넣은 스티커"처럼 붕 떠 보이는
+    문제가 있었음. 이제 한 번의 이미지 생성으로 실사 배경과 캐릭터를 같이 그려서, 이미지
+    모델이 처음부터 조명/그림자/구도를 통일감 있게 맞추도록 한다 (합성 단계 자체가 필요 없음).
+    """
     system_msg = f"""
-    당신은 퓰리처상을 받은 보도사진 편집장입니다.
+    당신은 퓰리처상을 받은 보도사진 편집장이자 스튜디오 지브리풍 일러스트 감독입니다.
     제공된 기사의 핵심 맥락(Context)을 깊이 이해하고, 이슈의 본질을 보여주는 상징적이고 생동감 넘치는 4분할 컷(4-panel photo collage) 영문 프롬프트를 작성하세요.
 
     🚨 [절대 금지 사항 - CRITICAL]
     - 현존 AI 기술 한계상 이미지 내 텍스트는 무조건 깨집니다. 따라서 ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY, NO LOGOS, NO SIGNS!
     - 영어든 한글이든 글자는 단 1개도 들어가선 안 됩니다. 글자가 필요한 간판이나 화면 대신 제품/사물의 형태, 상황의 분위기에만 집중하세요.
-    - 3D CG, 일러스트레이션 금지. 오직 8k 극사실주의 보도사진(Photorealistic, documentary photography) 스타일로 묘사할 것.
-    - [NEW] 사람/인물/손 등 신체 부위를 절대 그리지 마세요 (실내/사물/현장 풍경만). 캐릭터 마스코트가 별도로 합성되므로,
-      배경에 사람이 있으면 시각적으로 충돌합니다.
+    - 각 컷의 배경/현장 자체는 3D CG나 일러스트가 아닌, 8k 극사실주의 보도사진(Photorealistic, documentary photography) 스타일로 묘사할 것.
+
+    🎨 [캐릭터 통합 규칙 - 매우 중요]
+    4개 컷 전부에, 하나의 일관된 카툰 캐릭터가 그 실사 배경 속에 자연스럽게 녹아들어 등장해야 합니다
+    (배경만 있는 컷은 안 됩니다).
+    - 캐릭터 스타일: 스튜디오 지브리(Ghibli) 애니메이션풍의 부드러운 셀 셰이딩, 따뜻하고 자연스러운 색감의
+      페인터리 카툰. 평면적인 흰색 단색 실루엣이나 두꺼운 검은 윤곽선의 심플 라인아트는 절대 금지 —
+      배경의 조명/그림자와 어울리는 부드러운 채색과 음영이 있어야 합니다.
+    - 캐릭터가 반드시 전신으로 나올 필요는 없습니다. 손, 상반신, 뒷모습, 프레임 한쪽 구석의 작은 인물 등
+      장면에 자연스럽게 녹아드는 구도면 충분합니다.
+    - 각 컷마다 그 상황의 감정/맥락에 맞는 반응(놀람, 진지함, 분석적 시선, 자신감 등)을 표현하되,
+      실제 특정 인물이나 로고/제품을 직접 가리키거나 조작하는 모습은 그리지 마세요.
+    - 얼굴/헤어스타일/의상 등 캐릭터 디자인 자체는 4컷 내내 동일하게 유지하고, 포즈/표정/구도만 컷마다 다르게 하세요.
     """
     res = gpt_client.chat.completions.create(
         model="gpt-4o",  # Mini에서 고성능 모델로 업그레이드 (맥락 파악 강화)
@@ -238,41 +254,18 @@ def create_photo_prompt(category, topic, ref_content):
     return res.choices[0].message.content.strip()
 
 
-def generate_mascot_poses(category, topic, ref_content):
-    """[NEW] 4컷(오프닝/팩트/분석/전망)에 어울리는 마스코트 포즈·표정을 짧게 생성 (저렴한 mini 모델, 별도 호출)."""
-    prompt = f"""
-    아래 주제로 4컷짜리 뉴스 카드뉴스에 들어갈 마스코트 캐릭터의 포즈/표정을 영문으로 짧게 4개 작성하세요.
-    순서: 1)흥미로운 도입 리액션 2)사실을 짚어보는 진지한 자세 3)날카로운 분석/비판 표정 4)미래를 내다보는 자신감 있는 자세.
-    캐릭터 자체의 포즈·표정·제스처만 묘사하고, 실제 상품/기업 로고/특정 인물 묘사는 절대 하지 마세요
-    (예: "pointing at a chart" 대신 "pointing excitedly at empty space").
-    반드시 JSON 배열 4개 문자열로만 답하세요. 예: ["...", "...", "...", "..."]
-
-    주제: {topic}
-    내용: {ref_content[:1000]}
-    """
-    try:
-        res = gpt_client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.8,
-        )
-        text = res.choices[0].message.content.strip()
-        text = re.sub(r"^```[a-zA-Z]*\n?", "", text)
-        text = re.sub(r"```$", "", text).strip()
-        poses = json.loads(text)
-        if isinstance(poses, list) and len(poses) >= 4:
-            return poses[:4]
-    except Exception as e:
-        print(f"⚠️ 마스코트 포즈 생성 실패: {e}")
-    return ["curious and surprised expression, leaning forward",
-            "serious focused expression, arms crossed",
-            "skeptical raised-eyebrow expression, one hand on chin",
-            "confident smile, thumbs up"]
-
-
 def generate_and_split_images_xai(prompt, out_dir="."):
-    """[CHANGED] base64 대신 파일 경로 리스트를 반환하도록 변경 (마스코트 합성을 위해 파일이 필요)."""
-    final_prompt = f"A seamless photo collage of 4 panels in a 2x2 grid. {prompt} Highly highly realistic, documentary photography, cinematic lighting, ABSOLUTELY NO TEXT, NO WORDS, NO LOGOS, NO LETTERS, no signs, no typography, clean visual only."
+    """이미지 생성 시점에 배경(실사)+캐릭터(지브리풍 카툰)를 한 번에 같이 그려서, 별도 합성 없이
+    바로 완성 이미지로 씀 (경로 리스트를 반환)."""
+    final_prompt = (
+        f"A seamless photo collage of 4 panels in a 2x2 grid. Each panel is a photorealistic, "
+        f"documentary-style real-world scene, with ONE consistent Ghibli-style painterly cartoon "
+        f"character naturally blended into that same photorealistic scene (soft cel-shading, warm "
+        f"natural colors matching the scene's lighting — not a flat white silhouette or thick black "
+        f"outline). The character does not need to be full-body. {prompt} "
+        f"Highly realistic environment, cinematic lighting, ABSOLUTELY NO TEXT, NO WORDS, NO LOGOS, "
+        f"NO LETTERS, no signs, no typography, clean visual only."
+    )
     try:
         response = xai_client.images.generate(
             model="grok-imagine-image",
@@ -301,121 +294,14 @@ def generate_and_split_images_xai(prompt, out_dir="."):
         return []
 
 
-# ==========================================
-# 3.5b [NEW] 고정 마스코트 캐릭터 — 자취템(auto_soloitems.py)과 동일한 캐릭터시트+크로마키 방식
-# ==========================================
-MASCOT_STYLE = (
-    "Simple clean 2D cartoon/webtoon character design, thick black outline, flat colors, "
-    "plain solid bright green background (chroma key green #00FF00, perfectly flat and uniform, "
-    "no shadows or gradients on the background), dynamic and expressive full-body or half-body "
-    "pose filling most of the panel, no text, no watermark, no logos. IMPORTANT: do NOT draw any "
-    "household appliance, electronics, chart, screen, or product/logo icon of any kind (these would "
-    "visually conflict with the separately composited real background). Small generic hand props "
-    "(a newspaper, a magnifying glass, a coffee cup) are fine, but never draw a specific product, "
-    "company logo, or real person's likeness."
-)
-
-
-def build_mascot_sheet_prompt(poses):
-    labels = ["Top-left", "Top-right", "Bottom-left", "Bottom-right"]
-    parts = [f"{label}: {pose}" for label, pose in zip(labels, poses)]
-    return (
-        "A perfectly seamless 2x2 grid of 4 panels, absolutely NO borders, NO white frames, "
-        "NO margins between panels. The EXACT SAME single cartoon character (same face, same "
-        "outfit, same art style, same character design) appears in all 4 panels — only the pose "
-        "and facial expression changes per panel as described below. " + MASCOT_STYLE + " "
-        + " | ".join(parts)
-    )
-
-
-def chromakey_cutout(image_path, green_dominance=25, spill_dominance=6):
-    """배경 제거 + 잔여 초록기(스필) 제거 (auto_soloitems.py와 동일 로직)."""
-    import numpy as np
-    img = Image.open(image_path).convert("RGBA")
-    arr = np.array(img).astype(int)
-    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
-    max_rb = np.maximum(r, b)
-    dominance = g - max_rb
-    is_bg = dominance > green_dominance
-    is_spill = (dominance > spill_dominance) & (~is_bg)
-    arr[:, :, 1] = np.where(is_spill, max_rb, g)
-    arr[:, :, 3] = np.where(is_bg, 0, 255)
-    arr = np.clip(arr, 0, 255).astype(np.uint8)
-    return Image.fromarray(arr, "RGBA")
-
-
-def composite_mascot_on_background(bg_path, mascot_cutout_img, out_path, scale=0.62):
-    bg = Image.open(bg_path).convert("RGBA")
-    bw, bh = bg.size
-    mascot = mascot_cutout_img.copy()
-    mw, mh = mascot.size
-    new_h = int(bh * scale)
-    new_w = int(mw * (new_h / mh))
-    mascot = mascot.resize((new_w, new_h), Image.Resampling.LANCZOS)
-    x = (bw - new_w) // 2
-    y = bh - new_h
-    bg.alpha_composite(mascot, (x, y))
-    bg.convert("RGB").save(out_path, quality=85)
-    return out_path
-
-
-def split_grid_2x2_generic(image_path, out_dir, job_id):
-    img = Image.open(image_path)
-    w, h = img.size
-    half_w, half_h = w // 2, h // 2
-    margin = 8
-    boxes = [
-        (margin, margin, half_w - margin, half_h - margin),
-        (half_w + margin, margin, w - margin, half_h - margin),
-        (margin, half_h + margin, half_w - margin, h - margin),
-        (half_w + margin, half_h + margin, w - margin, h - margin),
-    ]
-    out_paths = []
-    for i, box in enumerate(boxes):
-        cropped = img.crop(box).resize((720, 405), Image.Resampling.LANCZOS)
-        out_path = os.path.join(out_dir, f"_mgrid_{job_id}_{i}.jpg")
-        cropped.save(out_path, quality=82)
-        out_paths.append(out_path)
-    return out_paths
-
-
-def generate_mascot_composited_images(background_crop_paths, poses):
-    """배경 4장(파일경로) + 포즈 4개 -> 마스코트 합성 후 base64 리스트로 반환.
-    마스코트 생성/합성이 실패하면 배경만이라도 그대로 base64로 반환 (완전 실패 방지)."""
-    def to_b64(path):
+def image_paths_to_b64(paths):
+    """이미지 생성 시점에 배경+캐릭터를 이미 같이 그렸으므로, 합성 없이 그대로 base64 인코딩만 한다."""
+    out = []
+    for path in paths:
         with open(path, "rb") as f:
-            return f"data:image/jpeg;base64,{base64.b64encode(f.read()).decode()}"
+            out.append(f"data:image/jpeg;base64,{base64.b64encode(f.read()).decode()}")
+    return out
 
-    if not background_crop_paths:
-        return []
-
-    try:
-        job_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-        mascot_sheet_path = f"_mascot_{job_id}.jpg"
-        mascot_prompt = build_mascot_sheet_prompt(poses)
-        res = xai_client.images.generate(
-            model="grok-imagine-image", prompt=mascot_prompt,
-            extra_body={"aspect_ratio": "16:9", "resolution": "2k"}, n=1
-        )
-        img_data = requests.get(res.data[0].url).content
-        with open(mascot_sheet_path, "wb") as f:
-            f.write(img_data)
-        mascot_crops = split_grid_2x2_generic(mascot_sheet_path, ".", job_id)
-        cutouts = [chromakey_cutout(p) for p in mascot_crops]
-
-        final_b64 = []
-        for i, bg_path in enumerate(background_crop_paths):
-            try:
-                out_path = f"_composited_{job_id}_{i}.jpg"
-                composite_mascot_on_background(bg_path, cutouts[i], out_path)
-                final_b64.append(to_b64(out_path))
-            except Exception as e:
-                print(f"⚠️ {i}번 마스코트 합성 실패, 배경만 사용: {e}")
-                final_b64.append(to_b64(bg_path))
-        return final_b64
-    except Exception as e:
-        print(f"⚠️ 마스코트 생성 실패, 배경 이미지만 사용: {e}")
-        return [to_b64(p) for p in background_crop_paths]
 
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 5px solid #d32f2f; padding: 18px 25px; margin: 35px 0; background-color: #fff9f9; color: #111; font-weight: 800; font-size: 1.15em; border-radius: 0 10px 10px 0; line-height: 1.6;"'
@@ -770,9 +656,8 @@ if __name__ == "__main__":
         exit(0)
 
     photo_prompt = create_photo_prompt(category, topic, ref_content)
-    bg_crop_paths = generate_and_split_images_xai(photo_prompt)
-    mascot_poses = generate_mascot_poses(category, topic, ref_content)
-    images = generate_mascot_composited_images(bg_crop_paths, mascot_poses)
+    image_paths = generate_and_split_images_xai(photo_prompt)
+    images = image_paths_to_b64(image_paths)
     title, html_output = write_blog_post(category, images, ref_content, topic)
 
     # [NEW] 쿠팡 관련 상품 섹션 삽입 (본문 출처 링크보다 먼저)

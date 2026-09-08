@@ -70,6 +70,6 @@ jobs:
         run: |
           git config user.name "content-pilot-bot"
           git config user.email "content-pilot-bot@users.noreply.github.com"
-          git add longform_creator_history.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "chore: update longform creator history [skip ci]"
+          git add longform_creator_history.json used_source_urls.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "chore: update dedup history [skip ci]"
           git push || true

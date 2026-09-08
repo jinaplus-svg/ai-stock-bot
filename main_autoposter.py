@@ -143,6 +143,39 @@ def is_recent_duplicate(topic, recent_titles, threshold=0.35):
     return False
 
 
+# 🚨 [v2 개선] 리뷰에서 확인된 문제 — 제목만 3-gram 유사도로 비교하면, GPT가 같은 원문 기사를
+# 매번 다른 문구의 제목으로 써서 통과시켜버림(실제로 9/5, 9/6 글이 같은 원문 URL을 쓰고도
+# 통과됨). 원문 URL 자체를 기록해서, 같은 기사를 소재로 다시 뽑지 않도록 직접 차단한다.
+SOURCE_URL_HISTORY_FILE = "used_source_urls.json"
+
+
+def _load_source_url_history():
+    if not os.path.exists(SOURCE_URL_HISTORY_FILE):
+        return {}
+    try:
+        with open(SOURCE_URL_HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _save_source_url_history(history):
+    for cat in history:
+        history[cat] = history[cat][-30:]
+    with open(SOURCE_URL_HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+
+def mark_source_url_used(category, url):
+    if not url:
+        return
+    history = _load_source_url_history()
+    history.setdefault(category, [])
+    if url not in history[category]:
+        history[category].append(url)
+    _save_source_url_history(history)
+
+
 def generate_auto_topic(category, recent_titles=None):
     print(f"🤖 [{category.upper()}] 최근 48시간 이내 최신 기사 팩트 수집 중...")
     kst = datetime.timezone(datetime.timedelta(hours=9))
@@ -186,6 +219,9 @@ def generate_auto_topic(category, recent_titles=None):
     if yt_content:
         candidates.append((yt_content, yt_title, yt_url))
 
+    used_urls = set(_load_source_url_history().get(category, []))
+    candidates = [c for c in candidates if c[2] not in used_urls]  # 같은 원문 URL은 아예 후보에서 제외
+
     for content, title, url in candidates:
         if not is_recent_duplicate(title, recent_titles):
             print(f"✅ 채택된 소재: {title}")
@@ -218,22 +254,23 @@ def generate_auto_topic(category, recent_titles=None):
 # ==========================================
 # 3. AI 이미지 생성 및 글 작성
 # ==========================================
+# 🌟 [v3] 만화 캐릭터가 실사 배경에 섞여있는 스타일이 뉴스/IT/증시처럼 진지한 시사 카테고리에는
+# 안 어울린다는 피드백(리뷰로 확인) — 이 카테고리들은 캐릭터 없이 순수 보도사진 스타일로,
+# food/travel(라이프스타일 성격)만 기존처럼 캐릭터를 유지한다.
+CHARACTER_CATEGORIES = {"food", "travel"}
+
+
 def create_photo_prompt(category, topic, ref_content):
     """
     [v2] 예전엔 배경(실사)과 마스코트(초록배경 카툰)를 따로 생성해서 크로마키로 합성했음 —
     두 이미지의 화풍/조명이 안 맞아 캐릭터가 배경 위에 "붙여넣은 스티커"처럼 붕 떠 보이는
     문제가 있었음. 이제 한 번의 이미지 생성으로 실사 배경과 캐릭터를 같이 그려서, 이미지
     모델이 처음부터 조명/그림자/구도를 통일감 있게 맞추도록 한다 (합성 단계 자체가 필요 없음).
+    [v3] news/it/stock은 캐릭터 없이 순수 보도사진 스타일로 분기.
     """
-    system_msg = f"""
-    당신은 퓰리처상을 받은 보도사진 편집장이자 스튜디오 지브리풍 일러스트 감독입니다.
-    제공된 기사의 핵심 맥락(Context)을 깊이 이해하고, 이슈의 본질을 보여주는 상징적이고 생동감 넘치는 4분할 컷(4-panel photo collage) 영문 프롬프트를 작성하세요.
+    use_character = category in CHARACTER_CATEGORIES
 
-    🚨 [절대 금지 사항 - CRITICAL]
-    - 현존 AI 기술 한계상 이미지 내 텍스트는 무조건 깨집니다. 따라서 ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY, NO LOGOS, NO SIGNS!
-    - 영어든 한글이든 글자는 단 1개도 들어가선 안 됩니다. 글자가 필요한 간판이나 화면 대신 제품/사물의 형태, 상황의 분위기에만 집중하세요.
-    - 각 컷의 배경/현장 자체는 3D CG나 일러스트가 아닌, 8k 극사실주의 보도사진(Photorealistic, documentary photography) 스타일로 묘사할 것.
-
+    character_rule = f"""
     🎨 [캐릭터 통합 규칙 - 매우 중요]
     4개 컷 전부에, 하나의 일관된 카툰 캐릭터가 그 실사 배경 속에 자연스럽게 녹아들어 등장해야 합니다
     (배경만 있는 컷은 안 됩니다).
@@ -245,6 +282,22 @@ def create_photo_prompt(category, topic, ref_content):
     - 각 컷마다 그 상황의 감정/맥락에 맞는 반응(놀람, 진지함, 분석적 시선, 자신감 등)을 표현하되,
       실제 특정 인물이나 로고/제품을 직접 가리키거나 조작하는 모습은 그리지 마세요.
     - 얼굴/헤어스타일/의상 등 캐릭터 디자인 자체는 4컷 내내 동일하게 유지하고, 포즈/표정/구도만 컷마다 다르게 하세요.
+    """ if use_character else """
+    🎨 [인물/캐릭터 규칙 - 매우 중요]
+    이 카테고리는 진지한 시사/분석 톤이라 만화 캐릭터를 넣지 않습니다. 4개 컷 모두 사람이 전혀
+    등장하지 않는 순수 다큐멘터리 사진(사물, 공간, 데이터를 시각화한 추상적 장면 등)이거나,
+    등장하더라도 100% 포토리얼리스틱한 실사 인물(카툰/일러스트 아님)만 배치하세요.
+    """
+
+    system_msg = f"""
+    당신은 퓰리처상을 받은 보도사진 편집장{"이자 스튜디오 지브리풍 일러스트 감독" if use_character else ""}입니다.
+    제공된 기사의 핵심 맥락(Context)을 깊이 이해하고, 이슈의 본질을 보여주는 상징적이고 생동감 넘치는 4분할 컷(4-panel photo collage) 영문 프롬프트를 작성하세요.
+
+    🚨 [절대 금지 사항 - CRITICAL]
+    - 현존 AI 기술 한계상 이미지 내 텍스트는 무조건 깨집니다. 따라서 ABSOLUTELY NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY, NO LOGOS, NO SIGNS!
+    - 영어든 한글이든 글자는 단 1개도 들어가선 안 됩니다. 글자가 필요한 간판이나 화면 대신 제품/사물의 형태, 상황의 분위기에만 집중하세요.
+    - 각 컷의 배경/현장 자체는 3D CG나 일러스트가 아닌, 8k 극사실주의 보도사진(Photorealistic, documentary photography) 스타일로 묘사할 것.
+    {character_rule}
     """
     res = gpt_client.chat.completions.create(
         model="gpt-4o",  # Mini에서 고성능 모델로 업그레이드 (맥락 파악 강화)
@@ -254,18 +307,27 @@ def create_photo_prompt(category, topic, ref_content):
     return res.choices[0].message.content.strip()
 
 
-def generate_and_split_images_xai(prompt, out_dir="."):
+def generate_and_split_images_xai(prompt, out_dir=".", use_character=True):
     """이미지 생성 시점에 배경(실사)+캐릭터(지브리풍 카툰)를 한 번에 같이 그려서, 별도 합성 없이
-    바로 완성 이미지로 씀 (경로 리스트를 반환)."""
-    final_prompt = (
-        f"A seamless photo collage of 4 panels in a 2x2 grid. Each panel is a photorealistic, "
-        f"documentary-style real-world scene, with ONE consistent Ghibli-style painterly cartoon "
-        f"character naturally blended into that same photorealistic scene (soft cel-shading, warm "
-        f"natural colors matching the scene's lighting — not a flat white silhouette or thick black "
-        f"outline). The character does not need to be full-body. {prompt} "
-        f"Highly realistic environment, cinematic lighting, ABSOLUTELY NO TEXT, NO WORDS, NO LOGOS, "
-        f"NO LETTERS, no signs, no typography, clean visual only."
-    )
+    바로 완성 이미지로 씀 (경로 리스트를 반환). [v3] use_character=False면 캐릭터 없이 순수 사진."""
+    if use_character:
+        final_prompt = (
+            f"A seamless photo collage of 4 panels in a 2x2 grid. Each panel is a photorealistic, "
+            f"documentary-style real-world scene, with ONE consistent Ghibli-style painterly cartoon "
+            f"character naturally blended into that same photorealistic scene (soft cel-shading, warm "
+            f"natural colors matching the scene's lighting — not a flat white silhouette or thick black "
+            f"outline). The character does not need to be full-body. {prompt} "
+            f"Highly realistic environment, cinematic lighting, ABSOLUTELY NO TEXT, NO WORDS, NO LOGOS, "
+            f"NO LETTERS, no signs, no typography, clean visual only."
+        )
+    else:
+        final_prompt = (
+            f"A seamless photo collage of 4 panels in a 2x2 grid. Each panel is a photorealistic, "
+            f"documentary-style news photograph — no cartoon or illustrated elements anywhere, no "
+            f"mascot character. If people appear, they must be fully photorealistic real humans. {prompt} "
+            f"Highly realistic environment, cinematic lighting, ABSOLUTELY NO TEXT, NO WORDS, NO LOGOS, "
+            f"NO LETTERS, no signs, no typography, clean visual only."
+        )
     try:
         response = xai_client.images.generate(
             model="grok-imagine-image",
@@ -303,6 +365,90 @@ def image_paths_to_b64(paths):
     return out
 
 
+
+# 🚨 [v2 개선] 카테고리별로 완전히 다른 구조 필요 — 예전엔 뉴스/IT/증시/맛집/여행 전부 똑같은
+# "칼럼니스트 심층분석" 틀을 썼는데, 리뷰 결과 맛집 글에도 "경쟁사 비교/산업 파급력 예측" 같은
+# 안 어울리는 구조가 반복되고, 원문에 없는 수치/조건이 "전문가 통찰"이란 명목으로 만들어지는
+# 문제가 확인됨(예: 원문 "일부 상품에 포함" → 블로그 "포함"으로 조건 소실). 카테고리를 정보형
+# (food/travel — 독자가 바로 쓸 정보가 목적)과 분석형(news/it/stock — 시사 해설이 목적)으로
+# 나눠서 각각 다른 글 구조를 쓴다.
+INFO_CATEGORIES = {"food", "travel"}
+
+CATEGORY_STRUCTURE = {
+    "food": """
+    <h2>매장명 + 핵심 키워드가 결합된 제목</h2>
+    (이 매장/음식이 왜 화제인지, 원문에 나온 사실 기반으로 2문단)
+    <br><br>
+    [IMAGE_1]
+    <br><br>
+    (메뉴 구성과 가격 — 원문에 나온 실제 메뉴명/가격만 기재. 없으면 "가격 미확인, 매장에 문의 필요"라고 쓸 것)
+    <br><br>
+    <table {table_style}>
+      <thead><tr><th {th_style}>확인 항목</th><th {th_style}>내용</th></tr></thead>
+      <tbody><tr><td {td_style}>위치/영업시간</td><td {td_style}>원문에 있으면 기재, 없으면 미확인 표시</td></tr>
+      <tr><td {td_style}>예약 필요 여부</td><td {td_style}>원문 기준</td></tr></tbody>
+    </table>
+    <br><br>
+    [IMAGE_2]
+    <br><br>
+    (이 매장을 고려할 때 확인해야 할 점 — 원문에 없는 맛 평가나 방문 경험은 절대 쓰지 말 것)
+    <br><br>
+    <blockquote {blockquote_style}>정보 요약 한 줄</blockquote>
+    """,
+    "travel": """
+    <h2>장소/행사명 + 핵심 키워드가 결합된 제목</h2>
+    (이 여행지/행사가 누구에게 맞는지, 원문 기반 2문단)
+    <br><br>
+    [IMAGE_1]
+    <br><br>
+    (일정·교통·비용 — 원문에 나온 날짜/요금/조건만 기재. "일부 상품에 한정" 같은 원문의 조건과
+    예외는 절대 생략하거나 일반화하지 말고 그대로 반영할 것)
+    <br><br>
+    <table {table_style}>
+      <thead><tr><th {th_style}>확인 항목</th><th {th_style}>내용</th></tr></thead>
+      <tbody><tr><td {td_style}>예약 방법/링크</td><td {td_style}>원문 기준, 없으면 미확인 표시</td></tr>
+      <tr><td {td_style}>참여 조건</td><td {td_style}>원문의 예외·제한사항 그대로</td></tr></tbody>
+    </table>
+    <br><br>
+    [IMAGE_2]
+    <br><br>
+    (독자가 예약/방문 전 실제로 확인해야 할 사항)
+    <br><br>
+    <blockquote {blockquote_style}>정보 요약 한 줄</blockquote>
+    """,
+    "_default": """
+    <h2>핵심 키워드 + 후킹 장치가 결합된 제목</h2>
+    (독자가 겪는 상황/숫자로 3초 안에 몰입시키는 도입부 2~3문단, 문단당 3~4문장)
+    <br><br>
+    [IMAGE_1]
+    <br><br>
+    (원문에 있는 사실과 수치만 기반으로 한 구체적 설명 2~3문단, 문단당 3~4문장 — 원문에 없는
+    수치나 조건은 절대 만들지 말 것)
+    <br><br>
+    <table {table_style}>
+      <thead><tr><th {th_style}>핵심 지표 / 비교 항목</th><th {th_style}>수치(출처: 원문) 및 해설</th></tr></thead>
+      <tbody><tr><td {td_style}>원문에 있는 데이터만 기입</td><td {td_style}>해설 — 원문 사실과 칼럼니스트 해석을 문장으로 구분</td></tr></tbody>
+    </table>
+    <br><br>
+    [IMAGE_2]
+    <br><br>
+    (이 이슈의 배경과 경쟁 구도 — 원문에 근거가 있는 부분은 사실로, 없는 부분은 "~로 예상된다"처럼
+    칼럼니스트의 해석임을 명시하는 문장으로 3~4문단)
+    <br><br>
+    [IMAGE_3]
+    <br><br>
+    (향후 1~3년 전망 — 반드시 "필자의 예측으로는" 같은 표현으로 이게 해설/전망이지 확정된 사실이
+    아님을 밝히면서 2~3문단)
+    <br><br>
+    [IMAGE_4]
+    <br><br>
+    (전체 내용을 관통하는 요약 1~2문단)
+    <br><br>
+    <blockquote {blockquote_style}>글 전체의 주제를 관통하는 마무리 한 줄 요약</blockquote>
+    """,
+}
+
+
 def write_blog_post(category, base64_images, ref_content="", topic=""):
     blockquote_style = 'style="border-left: 5px solid #d32f2f; padding: 18px 25px; margin: 35px 0; background-color: #fff9f9; color: #111; font-weight: 800; font-size: 1.15em; border-radius: 0 10px 10px 0; line-height: 1.6;"'
     table_style = 'style="width: 100%; border-collapse: collapse; margin: 35px 0; font-size: 0.95em; font-family: sans-serif; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-radius: 8px; overflow: hidden;"'
@@ -312,55 +458,45 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     kst = datetime.timezone(datetime.timedelta(hours=9))
     today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
 
+    persona = (
+        "당신은 실제 방문·구매 경험 없이, 주어진 원문 자료만으로 독자에게 실용적인 정보를 정리해주는 "
+        "에디터입니다." if category in INFO_CATEGORIES else
+        "당신은 한국 최고의 탑티어 비즈니스/IT/경제 분야를 아우르는 날카로운 시각의 칼럼니스트이자, "
+        "동시에 네이버/구글 검색 상위노출과 클릭을 부르는 카피라이팅에 능한 에디터입니다."
+    )
+
+    structure = CATEGORY_STRUCTURE.get(category, CATEGORY_STRUCTURE["_default"]).format(
+        table_style=table_style, th_style=th_style, td_style=td_style, blockquote_style=blockquote_style,
+    )
+
     system_prompt = f"""
-    당신은 한국 최고의 탑티어 비즈니스/IT/경제/여행 분야를 아우르는 날카로운 시각의 칼럼니스트이자,
-    동시에 네이버/구글 검색 상위노출과 클릭을 부르는 카피라이팅에 능한 에디터입니다.
+    {persona}
 
-    🚨 [핵심 지시 사항 - 전문가의 통찰과 구체성]
+    🚨 [사실 기반 작성 원칙 - 가장 중요, 반드시 지킬 것]
     1. 익명 처리(A사, 모 기업 등) 절대 금지! 원문에 등장하는 **실제 기업명, 인물명, 구체적 수치, 투자 금액, 확률 등 데이터**를 무조건 그대로 명시하세요.
-    2. 기사 내용을 단순 요약하는 것은 20% 이내로 제한합니다.
-    3. 나머지 80%는 전문가적 관점에서의 **날카로운 비평, 이면의 의도 분석, 경쟁사와의 비교, 향후 산업/우리 실생활에 미칠 파급력에 대한 심층 뇌피셜**로 꽉 채우세요. (최소 2500자 이상 작성)
-    4. 마크다운 기호(```, markdown, html, **, #) 절대 금지! 오직 순수 HTML 태그만 사용.
+    2. 수치·조건·예외는 원문에 있는 그대로만 쓰세요. 원문이 "일부 상품/일부 회차에만 해당"처럼 조건을
+       달았다면, 그 조건을 절대 생략하거나 "전체 제공"처럼 일반화하지 마세요.
+    3. 원문에 없는 수치(전환율, 비용, 성능 등)를 만들어내지 마세요. 근거 없는 수치는 아예 쓰지 않는
+       편이 지어내는 것보다 낫습니다.
+    4. 실제로 방문/시식/체험한 적이 없으므로 "직접 먹어보니", "방문해보니", "직원분과 대화해보니"처럼
+       체험한 것처럼 쓰지 마세요. "원문에 따르면", "알려진 바로는" 같은 표현을 쓰세요.
+    5. 향후 전망이나 경쟁 구도 분석처럼 원문에 없는 해석을 추가할 때는 "~로 보인다", "필자의 판단으로는"
+       처럼 이것이 사실이 아니라 해설/전망이라는 것을 문장에서 드러내세요. 원문 사실과 해설을
+       뒤섞어서 전부 확정된 사실처럼 쓰지 마세요.
+    6. 이미지는 실제 해당 장소/제품의 사진이 아니라 분위기를 표현한 참고 이미지입니다. 이미지 속
+       장면을 이 매장/제품의 실제 사진인 것처럼 구체적으로 설명하지 마세요.
+    7. 마크다운 기호(```, markdown, html, **, #) 절대 금지! 오직 순수 HTML 태그만 사용. (최소 1800자 이상 작성)
 
-    🚨 [조회수/가독성을 위한 글쓰기 규칙 - 매우 중요]
-    - 제목: 핵심 키워드(회사명/종목명/사건명)를 앞쪽에 배치하고, 숫자·손실회피·반전 중 하나의 후킹 장치를 결합하세요.
-      (예: "OO전자 -12%, 그런데 개미들은 오히려 사고 있다" 처럼 구체적 수치+의외성)
-    - 도입부(첫 2문단)에서 "이거 알고 계셨나요?" 같은 뻔한 문장 대신, 독자가 당장 겪고 있을 법한 상황이나
-      숫자로 시작해서 3초 안에 "이건 나랑 관련있다"고 느끼게 만드세요.
-    - 문단은 3~4문장을 넘기지 마세요. 한 문단이 길어지면 가독성이 떨어져 이탈이 늘어납니다.
-    - 각 섹션 사이사이에 "그런데 여기서 진짜 문제는", "하지만 숫자를 뜯어보면" 같은 짧은 전환 문장으로
-      다음 문단을 계속 읽고 싶게 만드세요 (클리프행어 기법).
-    - 상투적 문구("주목받고 있습니다", "관심이 집중되고 있습니다" 등 어디서나 보이는 뉴스 클리셰)는 피하고,
-      칼럼니스트 본인의 관점이 드러나는 구체적 문장으로 쓰세요.
+    🚨 [조회수/가독성을 위한 글쓰기 규칙]
+    - 제목: 핵심 키워드(회사명/종목명/사건명/매장명)를 앞쪽에 배치하고, 숫자·의외성 중 하나의 후킹
+      장치를 결합하되 원문 사실과 어긋나는 과장은 넣지 마세요.
+    - 도입부(첫 2문단)에서 독자가 당장 겪고 있을 법한 상황이나 원문 속 숫자로 시작하세요.
+    - 문단은 3~4문장을 넘기지 마세요.
+    - 상투적 문구("주목받고 있습니다" 등)는 피하고 구체적 문장으로 쓰세요.
 
     🚨 [글 구조 및 이미지 템플릿 - 반드시 아래 순서와 마커를 100% 지키세요!]
     이미지가 들어갈 자리를 본문 사이에 [IMAGE_1], [IMAGE_2] 텍스트로 정확히 명시해야 합니다. 절대 빼먹지 마세요.
-
-    <h2>핵심 키워드 + 후킹 장치가 결합된 제목</h2>
-    (독자가 겪는 상황/숫자로 3초 안에 몰입시키는 도입부 2~3문단, 문단당 3~4문장)
-    <br><br>
-    [IMAGE_1]
-    <br><br>
-    (표면적인 기사 내용의 팩트와 등장 기업/수치에 대한 구체적 설명 2~3문단, 문단당 3~4문장)
-    <br><br>
-    <table {table_style}>
-      <thead><tr><th {th_style}>핵심 지표 / 비교 항목</th><th {th_style}>구체적 수치 및 전문가 코멘트</th></tr></thead>
-      <tbody><tr><td {td_style}>실제 데이터 기입</td><td {td_style}>분석 내용</td></tr></tbody>
-    </table>
-    <br><br>
-    [IMAGE_2]
-    <br><br>
-    (이 이슈의 이면에 숨겨진 의도, 경쟁사들의 대응, 그리고 칼럼니스트로서의 날카로운 비판이나 긍정적 평가 3~4문단, 문단당 3~4문장)
-    <br><br>
-    [IMAGE_3]
-    <br><br>
-    (이 기술이나 사건이 향후 1~3년 뒤 일반 소비자나 시장 판도를 어떻게 뒤흔들 것인지에 대한 통찰력 있는 예측 2~3문단)
-    <br><br>
-    [IMAGE_4]
-    <br><br>
-    (전체 내용을 관통하는 뼈때리는 요약 1~2문단)
-    <br><br>
-    <blockquote {blockquote_style}>글 전체의 주제를 관통하는 가장 엣지있고 철학적인 마무리 한 줄 요약</blockquote>
+    {structure}
     """
 
     res = gpt_client.chat.completions.create(
@@ -430,19 +566,27 @@ def coupang_search_products(keyword, limit=3):
 
 
 def extract_product_keyword(category, topic, ref_content):
-    """[NEW] 생성된 소재에서 쿠팡 검색에 쓸 핵심 제품/브랜드 키워드를 GPT로 짧게 추출."""
+    """[NEW] 생성된 소재에서 쿠팡 검색에 쓸 핵심 제품/브랜드 키워드를 GPT로 짧게 추출.
+    🚨 [v2 개선] 예전 프롬프트는 "관련해서 검색하면 좋을 키워드"처럼 기준이 느슨해서, 광고시장
+    분석 글에 햇반, AI 산업 글에 포스기/종이컵처럼 독자와 무관한 상품이 자주 붙었음(리뷰로 확인).
+    "이 글을 읽은 사람이 하려는 행동에 이 상품이 실제로 도움이 되는가"를 명시적으로 묻고,
+    애매하면 NONE을 적극 고르도록 기준을 훨씬 엄격하게 바꿈."""
     try:
         res = gpt_client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{
                 "role": "user",
                 "content": (
-                    f"다음은 '{category}' 카테고리 블로그 소재야. 이 내용과 관련해서 쿠팡에서 검색하면 좋을 "
-                    f"구체적인 제품/브랜드 키워드 1개만 한국어 2~4단어로 답해. 관련 상품이 마땅치 않으면 'NONE'이라고만 답해.\n\n"
-                    f"제목: {topic}\n내용: {ref_content[:800]}"
+                    f"다음은 '{category}' 카테고리 블로그 글의 소재야.\n\n"
+                    f"제목: {topic}\n내용: {ref_content[:800]}\n\n"
+                    "질문: 이 글을 읽은 독자가 지금 하려는 행동(구매/예약/방문 준비 등)에 실제로 "
+                    "도움이 되는 쿠팡 판매 상품이 있어? 단어가 본문에 등장한다는 이유만으로 "
+                    "고르지 말고, 독자에게 실질적으로 유용한 경우에만 답해.\n"
+                    "있으면 구체적인 제품/브랜드 키워드 1개를 한국어 2~4단어로만 답하고, "
+                    "조금이라도 애매하면 무조건 'NONE'이라고만 답해."
                 )
             }],
-            temperature=0.3,
+            temperature=0.2,
         )
         keyword = res.choices[0].message.content.strip().strip('"')
         return None if keyword.upper() == "NONE" else keyword
@@ -452,7 +596,12 @@ def extract_product_keyword(category, topic, ref_content):
 
 
 def inject_coupang_section(html_content, category, topic, ref_content):
-    """[NEW] 본문 내용과 관련된 쿠팡 상품을 찾아 하단에 '관련 상품' 섹션으로 삽입."""
+    """[NEW] 본문 내용과 관련된 쿠팡 상품을 찾아 하단에 '관련 상품' 섹션으로 삽입.
+    🚨 [v2 개선] news/it/stock 카테고리는 리뷰에서 확인된 "무관한 상품 추천" 사례가 전부 이
+    카테고리들이었음 — 시사/기술 해설 글에 상품을 붙이는 것 자체가 구조적으로 안 맞는 경우가
+    많아, food/travel(원래도 상품 연결이 자연스러운 카테고리)만 시도하도록 제한."""
+    if category not in INFO_CATEGORIES:
+        return html_content
     keyword = extract_product_keyword(category, topic, ref_content)
     if not keyword:
         return html_content
@@ -463,11 +612,14 @@ def inject_coupang_section(html_content, category, topic, ref_content):
     items_html = ""
     for p in products:
         name = html.escape(p.get("productName", ""))
-        price = p.get("productPrice", 0)
+        # 🐛 [v2 버그수정] productPrice가 float(예: 13900.0)로 올 때가 있어서 "13,900.0원"처럼
+        # 소수점이 그대로 노출되던 문제(리뷰로 확인) — int로 캐스팅해서 정리.
+        price = int(p.get("productPrice", 0) or 0)
         url = p.get("productUrl", "")
         image = p.get("productImage", "")
         items_html += (
-            '<a href="' + url + '" target="_blank" rel="nofollow" '
+            # 🌟 [v2] 다른 블로그(soloitems)와 동일하게 sponsored 속성 추가 (구글 광고링크 권장 속성)
+            '<a href="' + url + '" target="_blank" rel="nofollow sponsored" '
             'style="display:block;text-decoration:none;color:#222;border:1px solid #eee;border-radius:10px;'
             'padding:14px;margin-bottom:10px;">'
             f'<img src="{image}" style="width:70px;height:70px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:12px;">'
@@ -649,6 +801,10 @@ if __name__ == "__main__":
         ref_content, topic, _ = fetch_reference_content(ref_url)
     else:
         ref_content, topic, ref_url = generate_auto_topic(category, recent_titles=recent_titles)
+        if ref_content and ref_url:
+            # 🚨 [v2] 같은 원문 기사가 다음날 또 소재로 뽑히지 않도록 채택 즉시 기록
+            # (자동 선정된 경우만 — --reference_url로 수동 지정한 건 기록하지 않음)
+            mark_source_url_used(category, ref_url)
 
     if not ref_content:
         print("❌ 유효한 기사 팩트를 찾지 못해 포스팅을 중단합니다.")
@@ -656,7 +812,7 @@ if __name__ == "__main__":
         exit(0)
 
     photo_prompt = create_photo_prompt(category, topic, ref_content)
-    image_paths = generate_and_split_images_xai(photo_prompt)
+    image_paths = generate_and_split_images_xai(photo_prompt, use_character=(category in CHARACTER_CATEGORIES))
     images = image_paths_to_b64(image_paths)
     title, html_output = write_blog_post(category, images, ref_content, topic)
 

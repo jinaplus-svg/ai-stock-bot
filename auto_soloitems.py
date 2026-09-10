@@ -28,7 +28,9 @@ COUPANG_SECRET_KEY = os.environ.get("COUPANG_SECRET_KEY")
 COUPANG_DOMAIN = "https://api-gateway.coupang.com"
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-GEMINI_MODEL = "gemini-2.5-flash"
+# 🌟 [v2] gemini-2.5-flash 10/16 단종 예정 — gemini-3.7-flash(기본) + gemini-3.5-flash(폴백)로 교체.
+GEMINI_MODEL_PRIMARY = "gemini-3.7-flash"
+GEMINI_MODEL_FALLBACK = "gemini-3.5-flash"
 XAI_API_KEY = os.environ.get("XAI")
 
 GOOGLE_OAUTH_TOKEN_STR = os.environ.get("SOLO_GOOGLE_TOKEN")  # [FIX] 5개 카테고리 블로그와 계정이 달라서 별도 시크릿 사용
@@ -306,7 +308,8 @@ def get_shape_hint(product_name):
 
 
 def generate_blog_script(product, specs_text=""):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+    """🌟 [v2] gemini-3.7-flash(기본) 실패 시 gemini-3.5-flash(안정판)로 자동 폴백.
+    thinkingBudget=0 필수 — 안 끄면 숨은 사고 토큰으로 비용이 10배 이상 뜀(실측 확인)."""
     product_info = f"상품명: {product['name']}\n가격: {product['price']}원\n카테고리: {product['category']}"
     if specs_text:
         product_info += f"\n\n[웹 검색으로 확인된 실제 스펙]\n{specs_text}"
@@ -319,17 +322,23 @@ def generate_blog_script(product, specs_text=""):
     full_prompt = f"{BLOG_SYSTEM_PROMPT}\n\n[상품 정보]\n{product_info}"
     payload = {
         "contents": [{"parts": [{"text": full_prompt}]}],
-        "generationConfig": {"response_mime_type": "application/json", "temperature": 0.9, "maxOutputTokens": 8192},
+        "generationConfig": {"response_mime_type": "application/json", "temperature": 0.9, "maxOutputTokens": 8192,
+                              "thinkingConfig": {"thinkingBudget": 0}},
     }
-    try:
-        res = post_with_retry(url, payload, timeout=120)
-        text = res.json()["candidates"][0]["content"]["parts"][0]["text"]
-        json_data = extract_pure_json(text)
-        if not json_data:
-            return None, f"JSON 파싱 실패: {text[-300:]}"
-        return json_data, None
-    except Exception as e:
-        return None, str(e)
+    last_error = "알 수 없는 오류"
+    for model in (GEMINI_MODEL_PRIMARY, GEMINI_MODEL_FALLBACK):
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+        try:
+            res = post_with_retry(url, payload, timeout=120)
+            text = res.json()["candidates"][0]["content"]["parts"][0]["text"]
+            json_data = extract_pure_json(text)
+            if json_data:
+                return json_data, None
+            last_error = f"[{model}] JSON 파싱 실패: {text[-300:]}"
+        except Exception as e:
+            last_error = f"[{model}] {e}"
+            print(f"⚠️ {last_error}")
+    return None, last_error
 
 
 def sanitize_text(text):

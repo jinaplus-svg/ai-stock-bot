@@ -24,6 +24,11 @@ from bs4 import BeautifulSoup
 # ==========================================
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 XAI_API_KEY = os.environ.get("XAI")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+# 🌟 [v4] 본문/대본 생성을 GPT-4o에서 Gemini로 교체(비용 절감) — gemini-3.7-flash(기본, 최신
+# 프로모션가) 실패 시 gemini-3.5-flash(안정판)로 자동 폴백.
+GEMINI_MODEL_PRIMARY = "gemini-3.7-flash"
+GEMINI_MODEL_FALLBACK = "gemini-3.5-flash"
 GOOGLE_OAUTH_TOKEN_STR = os.environ.get("GOOGLE_TOKEN")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
@@ -48,6 +53,33 @@ BLOG_REGISTRY = {
 gpt_client = OpenAI(api_key=OPENAI_API_KEY)
 xai_client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
 SCOPES = ['https://www.googleapis.com/auth/blogger']
+
+
+def _call_gemini_text(system_prompt, user_content, temperature=0.8, max_output_tokens=4096):
+    """🌟 [v4] gpt_client.chat.completions.create()를 대체하는 Gemini 버전 — 시스템/유저 프롬프트를
+    Gemini의 systemInstruction/contents로 매핑. gemini-3.7-flash(기본) 실패 시
+    gemini-3.5-flash(안정판)로 자동 폴백. thinkingBudget=0 필수 — 실측 결과 켜두면 숨은 사고
+    토큰이 콜당 수백~수천개까지 나와 비용이 10배 이상 뛰는 걸 확인했음(꺼도 품질 저하 없음)."""
+    last_error = "알 수 없는 오류"
+    for model in (GEMINI_MODEL_PRIMARY, GEMINI_MODEL_FALLBACK):
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+        payload = {
+            "contents": [{"parts": [{"text": user_content}]}],
+            "generationConfig": {"temperature": temperature, "maxOutputTokens": max_output_tokens,
+                                  "thinkingConfig": {"thinkingBudget": 0}},
+        }
+        if system_prompt:
+            payload["systemInstruction"] = {"parts": [{"text": system_prompt}]}
+        try:
+            res = requests.post(url, json=payload, timeout=120)
+            res.raise_for_status()
+            data = res.json()
+            text = data["candidates"][0]["content"]["parts"][0]["text"]
+            return text.strip()
+        except Exception as e:
+            last_error = f"[{model}] {e}"
+            print(f"⚠️ Gemini 텍스트 생성 실패: {last_error}")
+    raise RuntimeError(f"Gemini 텍스트 생성 전부 실패: {last_error}")
 
 def send_telegram(text):
     if not (TELEGRAM_TOKEN and CHAT_ID):
@@ -299,12 +331,8 @@ def create_photo_prompt(category, topic, ref_content):
     - 각 컷의 배경/현장 자체는 3D CG나 일러스트가 아닌, 8k 극사실주의 보도사진(Photorealistic, documentary photography) 스타일로 묘사할 것.
     {character_rule}
     """
-    res = gpt_client.chat.completions.create(
-        model="gpt-4o",  # Mini에서 고성능 모델로 업그레이드 (맥락 파악 강화)
-        messages=[{"role": "system", "content": system_msg}, {"role": "user", "content": f"주제: {topic}\n내용: {ref_content}"}],
-        temperature=0.7
-    )
-    return res.choices[0].message.content.strip()
+    return _call_gemini_text(system_msg, f"주제: {topic}\n내용: {ref_content}",
+                              temperature=0.7, max_output_tokens=1024)
 
 
 def generate_and_split_images_xai(prompt, out_dir=".", use_character=True):
@@ -524,13 +552,10 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     {structure}
     """
 
-    res = gpt_client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": f"주제: {topic}\n\n[최근 48시간 내 최신 특급 기사 팩트 원문]:\n{ref_content}"}],
-        temperature=0.85
+    html_content = _call_gemini_text(
+        system_prompt, f"주제: {topic}\n\n[최근 48시간 내 최신 특급 기사 팩트 원문]:\n{ref_content}",
+        temperature=0.85, max_output_tokens=4096,
     )
-
-    html_content = res.choices[0].message.content.strip()
     html_content = re.sub(r'^```[a-zA-Z]*\n', '', html_content)
     html_content = re.sub(r'```$', '', html_content).strip()
     if html_content.lower().startswith('markdown'): html_content = html_content[8:].strip()
@@ -597,23 +622,17 @@ def extract_product_keyword(category, topic, ref_content):
     "이 글을 읽은 사람이 하려는 행동에 이 상품이 실제로 도움이 되는가"를 명시적으로 묻고,
     애매하면 NONE을 적극 고르도록 기준을 훨씬 엄격하게 바꿈."""
     try:
-        res = gpt_client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{
-                "role": "user",
-                "content": (
-                    f"다음은 '{category}' 카테고리 블로그 글의 소재야.\n\n"
-                    f"제목: {topic}\n내용: {ref_content[:800]}\n\n"
-                    "질문: 이 글을 읽은 독자가 지금 하려는 행동(구매/예약/방문 준비 등)에 실제로 "
-                    "도움이 되는 쿠팡 판매 상품이 있어? 단어가 본문에 등장한다는 이유만으로 "
-                    "고르지 말고, 독자에게 실질적으로 유용한 경우에만 답해.\n"
-                    "있으면 구체적인 제품/브랜드 키워드 1개를 한국어 2~4단어로만 답하고, "
-                    "조금이라도 애매하면 무조건 'NONE'이라고만 답해."
-                )
-            }],
-            temperature=0.2,
-        )
-        keyword = res.choices[0].message.content.strip().strip('"')
+        keyword = _call_gemini_text(
+            None,
+            f"다음은 '{category}' 카테고리 블로그 글의 소재야.\n\n"
+            f"제목: {topic}\n내용: {ref_content[:800]}\n\n"
+            "질문: 이 글을 읽은 독자가 지금 하려는 행동(구매/예약/방문 준비 등)에 실제로 "
+            "도움이 되는 쿠팡 판매 상품이 있어? 단어가 본문에 등장한다는 이유만으로 "
+            "고르지 말고, 독자에게 실질적으로 유용한 경우에만 답해.\n"
+            "있으면 구체적인 제품/브랜드 키워드 1개를 한국어 2~4단어로만 답하고, "
+            "조금이라도 애매하면 무조건 'NONE'이라고만 답해.",
+            temperature=0.2, max_output_tokens=50,
+        ).strip('"')
         return None if keyword.upper() == "NONE" else keyword
     except Exception as e:
         print(f"⚠️ 쿠팡 키워드 추출 실패: {e}")
@@ -673,13 +692,8 @@ def generate_longform_script(category, topic, ref_content):
         "각 씬은 '씬 N: (화면 설명) / 대사: ...' 형식으로, 8~12개 씬으로 구성하고, "
         "도입부 후킹 → 본론 3~4개 포인트 → 마무리 요약 순서를 지키세요."
     )
-    res = gpt_client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "system", "content": system_prompt},
-                  {"role": "user", "content": f"주제: {topic}\n\n참고 내용:\n{ref_content[:3000]}"}],
-        temperature=0.8,
-    )
-    return res.choices[0].message.content.strip()
+    return _call_gemini_text(system_prompt, f"주제: {topic}\n\n참고 내용:\n{ref_content[:3000]}",
+                              temperature=0.8, max_output_tokens=4096)
 
 
 def send_longform_script_telegram(category, topic, script_text, source_note=""):
@@ -766,13 +780,10 @@ def generate_longform_script_from_transcript(source):
         "새로운 구성으로 재구성한 오리지널 대본을 작성하세요. 원문 문장을 그대로 가져오지 마세요(표절 금지). "
         "각 씬은 '씬 N: (화면 설명) / 대사: ...' 형식으로 8~12개 씬, 도입부 후킹 → 본론 3~4개 포인트 → 마무리 요약 순서."
     )
-    res = gpt_client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "system", "content": system_prompt},
-                  {"role": "user", "content": f"참고 영상: {source['creator']} - {source['title']}\n\n자막 원문:\n{source['transcript']}"}],
-        temperature=0.85,
+    return _call_gemini_text(
+        system_prompt, f"참고 영상: {source['creator']} - {source['title']}\n\n자막 원문:\n{source['transcript']}",
+        temperature=0.85, max_output_tokens=4096,
     )
-    return res.choices[0].message.content.strip()
 
 
 # ==========================================

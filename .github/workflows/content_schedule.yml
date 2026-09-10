@@ -3,13 +3,14 @@ name: Content Schedule (Daily Auto Publish - All Categories)
 # 🌟 [v3] 예전엔 크론 1번(07:00 KST)에 5개 카테고리를 한 잡 안에서 5초 간격으로 전부 발행했음 —
 # 5개 블로그가 몇 분 사이에 한꺼번에 올라와서 부자연스럽다는 피드백으로, 카테고리별로 크론을
 # 30분씩 나눠서 각 트리거가 자기 카테고리 하나만 발행하도록 분리.
+# 🐛 [v5] 2026-09-11: 이 GitHub 크론 스케줄(schedule:) 자체가 그날 아예 발동하지 않는 문제가
+# 실측 확인됨(활성 상태, 브랜치도 정상인데 그날 스케줄 트리거 실행 이력이 하나도 없었음 — GitHub
+# Actions의 알려진 스케줄 지연/스킵 이슈로 추정). schedule 트리거를 완전히 제거하고, 대신 로컬
+# PC의 Windows 작업 스케줄러가 정확히 같은 시각(7:00/7:30/8:00/8:30/9:00 KST)에 이 워크플로우를
+# workflow_dispatch로 직접 호출하도록 이전 — 이번 세션에 로컬 스케줄러(토스봇 등)는 실제로
+# 정확히 작동하는 게 검증됨. schedule을 남겨두면 나중에 우연히 같이 발동해 중복 발행될 위험이
+# 있어 완전히 제거함(재도입하려면 이 커밋을 되돌리면 됨).
 on:
-  schedule:
-    - cron: '0 22 * * *'    # 07:00 KST -> stock
-    - cron: '30 22 * * *'   # 07:30 KST -> it
-    - cron: '0 23 * * *'    # 08:00 KST -> food
-    - cron: '30 23 * * *'   # 08:30 KST -> news
-    - cron: '0 0 * * *'     # 09:00 KST -> travel
   workflow_dispatch:
     inputs:
       category:

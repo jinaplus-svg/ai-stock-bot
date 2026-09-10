@@ -333,10 +333,14 @@ def generate_blog_script(product, specs_text=""):
 
 
 def sanitize_text(text):
+    """🐛 [실측 발견] 물결표(~)를 마크다운 기호로 보고 통째로 지웠더니, "1~3인용"처럼 숫자 사이의
+    한글 범위 표기(~)가 "13인용"으로 붙어버려 스펙이 왜곡되는 버그가 있었음(예: "미니" 밥솥인데
+    "13인용"으로 표기됨). 숫자 사이의 ~는 보존하고, 그 외의 ~(마크다운 취소선 등)만 제거."""
     if not text:
         return text
     normalized = unicodedata.normalize("NFC", text)
-    cleaned = re.sub(r"[*_~`#‘’“”]+", "", normalized)
+    cleaned = re.sub(r"(?<![0-9])~(?![0-9])", "", normalized)  # 숫자 사이가 아닌 ~만 제거
+    cleaned = re.sub(r"[*_`#‘’“”]+", "", cleaned)
     return re.sub(r"\s+", " ", cleaned).strip()
 
 

@@ -266,21 +266,26 @@ def post_with_retry(url, payload, timeout=60, retries=3):
 
 
 def fetch_product_specs_via_search(product_name):
+    """🌟 [v2] gemini-3.7-flash(기본) 실패 시 gemini-3.5-flash(안정판)로 자동 폴백."""
     if not GEMINI_API_KEY:
         return ""
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
     prompt = (
         f"'{product_name}' 실제 판매 중인 상품의 정확한 스펙을 웹에서 검색해서 알려주세요.\n"
         "용량/사이즈/전력/무게/주요 기능 등 확인 가능한 항목만 4~6개, '항목명: 값' 형식으로 한 줄씩.\n"
         "확실하지 않은 항목은 빼세요. 목록만 출력하세요."
     )
-    payload = {"contents": [{"parts": [{"text": prompt}]}], "tools": [{"google_search": {}}]}
-    try:
-        res = post_with_retry(url, payload, timeout=60)
-        return res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-    except Exception as e:
-        print(f"⚠️ 스펙 검색 실패(스펙 없이 진행): {e}")
-        return ""
+    payload = {"contents": [{"parts": [{"text": prompt}]}], "tools": [{"google_search": {}}],
+               "generationConfig": {"thinkingConfig": {"thinkingBudget": 0}}}
+    last_error = None
+    for model in (GEMINI_MODEL_PRIMARY, GEMINI_MODEL_FALLBACK):
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+        try:
+            res = post_with_retry(url, payload, timeout=60)
+            return res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+        except Exception as e:
+            last_error = e
+    print(f"⚠️ 스펙 검색 실패(스펙 없이 진행): {last_error}")
+    return ""
 
 
 # 🌟 이미지 생성 AI가 헷갈리기 쉬운 형태(하위 유형)를 상품명에서 미리 감지해서,

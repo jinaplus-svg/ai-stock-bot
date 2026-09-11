@@ -10,3 +10,4 @@ google-auth-oauthlib
 openai
 beautifulsoup4
 numpy
+streamlit

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T12:03:43.223196+09:00",
+  "updated_at": "2026-09-11T12:13:42.805162+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -83,7 +83,7 @@
       "title": "의식의 비밀 10차원 넘어",
       "video_id": "FjEPW_C1Bdc",
       "published_kst": "09/10 05:50",
-      "views": 166,
+      "views": 170,
       "privacy": "public"
     }
   ],
@@ -98,22 +98,11 @@
     },
     "toss1min": {
       "date": "2026-09-11",
-      "daily_pnl": -14552.0,
-      "cumulative_pnl": -23192.0,
-      "trade_count_today": 48,
-      "consecutive_losses": 9,
+      "daily_pnl": -14957.0,
+      "cumulative_pnl": -23597.0,
+      "trade_count_today": 49,
+      "consecutive_losses": 10,
       "positions": [
-        {
-          "symbol": "360750",
-          "name": "TIGER 미국S&P500",
-          "qty": 9.0,
-          "entry_price": 25395.0,
-          "atr": 10.07,
-          "stop_price": 25356.9,
-          "target_price": 25471.2,
-          "current_price": 25360.0,
-          "unrealized_pnl": -315
-        },
         {
           "symbol": "266420",
           "name": "KODEX 헬스케어",
@@ -122,8 +111,8 @@
           "atr": 3.93,
           "stop_price": 16010.9,
           "target_price": 16083.1,
-          "current_price": 16035.0,
-          "unrealized_pnl": 0
+          "current_price": 16030.0,
+          "unrealized_pnl": -75
         }
       ]
     },
@@ -137,9 +126,9 @@
     }
   },
   "account": {
-    "buying_power": 4504231.0,
-    "stock_value_krw": 468765,
-    "total_value_krw": 4972996,
-    "unrealized_pnl_krw": -315
+    "buying_power": 4732347.0,
+    "stock_value_krw": 240450,
+    "total_value_krw": 4972797,
+    "unrealized_pnl_krw": -75
   }
 }

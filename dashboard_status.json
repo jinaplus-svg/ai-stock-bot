@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T10:03:41.033747+09:00",
+  "updated_at": "2026-09-11T10:13:27.743781+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -98,9 +98,9 @@
     },
     "toss1min": {
       "date": "2026-09-11",
-      "daily_pnl": -12975.0,
-      "cumulative_pnl": -21615.0,
-      "trade_count_today": 8,
+      "daily_pnl": -11670.0,
+      "cumulative_pnl": -20310.0,
+      "trade_count_today": 10,
       "consecutive_losses": 0,
       "positions": [
         {
@@ -110,7 +110,9 @@
           "entry_price": 25395.0,
           "atr": 10.07,
           "stop_price": 25356.9,
-          "target_price": 25471.2
+          "target_price": 25471.2,
+          "current_price": 25400.0,
+          "unrealized_pnl": 45
         },
         {
           "symbol": "229200",
@@ -119,7 +121,9 @@
           "entry_price": 13860.0,
           "atr": 20.0,
           "stop_price": 13830.0,
-          "target_price": 13920.0
+          "target_price": 13920.0,
+          "current_price": 13910.0,
+          "unrealized_pnl": 900
         },
         {
           "symbol": "133690",
@@ -128,16 +132,20 @@
           "entry_price": 173515.0,
           "atr": 79.5,
           "stop_price": 173254.7,
-          "target_price": 174035.5
+          "target_price": 174035.5,
+          "current_price": 173575.0,
+          "unrealized_pnl": 60
         },
         {
-          "symbol": "091170",
-          "name": "KODEX 은행",
-          "qty": 15.0,
-          "entry_price": 16618.0,
-          "atr": 24.5,
-          "stop_price": 16581.2,
-          "target_price": 16691.5
+          "symbol": "091160",
+          "name": "KODEX 반도체",
+          "qty": 1.0,
+          "entry_price": 129735.0,
+          "atr": 189.29,
+          "stop_price": 129451.1,
+          "target_price": 130302.9,
+          "current_price": 129965.0,
+          "unrealized_pnl": 230
         }
       ]
     },
@@ -151,6 +159,8 @@
     }
   },
   "account": {
-    "buying_power": 4075354.0
+    "buying_power": 4196138.0,
+    "stock_value_krw": 782520,
+    "total_value_krw": 4978658
   }
 }

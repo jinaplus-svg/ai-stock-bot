@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T10:33:45.975381+09:00",
+  "updated_at": "2026-09-11T10:43:45.539306+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -28,10 +28,10 @@
     {
       "category": "News",
       "domain": "brandnew890.blogspot.com",
-      "title": "2026년 9월 11일 주말 날씨, 비·더위 걱정 없는 완벽한 나들이 찬스",
-      "url": "https://brandnew890.blogspot.com/2026/09/2026-9-11.html",
-      "published_kst": "09/11 09:39",
-      "published_raw": "2026-09-10T17:39:26-07:00"
+      "title": "윤상현 \"김승원 청문회 계기로 한동훈과 뭉쳐야…소아적 자아 버리고 복당시켜야\"",
+      "url": "https://brandnew890.blogspot.com/2026/09/blog-post_724.html",
+      "published_kst": "09/11 10:43",
+      "published_raw": "2026-09-10T18:43:46-07:00"
     },
     {
       "category": "Food",
@@ -55,7 +55,7 @@
       "title": "손에 쥔 힘을 빼는 순간 시작되는 양자 도약 | 내맡김과 잠재의식 재설계 4단계 명상",
       "video_id": "k7_lJnkBsHg",
       "published_kst": "09/11 05:30",
-      "views": 0,
+      "views": 3,
       "privacy": "public"
     },
     {
@@ -98,10 +98,10 @@
     },
     "toss1min": {
       "date": "2026-09-11",
-      "daily_pnl": -12695.0,
-      "cumulative_pnl": -21335.0,
-      "trade_count_today": 20,
-      "consecutive_losses": 2,
+      "daily_pnl": -11673.0,
+      "cumulative_pnl": -20313.0,
+      "trade_count_today": 21,
+      "consecutive_losses": 0,
       "positions": [
         {
           "symbol": "360750",
@@ -111,8 +111,8 @@
           "atr": 10.07,
           "stop_price": 25356.9,
           "target_price": 25471.2,
-          "current_price": 25435.0,
-          "unrealized_pnl": 360
+          "current_price": 25420.0,
+          "unrealized_pnl": 225
         },
         {
           "symbol": "229200",
@@ -122,8 +122,8 @@
           "atr": 20.0,
           "stop_price": 13830.0,
           "target_price": 13920.0,
-          "current_price": 13880.0,
-          "unrealized_pnl": 360
+          "current_price": 13870.0,
+          "unrealized_pnl": 180
         },
         {
           "symbol": "133690",
@@ -133,19 +133,8 @@
           "atr": 79.5,
           "stop_price": 173254.7,
           "target_price": 174035.5,
-          "current_price": 173750.0,
-          "unrealized_pnl": 235
-        },
-        {
-          "symbol": "091170",
-          "name": "KODEX 은행",
-          "qty": 14.0,
-          "entry_price": 16700.0,
-          "atr": 24.29,
-          "stop_price": 16663.6,
-          "target_price": 16772.9,
-          "current_price": 16730.0,
-          "unrealized_pnl": 420
+          "current_price": 173575.0,
+          "unrealized_pnl": 60
         },
         {
           "symbol": "091160",
@@ -155,8 +144,8 @@
           "atr": 181.79,
           "stop_price": 129127.3,
           "target_price": 129945.4,
-          "current_price": 129570.0,
-          "unrealized_pnl": 170
+          "current_price": 129530.0,
+          "unrealized_pnl": 130
         },
         {
           "symbol": "069500",
@@ -166,8 +155,8 @@
           "atr": 135.36,
           "stop_price": 108147.0,
           "target_price": 108756.1,
-          "current_price": 108360.0,
-          "unrealized_pnl": 20
+          "current_price": 108260.0,
+          "unrealized_pnl": -180
         },
         {
           "symbol": "279530",
@@ -177,8 +166,8 @@
           "atr": 11.43,
           "stop_price": 17713.4,
           "target_price": 17793.2,
-          "current_price": 17745.0,
-          "unrealized_pnl": 70
+          "current_price": 17740.0,
+          "unrealized_pnl": 0
         },
         {
           "symbol": "132030",
@@ -188,8 +177,8 @@
           "atr": 17.14,
           "stop_price": 24203.6,
           "target_price": 24312.7,
-          "current_price": 24265.0,
-          "unrealized_pnl": 250
+          "current_price": 24220.0,
+          "unrealized_pnl": -200
         },
         {
           "symbol": "305720",
@@ -199,8 +188,8 @@
           "atr": 22.5,
           "stop_price": 14901.2,
           "target_price": 15002.5,
-          "current_price": 14935.0,
-          "unrealized_pnl": 0
+          "current_price": 14910.0,
+          "unrealized_pnl": -400
         },
         {
           "symbol": "266420",
@@ -210,8 +199,8 @@
           "atr": 6.79,
           "stop_price": 16035.9,
           "target_price": 16108.2,
-          "current_price": 16060.0,
-          "unrealized_pnl": 0
+          "current_price": 16050.0,
+          "unrealized_pnl": -150
         }
       ]
     },
@@ -225,9 +214,9 @@
     }
   },
   "account": {
-    "buying_power": 2774017.0,
-    "stock_value_krw": 2203955,
-    "total_value_krw": 4977972,
-    "unrealized_pnl_krw": 1885
+    "buying_power": 3008812.0,
+    "stock_value_krw": 1967935,
+    "total_value_krw": 4976747,
+    "unrealized_pnl_krw": -335
   }
 }

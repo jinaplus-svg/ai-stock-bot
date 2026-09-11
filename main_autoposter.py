@@ -216,6 +216,11 @@ def generate_auto_topic(category, recent_titles=None):
 
     candidates = []  # (ref_content, title, url) 후보들을 모아서 중복 아닌 것부터 채택
 
+    # 🌟 [v5] 뉴스 카테고리는 정치/시사 기사만 계속 쓰면 GEO(생성형 검색엔진 최적화) 관점에서
+    # "질문-바로 답" 형태의 생활정보(공지/법 개정/이용법)와 궁합이 안 맞음 — 일정 확률로 정치 기사
+    # 대신 생활정보 소재를 검색해서, write_blog_post에서 Q&A 구조로 다르게 작성하게 한다.
+    is_life_info_roll = category == "news" and random.random() < 0.4
+
     if TAVILY_API_KEY:
         try:
             search_queries = {
@@ -226,6 +231,8 @@ def generate_auto_topic(category, recent_titles=None):
                 "travel": "국내외 여행 관광 항공 최신 뉴스"
             }
             query = search_queries.get(category, "오늘 주요 속보")
+            if is_life_info_roll:
+                query = "정부24 지자체 공지 교통법 개정 도서관 이용법 생활정보 안내"
 
             payload = {
                 "api_key": TAVILY_API_KEY,
@@ -234,15 +241,16 @@ def generate_auto_topic(category, recent_titles=None):
                 "include_raw_content": True,
                 "max_results": 3,
                 "topic": "news",
-                "days": 2
+                "days": 2 if not is_life_info_roll else 14,
             }
             res = requests.post("https://api.tavily.com/search", json=payload, timeout=15)
             if res.status_code == 200:
+                marker = "[생활정보 소스]\n" if is_life_info_roll else ""
                 for result in res.json().get('results', []):
                     title = result.get('title', '제목 없음')
                     content = result.get('raw_content') or result.get('content', '')
                     if len(content) > 200:
-                        candidates.append((f"[Tavily 추출 원문]:\n{content[:4000]}", title, result.get('url', '')))
+                        candidates.append((f"{marker}[Tavily 추출 원문]:\n{content[:4000]}", title, result.get('url', '')))
         except Exception as e:
             print(f"⚠️ Tavily 검색 에러: {e}")
 
@@ -409,8 +417,8 @@ INFO_CATEGORIES = {"food", "travel"}
 # "요즘 많이 찾는 생활템" 식으로 문구를 바꿔 자연스럽게 수익화 섹션을 항상 붙인다(사용자 요청).
 COUPANG_CATEGORIES = {"stock", "it", "food", "news", "travel"}
 FALLBACK_PRODUCT_KEYWORDS = {
-    "stock": ["가계부 다이어리", "모니터암", "블루라이트 차단 안경"],
-    "it": ["무선 마우스 키보드 세트", "보조배터리", "웹캠"],
+    "stock": ["투자 경제 서적", "모니터암", "가계부 다이어리", "블루라이트 차단 안경"],
+    "it": ["무선 마우스 키보드 세트", "모니터암", "보조배터리", "웹캠"],
     "food": ["밀폐용기 세트", "에어프라이어", "전자레인지 용기"],
     "news": ["독서대", "무선 이어폰", "휴대용 가습기"],
     "travel": ["여행용 캐리어", "보조배터리", "여행 파우치 세트"],
@@ -457,6 +465,34 @@ CATEGORY_STRUCTURE = {
     (독자가 예약/방문 전 실제로 확인해야 할 사항)
     <br><br>
     <blockquote {blockquote_style}>정보 요약 한 줄</blockquote>
+    """,
+    # 🌟 [v5] GEO(생성형 검색엔진 최적화)를 노리는 생활정보형 — AI 검색이 그대로 인용하기 좋게
+    # "질문 → 바로 답" 구조를 명시적으로 강제. <h3>Q. ...</h3><p>A. ...</p> 태그 형식을 반드시
+    # 지켜야 write_blog_post가 이걸 파싱해서 FAQPage 구조화 데이터를 자동으로 붙일 수 있음.
+    "life_info": """
+    <h2>독자가 실제로 검색할 법한 질문형 제목 (예: '도서관 대출 기간, 며칠까지 늘었나')</h2>
+    (이 정보가 왜 지금 확인해야 하는 사안인지, 원문 기반 1~2문단 — 배경 설명은 짧게)
+    <br><br>
+    [IMAGE_1]
+    <br><br>
+    (아래 Q&A는 반드시 이 태그 형식 그대로 3~5개 작성 — AI 검색엔진이 그대로 인용할 수 있도록
+    질문은 실제 검색어처럼 짧고 구체적으로, 답변은 원문 사실만으로 2~4문장 안에 결론부터 말할 것)
+    <h3>Q. 첫 번째로 가장 궁금할 질문</h3>
+    <p>A. 원문 기반 명확한 답변</p>
+    <h3>Q. 두 번째 질문</h3>
+    <p>A. 원문 기반 명확한 답변</p>
+    <h3>Q. 세 번째 질문</h3>
+    <p>A. 원문 기반 명확한 답변</p>
+    <br><br>
+    <table {table_style}>
+      <thead><tr><th {th_style}>확인 항목</th><th {th_style}>내용</th></tr></thead>
+      <tbody><tr><td {td_style}>시행일/적용 대상</td><td {td_style}>원문 기준, 없으면 미확인 표시</td></tr>
+      <tr><td {td_style}>문의처/근거 기관</td><td {td_style}>원문 기준</td></tr></tbody>
+    </table>
+    <br><br>
+    [IMAGE_2]
+    <br><br>
+    <blockquote {blockquote_style}>핵심 요약 한 줄</blockquote>
     """,
     "_default": """
     <h2>핵심 키워드 + 후킹 장치가 결합된 제목</h2>
@@ -505,14 +541,19 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
     kst = datetime.timezone(datetime.timedelta(hours=9))
     today_str = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
 
+    # 🌟 [v5] generate_auto_topic이 뉴스 카테고리에서 일정 확률로 생활정보 소재를 찾으면
+    # ref_content 맨 앞에 이 마커를 붙여둠 — 정치/시사 칼럼 톤 대신 Q&A 정보형으로 전환.
+    is_life_info = ref_content.startswith("[생활정보 소스]")
+
     persona = (
         "당신은 실제 방문·구매 경험 없이, 주어진 원문 자료만으로 독자에게 실용적인 정보를 정리해주는 "
-        "에디터입니다." if category in INFO_CATEGORIES else
+        "에디터입니다." if (category in INFO_CATEGORIES or is_life_info) else
         "당신은 한국 최고의 탑티어 비즈니스/IT/경제 분야를 아우르는 날카로운 시각의 칼럼니스트이자, "
         "동시에 네이버/구글 검색 상위노출과 클릭을 부르는 카피라이팅에 능한 에디터입니다."
     )
 
-    structure = CATEGORY_STRUCTURE.get(category, CATEGORY_STRUCTURE["_default"]).format(
+    structure_key = "life_info" if is_life_info else category
+    structure = CATEGORY_STRUCTURE.get(structure_key, CATEGORY_STRUCTURE["_default"]).format(
         table_style=table_style, th_style=th_style, td_style=td_style, blockquote_style=blockquote_style,
     )
 
@@ -600,7 +641,27 @@ def write_blog_post(category, base64_images, ref_content="", topic=""):
                 else:
                     html_content += f"<br><br>{tag}"
 
+    if is_life_info:
+        html_content += build_faq_jsonld(html_content)
+
     return title, html_content
+
+
+def build_faq_jsonld(html_content):
+    """[NEW] life_info 구조의 <h3>Q. ...</h3><p>A. ...</p> 쌍을 파싱해서 FAQPage 구조화 데이터로
+    변환 — AI 검색엔진(구글 AI Overview 등)이 이 글을 그대로 인용하기 쉽게 만드는 GEO 장치."""
+    pairs = re.findall(r'<h3>\s*Q\.?\s*(.*?)</h3>\s*<p>\s*A\.?\s*(.*?)</p>', html_content, re.DOTALL)
+    if not pairs:
+        return ""
+    entities = [
+        {"@type": "Question", "name": re.sub(r'<[^>]+>', '', q).strip(),
+         "acceptedAnswer": {"@type": "Answer", "text": re.sub(r'<[^>]+>', '', a).strip()}}
+        for q, a in pairs if q.strip() and a.strip()
+    ]
+    if not entities:
+        return ""
+    ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": entities}
+    return f'\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
 
 
 # ==========================================

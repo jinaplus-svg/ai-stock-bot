@@ -11,3 +11,5 @@ openai
 beautifulsoup4
 numpy
 streamlit
+plotly
+pandas

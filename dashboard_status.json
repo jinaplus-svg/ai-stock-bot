@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T10:43:45.539306+09:00",
+  "updated_at": "2026-09-11T10:53:45.150083+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -98,10 +98,10 @@
     },
     "toss1min": {
       "date": "2026-09-11",
-      "daily_pnl": -11673.0,
-      "cumulative_pnl": -20313.0,
-      "trade_count_today": 21,
-      "consecutive_losses": 0,
+      "daily_pnl": -13058.0,
+      "cumulative_pnl": -21698.0,
+      "trade_count_today": 24,
+      "consecutive_losses": 2,
       "positions": [
         {
           "symbol": "360750",
@@ -111,8 +111,8 @@
           "atr": 10.07,
           "stop_price": 25356.9,
           "target_price": 25471.2,
-          "current_price": 25420.0,
-          "unrealized_pnl": 225
+          "current_price": 25415.0,
+          "unrealized_pnl": 180
         },
         {
           "symbol": "229200",
@@ -122,8 +122,8 @@
           "atr": 20.0,
           "stop_price": 13830.0,
           "target_price": 13920.0,
-          "current_price": 13870.0,
-          "unrealized_pnl": 180
+          "current_price": 13875.0,
+          "unrealized_pnl": 270
         },
         {
           "symbol": "133690",
@@ -133,8 +133,8 @@
           "atr": 79.5,
           "stop_price": 173254.7,
           "target_price": 174035.5,
-          "current_price": 173575.0,
-          "unrealized_pnl": 60
+          "current_price": 173530.0,
+          "unrealized_pnl": 15
         },
         {
           "symbol": "091160",
@@ -144,8 +144,8 @@
           "atr": 181.79,
           "stop_price": 129127.3,
           "target_price": 129945.4,
-          "current_price": 129530.0,
-          "unrealized_pnl": 130
+          "current_price": 129560.0,
+          "unrealized_pnl": 160
         },
         {
           "symbol": "069500",
@@ -155,8 +155,8 @@
           "atr": 135.36,
           "stop_price": 108147.0,
           "target_price": 108756.1,
-          "current_price": 108260.0,
-          "unrealized_pnl": -180
+          "current_price": 108485.0,
+          "unrealized_pnl": 270
         },
         {
           "symbol": "279530",
@@ -166,8 +166,8 @@
           "atr": 11.43,
           "stop_price": 17713.4,
           "target_price": 17793.2,
-          "current_price": 17740.0,
-          "unrealized_pnl": 0
+          "current_price": 17750.0,
+          "unrealized_pnl": 140
         },
         {
           "symbol": "132030",
@@ -177,30 +177,19 @@
           "atr": 17.14,
           "stop_price": 24203.6,
           "target_price": 24312.7,
-          "current_price": 24220.0,
-          "unrealized_pnl": -200
-        },
-        {
-          "symbol": "305720",
-          "name": "KODEX 2차전지산업",
-          "qty": 16.0,
-          "entry_price": 14935.0,
-          "atr": 22.5,
-          "stop_price": 14901.2,
-          "target_price": 15002.5,
-          "current_price": 14910.0,
-          "unrealized_pnl": -400
+          "current_price": 24230.0,
+          "unrealized_pnl": -100
         },
         {
           "symbol": "266420",
           "name": "KODEX 헬스케어",
           "qty": 15.0,
-          "entry_price": 16060.0,
-          "atr": 6.79,
-          "stop_price": 16035.9,
-          "target_price": 16108.2,
-          "current_price": 16050.0,
-          "unrealized_pnl": -150
+          "entry_price": 16040.0,
+          "atr": 7.5,
+          "stop_price": 16015.9,
+          "target_price": 16088.1,
+          "current_price": 16020.0,
+          "unrealized_pnl": -300
         }
       ]
     },
@@ -214,9 +203,9 @@
     }
   },
   "account": {
-    "buying_power": 3008812.0,
-    "stock_value_krw": 1967935,
-    "total_value_krw": 4976747,
-    "unrealized_pnl_krw": -335
+    "buying_power": 3246589.0,
+    "stock_value_krw": 1729645,
+    "total_value_krw": 4976234,
+    "unrealized_pnl_krw": 635
   }
 }

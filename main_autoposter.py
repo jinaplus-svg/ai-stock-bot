@@ -402,6 +402,20 @@ def image_paths_to_b64(paths):
 # 나눠서 각각 다른 글 구조를 쓴다.
 INFO_CATEGORIES = {"food", "travel"}
 
+# 🌟 [v3] 쿠팡 파트너스 수익화 — 예전엔 food/travel만 시도(INFO_CATEGORIES 재사용)했는데, 이건
+# "글 구조"(정보형 vs 분석형) 기준이라 목적이 다름. 수익화는 전 카테고리 대상으로 분리.
+# stock/it/news처럼 특정 상품과 자연히 안 엮이는 글이 많은 카테고리는, 본문 관련 키워드 추출이
+# NONE을 반환하면 아래 FALLBACK_PRODUCT_KEYWORDS로 대체해서 "이 글과 관련된 상품"이 아니라
+# "요즘 많이 찾는 생활템" 식으로 문구를 바꿔 자연스럽게 수익화 섹션을 항상 붙인다(사용자 요청).
+COUPANG_CATEGORIES = {"stock", "it", "food", "news", "travel"}
+FALLBACK_PRODUCT_KEYWORDS = {
+    "stock": ["가계부 다이어리", "모니터암", "블루라이트 차단 안경"],
+    "it": ["무선 마우스 키보드 세트", "보조배터리", "웹캠"],
+    "food": ["밀폐용기 세트", "에어프라이어", "전자레인지 용기"],
+    "news": ["독서대", "무선 이어폰", "휴대용 가습기"],
+    "travel": ["여행용 캐리어", "보조배터리", "여행 파우치 세트"],
+}
+
 CATEGORY_STRUCTURE = {
     "food": """
     <h2>매장명 + 핵심 키워드가 결합된 제목</h2>
@@ -641,14 +655,17 @@ def extract_product_keyword(category, topic, ref_content):
 
 def inject_coupang_section(html_content, category, topic, ref_content):
     """[NEW] 본문 내용과 관련된 쿠팡 상품을 찾아 하단에 '관련 상품' 섹션으로 삽입.
-    🚨 [v2 개선] news/it/stock 카테고리는 리뷰에서 확인된 "무관한 상품 추천" 사례가 전부 이
-    카테고리들이었음 — 시사/기술 해설 글에 상품을 붙이는 것 자체가 구조적으로 안 맞는 경우가
-    많아, food/travel(원래도 상품 연결이 자연스러운 카테고리)만 시도하도록 제한."""
-    if category not in INFO_CATEGORIES:
+    🌟 [v3] 전 카테고리 수익화 대상(COUPANG_CATEGORIES). 본문과 진짜 관련된 상품이 있으면
+    "이 글과 함께 보면 좋은 상품"으로 붙이고, stock/it/news처럼 관련 상품이 없다고 판단되면
+    (extract_product_keyword가 NONE 반환) 카테고리별 무난한 생활템으로 대체해서 "요즘 많이
+    찾는 생활템"이라는 다른 문구로 붙인다 — 관련 없는 상품을 "관련 상품"이라고 우기지 않기 위함."""
+    if category not in COUPANG_CATEGORIES:
         return html_content
     keyword = extract_product_keyword(category, topic, ref_content)
+    is_fallback = False
     if not keyword:
-        return html_content
+        is_fallback = True
+        keyword = random.choice(FALLBACK_PRODUCT_KEYWORDS.get(category, ["생활용품 베스트"]))
     products = coupang_search_products(keyword, limit=3)
     if not products:
         return html_content
@@ -672,9 +689,10 @@ def inject_coupang_section(html_content, category, topic, ref_content):
             '</a>'
         )
 
+    heading = "🛒 요즘 많이 찾는 생활템" if is_fallback else "🛒 이 글과 함께 보면 좋은 상품"
     section = (
         '<br><br><hr><div style="margin-top:30px;">'
-        '<h3 style="font-size:1.1em;">🛒 이 글과 함께 보면 좋은 상품</h3>'
+        f'<h3 style="font-size:1.1em;">{heading}</h3>'
         f'{items_html}'
         '<p style="font-size:0.8em;color:#999;">이 포스팅은 쿠팡 파트너스 활동의 일환으로, '
         '이에 따른 일정액의 수수료를 제공받습니다.</p>'

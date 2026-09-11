@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T09:00:50.002036+09:00",
+  "updated_at": "2026-09-11T09:03:12.976474+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "코리아둘레길×동서트레일 걷기여행주간 개최…선착순 500명 혜택 안내",
-      "url": "https://brandnew901.blogspot.com/2026/09/500.html",
-      "published_kst": "09/11 08:42",
-      "published_raw": "2026-09-10T16:42:18-07:00"
+      "title": "트럼프 공화당 중간선거 전당대회 흥행 주장과 현장 관람석 실황",
+      "url": "https://brandnew901.blogspot.com/2026/09/blog-post_10.html",
+      "published_kst": "09/11 09:01",
+      "published_raw": "2026-09-10T17:01:04-07:00"
     },
     {
       "category": "News",
@@ -62,7 +62,7 @@
       "title": "손 힘을 뺀 0.1초의 기적",
       "video_id": "AYj8NIKJGoE",
       "published_kst": "09/11 05:28",
-      "views": 198,
+      "views": 268,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "의식의 비밀 10차원 넘어",
       "video_id": "FjEPW_C1Bdc",
       "published_kst": "09/10 05:50",
-      "views": 166,
+      "views": 153,
       "privacy": "public"
     }
   ],
@@ -94,7 +94,7 @@
       "cumulative_pnl": 0.0,
       "trade_count_today": 0,
       "consecutive_losses": 0,
-      "positions": {}
+      "positions": []
     },
     "toss1min": {
       "date": "2026-09-11",
@@ -102,15 +102,17 @@
       "cumulative_pnl": -22245.0,
       "trade_count_today": 3,
       "consecutive_losses": 3,
-      "positions": {
-        "360750": {
+      "positions": [
+        {
+          "symbol": "360750",
+          "name": "TIGER 미국S&P500",
           "qty": 9.0,
           "entry_price": 25395.0,
           "atr": 10.07,
           "stop_price": 25356.9,
           "target_price": 25471.2
         }
-      }
+      ]
     },
     "binance": {
       "date": "2026-09-10",
@@ -118,7 +120,7 @@
       "cumulative_pnl": -3.067997300000009,
       "trade_count_today": 0,
       "consecutive_losses": 0,
-      "positions": {}
+      "positions": []
     }
   },
   "account": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T09:03:12.976474+09:00",
+  "updated_at": "2026-09-11T09:13:41.056295+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -62,7 +62,7 @@
       "title": "손 힘을 뺀 0.1초의 기적",
       "video_id": "AYj8NIKJGoE",
       "published_kst": "09/11 05:28",
-      "views": 268,
+      "views": 273,
       "privacy": "public"
     },
     {
@@ -83,13 +83,13 @@
       "title": "의식의 비밀 10차원 넘어",
       "video_id": "FjEPW_C1Bdc",
       "published_kst": "09/10 05:50",
-      "views": 153,
+      "views": 166,
       "privacy": "public"
     }
   ],
   "bots": {
     "toss30": {
-      "date": "2026-09-10",
+      "date": "2026-09-11",
       "daily_pnl": 0.0,
       "cumulative_pnl": 0.0,
       "trade_count_today": 0,

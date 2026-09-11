@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T10:23:45.636453+09:00",
+  "updated_at": "2026-09-11T10:33:45.975381+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -98,10 +98,10 @@
     },
     "toss1min": {
       "date": "2026-09-11",
-      "daily_pnl": -12005.0,
-      "cumulative_pnl": -20645.0,
-      "trade_count_today": 16,
-      "consecutive_losses": 1,
+      "daily_pnl": -12695.0,
+      "cumulative_pnl": -21335.0,
+      "trade_count_today": 20,
+      "consecutive_losses": 2,
       "positions": [
         {
           "symbol": "360750",
@@ -111,8 +111,8 @@
           "atr": 10.07,
           "stop_price": 25356.9,
           "target_price": 25471.2,
-          "current_price": 25415.0,
-          "unrealized_pnl": 180
+          "current_price": 25435.0,
+          "unrealized_pnl": 360
         },
         {
           "symbol": "229200",
@@ -122,8 +122,8 @@
           "atr": 20.0,
           "stop_price": 13830.0,
           "target_price": 13920.0,
-          "current_price": 13855.0,
-          "unrealized_pnl": -90
+          "current_price": 13880.0,
+          "unrealized_pnl": 360
         },
         {
           "symbol": "133690",
@@ -133,8 +133,8 @@
           "atr": 79.5,
           "stop_price": 173254.7,
           "target_price": 174035.5,
-          "current_price": 173615.0,
-          "unrealized_pnl": 100
+          "current_price": 173750.0,
+          "unrealized_pnl": 235
         },
         {
           "symbol": "091170",
@@ -144,19 +144,8 @@
           "atr": 24.29,
           "stop_price": 16663.6,
           "target_price": 16772.9,
-          "current_price": 16675.0,
-          "unrealized_pnl": -350
-        },
-        {
-          "symbol": "266420",
-          "name": "KODEX 헬스케어",
-          "qty": 15.0,
-          "entry_price": 16085.0,
-          "atr": 7.5,
-          "stop_price": 16060.9,
-          "target_price": 16133.3,
-          "current_price": 16080.0,
-          "unrealized_pnl": -75
+          "current_price": 16730.0,
+          "unrealized_pnl": 420
         },
         {
           "symbol": "091160",
@@ -166,8 +155,8 @@
           "atr": 181.79,
           "stop_price": 129127.3,
           "target_price": 129945.4,
-          "current_price": 129100.0,
-          "unrealized_pnl": -300
+          "current_price": 129570.0,
+          "unrealized_pnl": 170
         },
         {
           "symbol": "069500",
@@ -177,8 +166,8 @@
           "atr": 135.36,
           "stop_price": 108147.0,
           "target_price": 108756.1,
-          "current_price": 108200.0,
-          "unrealized_pnl": -300
+          "current_price": 108360.0,
+          "unrealized_pnl": 20
         },
         {
           "symbol": "279530",
@@ -188,8 +177,41 @@
           "atr": 11.43,
           "stop_price": 17713.4,
           "target_price": 17793.2,
-          "current_price": 17725.0,
-          "unrealized_pnl": -210
+          "current_price": 17745.0,
+          "unrealized_pnl": 70
+        },
+        {
+          "symbol": "132030",
+          "name": "KODEX 골드선물(H)",
+          "qty": 10.0,
+          "entry_price": 24240.0,
+          "atr": 17.14,
+          "stop_price": 24203.6,
+          "target_price": 24312.7,
+          "current_price": 24265.0,
+          "unrealized_pnl": 250
+        },
+        {
+          "symbol": "305720",
+          "name": "KODEX 2차전지산업",
+          "qty": 16.0,
+          "entry_price": 14935.0,
+          "atr": 22.5,
+          "stop_price": 14901.2,
+          "target_price": 15002.5,
+          "current_price": 14935.0,
+          "unrealized_pnl": 0
+        },
+        {
+          "symbol": "266420",
+          "name": "KODEX 헬스케어",
+          "qty": 15.0,
+          "entry_price": 16060.0,
+          "atr": 6.79,
+          "stop_price": 16035.9,
+          "target_price": 16108.2,
+          "current_price": 16060.0,
+          "unrealized_pnl": 0
         }
       ]
     },
@@ -203,9 +225,9 @@
     }
   },
   "account": {
-    "buying_power": 3255825.0,
-    "stock_value_krw": 1720040,
-    "total_value_krw": 4975865,
-    "unrealized_pnl_krw": -1045
+    "buying_power": 2774017.0,
+    "stock_value_krw": 2203955,
+    "total_value_krw": 4977972,
+    "unrealized_pnl_krw": 1885
   }
 }

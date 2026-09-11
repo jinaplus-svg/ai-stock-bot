@@ -34,5 +34,14 @@
     "cum_pnl_toss30": 0.0,
     "cum_pnl_toss1min": -21335.0,
     "cum_pnl_binance_usdt": -3.067997300000009
+  },
+  {
+    "ts": "2026-09-11T10:43:45.539306+09:00",
+    "total_value_krw": 4976747,
+    "cash_krw": 3008812.0,
+    "stock_value_krw": 1967935,
+    "cum_pnl_toss30": 0.0,
+    "cum_pnl_toss1min": -20313.0,
+    "cum_pnl_binance_usdt": -3.067997300000009
   }
 ]

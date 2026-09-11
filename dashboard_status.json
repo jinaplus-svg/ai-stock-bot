@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T09:53:41.212984+09:00",
+  "updated_at": "2026-09-11T10:03:41.033747+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -98,10 +98,10 @@
     },
     "toss1min": {
       "date": "2026-09-11",
-      "daily_pnl": -13605.0,
-      "cumulative_pnl": -22245.0,
-      "trade_count_today": 6,
-      "consecutive_losses": 3,
+      "daily_pnl": -12975.0,
+      "cumulative_pnl": -21615.0,
+      "trade_count_today": 8,
+      "consecutive_losses": 0,
       "positions": [
         {
           "symbol": "360750",
@@ -131,13 +131,13 @@
           "target_price": 174035.5
         },
         {
-          "symbol": "279530",
-          "name": "KODEX 고배당주",
-          "qty": 14.0,
-          "entry_price": 17650.0,
-          "atr": 11.43,
-          "stop_price": 17623.5,
-          "target_price": 17703.0
+          "symbol": "091170",
+          "name": "KODEX 은행",
+          "qty": 15.0,
+          "entry_price": 16618.0,
+          "atr": 24.5,
+          "stop_price": 16581.2,
+          "target_price": 16691.5
         }
       ]
     },
@@ -151,6 +151,6 @@
     }
   },
   "account": {
-    "buying_power": 4076978.0
+    "buying_power": 4075354.0
   }
 }

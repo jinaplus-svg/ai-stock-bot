@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-13T05:23:44.650616+09:00",
+  "updated_at": "2026-09-13T05:33:44.148864+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "불안과 집착을 멈추고 뇌의 파동을 바꾸는 법 | 내면의 안전지대와 현실 창조의 비밀",
+      "video_id": "zDymjdmQFKw",
+      "published_kst": "09/13 05:33",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "뇌파 4단계 현실이 바뀐다",
+      "video_id": "4N9UrDkTfpY",
+      "published_kst": "09/13 05:31",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "입 밖으로 꺼내는 순간 운명이 바뀌는 1가지 파동의 비밀 | 양자역학과 마음챙김 끌어당김",
       "video_id": "870e3uPmvOM",
       "published_kst": "09/12 05:31",
@@ -70,20 +84,6 @@
       "video_id": "k7_lJnkBsHg",
       "published_kst": "09/11 05:30",
       "views": 82,
-      "privacy": "public"
-    },
-    {
-      "title": "손 힘을 뺀 0.1초의 기적",
-      "video_id": "AYj8NIKJGoE",
-      "published_kst": "09/11 05:28",
-      "views": 415,
-      "privacy": "public"
-    },
-    {
-      "title": "오디세이 보기 전, 원작만 알면 다 보인다 | 3가지 핵심 완전정리",
-      "video_id": "7iIcsAMHnyA",
-      "published_kst": "09/10 08:25",
-      "views": 13,
       "privacy": "public"
     }
   ],

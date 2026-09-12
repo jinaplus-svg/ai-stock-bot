@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-12T13:03:43.301350+09:00",
+  "updated_at": "2026-09-12T13:13:42.536633+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "입 밖으로 꺼내는 순간 운명이 바뀌는 1가지 파동의 비밀 | 양자역학과 마음챙김 끌어당김",
-      "video_id": "870e3uPmvOM",
-      "published_kst": "09/12 05:31",
-      "views": 3,
-      "privacy": "public"
-    },
-    {
-      "title": "단 1초의 파동 운명을 바꾼다",
-      "video_id": "lX-sTBTOuuw",
-      "published_kst": "09/12 05:29",
-      "views": 101,
-      "privacy": "public"
-    },
-    {
-      "title": "손에 쥔 힘을 빼는 순간 시작되는 양자 도약 | 내맡김과 잠재의식 재설계 4단계 명상",
-      "video_id": "k7_lJnkBsHg",
-      "published_kst": "09/11 05:30",
-      "views": 60,
-      "privacy": "public"
-    },
-    {
-      "title": "손 힘을 뺀 0.1초의 기적",
-      "video_id": "AYj8NIKJGoE",
-      "published_kst": "09/11 05:28",
-      "views": 366,
-      "privacy": "public"
-    },
-    {
-      "title": "오디세이 보기 전, 원작만 알면 다 보인다 | 3가지 핵심 완전정리",
-      "video_id": "7iIcsAMHnyA",
-      "published_kst": "09/10 08:25",
-      "views": 9,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

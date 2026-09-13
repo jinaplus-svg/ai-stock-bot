@@ -157,7 +157,7 @@ else:
 
 st.divider()
 
-tab_summary, tab_blog, tab_yt, tab_bots = st.tabs(["📋 요약", "✍️ 블로그", "🎬 유튜브", "🤖 자동매매"])
+tab_summary, tab_blog, tab_yt, tab_threads, tab_bots = st.tabs(["📋 요약", "✍️ 블로그", "🎬 유튜브", "🧵 쓰레드", "🤖 자동매매"])
 
 # ── 요약 탭 ──────────────────────────────────────────
 with tab_summary:
@@ -219,6 +219,35 @@ with tab_yt:
             f"<a class='row-link' href='{video_url}' target='_blank'>{v.get('title', '')}</a>",
             unsafe_allow_html=True)
         cols[2].markdown(f"**{v.get('views', 0):,}회**")
+
+# ── 쓰레드 탭 ──────────────────────────────────────────
+with tab_threads:
+    threads = data.get("threads", {})
+    if threads.get("error"):
+        st.warning(f"조회 실패: {threads['error'][:80]}")
+    elif not threads.get("latest"):
+        st.caption("아직 크로스포스팅한 글이 없어요.")
+    else:
+        latest = threads["latest"]
+        tcol1, tcol2, tcol3 = st.columns(3)
+        tcol1.metric("누적 게시 수", f"{threads.get('total_posts', 0)}개")
+        tcol2.metric("누적 조회수", f"{threads.get('total_views', 0):,}회")
+        tcol3.metric("누적 좋아요", f"{threads.get('total_likes', 0):,}개")
+
+        st.markdown("##### 최신 게시물")
+        st.markdown(
+            f"<a class='row-link' href='{latest.get('permalink', '#')}' target='_blank'>"
+            f"<span class='row-title'>{latest.get('title', '')}</span></a><br>"
+            f"<span class='row-sub'>{latest.get('date', '')[:16].replace('T', ' ')}</span>",
+            unsafe_allow_html=True)
+        st.write("")
+        mcol1, mcol2, mcol3, mcol4 = st.columns(4)
+        mcol1.metric("조회수", f"{latest.get('views', 0):,}")
+        mcol2.metric("좋아요", f"{latest.get('likes', 0):,}")
+        mcol3.metric("댓글", f"{latest.get('replies', 0):,}")
+        mcol4.metric("리포스트", f"{latest.get('reposts', 0):,}")
+        st.caption("💡 쿠팡 링크 클릭수는 쓰레드 API에서 제공하지 않는 지표예요 — 쿠팡 파트너스 "
+                   "자체 리포트(계정 전체 합산치)로만 참고 가능해요.")
 
 # ── 자동매매 탭 ──────────────────────────────────────────
 with tab_bots:

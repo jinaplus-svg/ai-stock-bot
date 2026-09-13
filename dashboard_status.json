@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-13T17:43:42.996409+09:00",
+  "updated_at": "2026-09-13T18:35:03.803913+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -76,7 +76,7 @@
       "title": "단 1초의 파동 운명을 바꾼다",
       "video_id": "lX-sTBTOuuw",
       "published_kst": "09/12 05:29",
-      "views": 146,
+      "views": 151,
       "privacy": "public"
     },
     {
@@ -105,12 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-09-10",
-      "daily_pnl": 0.0,
-      "cumulative_pnl": -3.067997300000009,
-      "trade_count_today": 0,
-      "consecutive_losses": 0,
-      "positions": []
+      "error": "[Errno 2] No such file or directory: 'trading_state.json'"
     }
   },
   "account": {

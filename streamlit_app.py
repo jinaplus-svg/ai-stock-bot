@@ -269,10 +269,11 @@ with tab_bots:
 
     with bcol3:
         st.markdown("<div class='bot-card'>", unsafe_allow_html=True)
-        st.markdown("**바이낸스 테스트넷**")
-        st.caption("BTC/USDT · 홀딩 상태")
-        st.metric("테스트 기간 손익", fmt_usdt(binance.get("cumulative_pnl")))
-        st.caption("실계좌 연동 대기 중 — 스케줄러 비활성화됨")
+        st.markdown("**바이낸스 실계좌**")
+        st.caption("BTC/USDT · gemini-3.7-flash(폴백 3.5) · 매시간")
+        st.metric(f"손익 ({binance.get('date', '—')})", fmt_usdt(binance.get("daily_pnl")))
+        st.metric("누적 손익", fmt_usdt(binance.get("cumulative_pnl")))
+        st.caption(f"오늘 거래 {binance.get('trade_count_today', '—')}회 · 연속손실 {binance.get('consecutive_losses', '—')}/3회")
         if not history.empty and "cum_pnl_binance_usdt" in history.columns:
             st.plotly_chart(
                 line_chart(history, ["cum_pnl_binance_usdt"], ["누적손익"], ["#7d5ba6"], height=140),

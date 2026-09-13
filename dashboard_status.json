@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-13T19:23:44.179522+09:00",
+  "updated_at": "2026-09-13T19:33:45.413009+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -105,7 +105,12 @@
       "positions": []
     },
     "binance": {
-      "error": "[Errno 2] No such file or directory: 'trading_state.json'"
+      "date": "",
+      "daily_pnl": 0.0,
+      "cumulative_pnl": 0.0,
+      "trade_count_today": 1,
+      "consecutive_losses": 0,
+      "positions": []
     },
     "binance_1min": {
       "date": "2026-09-13",

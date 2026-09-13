@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-13T12:03:43.999300+09:00",
+  "updated_at": "2026-09-13T12:13:43.798402+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "불안과 집착을 멈추고 뇌의 파동을 바꾸는 법 | 내면의 안전지대와 현실 창조의 비밀",
-      "video_id": "zDymjdmQFKw",
-      "published_kst": "09/13 05:33",
-      "views": 1,
-      "privacy": "public"
-    },
-    {
-      "title": "뇌파 4단계 현실이 바뀐다",
-      "video_id": "4N9UrDkTfpY",
-      "published_kst": "09/13 05:31",
-      "views": 207,
-      "privacy": "public"
-    },
-    {
-      "title": "입 밖으로 꺼내는 순간 운명이 바뀌는 1가지 파동의 비밀 | 양자역학과 마음챙김 끌어당김",
-      "video_id": "870e3uPmvOM",
-      "published_kst": "09/12 05:31",
-      "views": 70,
-      "privacy": "public"
-    },
-    {
-      "title": "단 1초의 파동 운명을 바꾼다",
-      "video_id": "lX-sTBTOuuw",
-      "published_kst": "09/12 05:29",
-      "views": 133,
-      "privacy": "public"
-    },
-    {
-      "title": "손에 쥔 힘을 빼는 순간 시작되는 양자 도약 | 내맡김과 잠재의식 재설계 4단계 명상",
-      "video_id": "k7_lJnkBsHg",
-      "published_kst": "09/11 05:30",
-      "views": 83,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

@@ -224,8 +224,9 @@ with tab_yt:
 with tab_bots:
     bots = data.get("bots", {})
     toss30, toss1min, binance = bots.get("toss30", {}), bots.get("toss1min", {}), bots.get("binance", {})
+    binance_1min = bots.get("binance_1min", {})
 
-    bcol1, bcol2, bcol3 = st.columns(3)
+    bcol1, bcol2 = st.columns(2)
 
     with bcol1:
         st.markdown("<div class='bot-card'>", unsafe_allow_html=True)
@@ -267,9 +268,11 @@ with tab_bots:
             st.caption("보유 없음")
         st.markdown("</div>", unsafe_allow_html=True)
 
+    bcol3, bcol4 = st.columns(2)
+
     with bcol3:
         st.markdown("<div class='bot-card'>", unsafe_allow_html=True)
-        st.markdown("**바이낸스 실계좌**")
+        st.markdown("**바이낸스 실계좌 (시간봉)**")
         st.caption("BTC/USDT · gemini-3.7-flash(폴백 3.5) · 매시간")
         st.metric(f"손익 ({binance.get('date', '—')})", fmt_usdt(binance.get("daily_pnl")))
         st.metric("누적 손익", fmt_usdt(binance.get("cumulative_pnl")))
@@ -279,6 +282,26 @@ with tab_bots:
                 line_chart(history, ["cum_pnl_binance_usdt"], ["누적손익"], ["#7d5ba6"], height=140),
                 use_container_width=True, config={"displayModeBar": False},
             )
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with bcol4:
+        st.markdown("<div class='bot-card'>", unsafe_allow_html=True)
+        st.markdown("**바이낸스 실계좌 (1분봇)**")
+        st.caption("BTC/USDT · 규칙기반(모멘텀+거래량+RSI) · 매분")
+        breaker_1min = (binance_1min.get("consecutive_losses") or 0) >= 3
+        st.metric(f"손익 ({binance_1min.get('date', '—')})", fmt_usdt(binance_1min.get("daily_pnl")))
+        st.metric("누적 손익", fmt_usdt(binance_1min.get("cumulative_pnl")))
+        st.caption(f"오늘 거래 {binance_1min.get('trade_count_today', '—')}회 · 연속손실 {binance_1min.get('consecutive_losses', '—')}/3회"
+                   + (" · 🛑 신규진입 정지" if breaker_1min else ""))
+        if binance_1min.get("positions"):
+            st.caption("보유 포지션")
+            for p in binance_1min["positions"]:
+                entry = p.get("entry_price")
+                entry_str = f"@{entry:,.2f}" if isinstance(entry, (int, float)) else ""
+                st.markdown(f"<span class='pos-pill'>{p['name']} {p.get('qty', '?')} {entry_str}</span>",
+                            unsafe_allow_html=True)
+        else:
+            st.caption("보유 없음")
         st.markdown("</div>", unsafe_allow_html=True)
 
 st.divider()

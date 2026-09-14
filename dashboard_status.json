@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T19:23:43.257617+09:00",
+  "updated_at": "2026-09-14T19:33:43.201656+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -108,7 +108,7 @@
       "date": "2026-09-14",
       "daily_pnl": 0.0,
       "cumulative_pnl": 0.0,
-      "trade_count_today": 0,
+      "trade_count_today": 1,
       "consecutive_losses": 0,
       "positions": []
     },
@@ -132,14 +132,14 @@
       "date": "2026-09-13T00:00:00+09:00",
       "title": "좁은 원룸 공간 2배로 넓히는 거실 접이식 확장형 기능성 테이블 활용법",
       "permalink": "https://www.threads.com/@brandnew0789/post/DdObhiOGh9c",
-      "views": 0,
-      "likes": 0,
+      "views": 97,
+      "likes": 2,
       "replies": 1,
       "reposts": 0,
       "quotes": 0
     },
     "total_posts": 1,
-    "total_views": 0,
-    "total_likes": 0
+    "total_views": 97,
+    "total_likes": 2
   }
 }

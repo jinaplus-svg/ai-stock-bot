@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T09:23:45.292541+09:00",
+  "updated_at": "2026-09-14T09:33:53.857062+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,10 +66,10 @@
     },
     "toss1min": {
       "date": "2026-09-14",
-      "daily_pnl": -37.0,
-      "cumulative_pnl": -23949.0,
-      "trade_count_today": 11,
-      "consecutive_losses": 1,
+      "daily_pnl": -1720.0,
+      "cumulative_pnl": -25632.0,
+      "trade_count_today": 13,
+      "consecutive_losses": 2,
       "positions": [
         {
           "symbol": "266420",
@@ -79,8 +79,8 @@
           "atr": 38.93,
           "stop_price": 15721.6,
           "target_price": 15896.8,
-          "current_price": 15785.0,
-          "unrealized_pnl": 75
+          "current_price": 15770.0,
+          "unrealized_pnl": -150
         },
         {
           "symbol": "360750",
@@ -94,17 +94,6 @@
           "unrealized_pnl": -135
         },
         {
-          "symbol": "305720",
-          "name": "KODEX 2차전지산업",
-          "qty": 17.0,
-          "entry_price": 14570.0,
-          "atr": 50.71,
-          "stop_price": 14493.9,
-          "target_price": 14722.1,
-          "current_price": 14550.0,
-          "unrealized_pnl": -340
-        },
-        {
           "symbol": "091170",
           "name": "KODEX 은행",
           "qty": 14.0,
@@ -112,8 +101,8 @@
           "atr": 56.36,
           "stop_price": 16835.5,
           "target_price": 17089.1,
-          "current_price": 16955.0,
-          "unrealized_pnl": 490
+          "current_price": 16875.0,
+          "unrealized_pnl": -630
         },
         {
           "symbol": "133690",
@@ -123,8 +112,19 @@
           "atr": 107.86,
           "stop_price": 172625.7,
           "target_price": 173403.7,
-          "current_price": 172860.0,
-          "unrealized_pnl": -25
+          "current_price": 172795.0,
+          "unrealized_pnl": -90
+        },
+        {
+          "symbol": "279530",
+          "name": "KODEX 고배당주",
+          "qty": 14.0,
+          "entry_price": 17805.0,
+          "atr": 20.0,
+          "stop_price": 17775.0,
+          "target_price": 17865.0,
+          "current_price": 17795.0,
+          "unrealized_pnl": -140
         }
       ]
     },
@@ -146,10 +146,10 @@
     }
   },
   "account": {
-    "buying_power": 3849022.0,
-    "stock_value_krw": 1123180,
-    "total_value_krw": 4972202,
-    "unrealized_pnl_krw": 65
+    "buying_power": 3845694.0,
+    "stock_value_krw": 1123550,
+    "total_value_krw": 4969244,
+    "unrealized_pnl_krw": -1145
   },
   "threads": {
     "latest": {

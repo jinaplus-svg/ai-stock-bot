@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T18:43:43.207006+09:00",
+  "updated_at": "2026-09-14T18:53:43.228881+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -83,7 +83,7 @@
       "title": "입 밖으로 꺼내는 순간 운명이 바뀌는 1가지 파동의 비밀 | 양자역학과 마음챙김 끌어당김",
       "video_id": "870e3uPmvOM",
       "published_kst": "09/12 05:31",
-      "views": 265,
+      "views": 281,
       "privacy": "public"
     }
   ],
@@ -114,21 +114,11 @@
     },
     "binance_1min": {
       "date": "2026-09-14",
-      "daily_pnl": 0.0,
-      "cumulative_pnl": 0.0,
-      "trade_count_today": 1,
+      "daily_pnl": 0.21099999999999852,
+      "cumulative_pnl": 0.21099999999999852,
+      "trade_count_today": 2,
       "consecutive_losses": 0,
-      "positions": [
-        {
-          "symbol": "BTCUSDT",
-          "name": "BTCUSDT",
-          "qty": 0.00025,
-          "entry_price": 77200.0,
-          "atr": 50.83214285714036,
-          "stop_price": 76883.24,
-          "target_price": 78015.39
-        }
-      ]
+      "positions": []
     }
   },
   "account": {

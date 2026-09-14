@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T09:53:43.468828+09:00",
+  "updated_at": "2026-09-14T10:03:42.706934+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,34 +66,11 @@
     },
     "toss1min": {
       "date": "2026-09-14",
-      "daily_pnl": -5239.0,
-      "cumulative_pnl": -29151.0,
-      "trade_count_today": 16,
-      "consecutive_losses": 5,
-      "positions": [
-        {
-          "symbol": "360750",
-          "name": "TIGER 미국S&P500",
-          "qty": 9.0,
-          "entry_price": 25440.0,
-          "atr": 17.14,
-          "stop_price": 25401.8,
-          "target_price": 25516.3,
-          "current_price": 25410.0,
-          "unrealized_pnl": -270
-        },
-        {
-          "symbol": "133690",
-          "name": "TIGER 미국나스닥100",
-          "qty": 1.0,
-          "entry_price": 172885.0,
-          "atr": 107.86,
-          "stop_price": 172625.7,
-          "target_price": 173403.7,
-          "current_price": 172690.0,
-          "unrealized_pnl": -195
-        }
-      ]
+      "daily_pnl": -5909.0,
+      "cumulative_pnl": -29821.0,
+      "trade_count_today": 18,
+      "consecutive_losses": 7,
+      "positions": []
     },
     "binance": {
       "date": "2026-09-14",
@@ -113,10 +90,10 @@
     }
   },
   "account": {
-    "buying_power": 4564922.0,
-    "stock_value_krw": 401380,
-    "total_value_krw": 4966302,
-    "unrealized_pnl_krw": -465
+    "buying_power": 4966037.0,
+    "stock_value_krw": 0,
+    "total_value_krw": 4966037,
+    "unrealized_pnl_krw": 0
   },
   "threads": {
     "latest": {

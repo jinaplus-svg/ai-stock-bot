@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T12:03:53.377194+09:00",
+  "updated_at": "2026-09-15T12:14:08.158105+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,10 +66,10 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": 786.0,
-      "cumulative_pnl": -29035.0,
-      "trade_count_today": 58,
-      "consecutive_losses": 3,
+      "daily_pnl": 456.0,
+      "cumulative_pnl": -29365.0,
+      "trade_count_today": 60,
+      "consecutive_losses": 4,
       "positions": [
         {
           "symbol": "360750",
@@ -79,8 +79,8 @@
           "atr": 8.86,
           "stop_price": 25573.6,
           "target_price": 25688.8,
-          "current_price": 25585.0,
-          "unrealized_pnl": -243
+          "current_price": 25590.0,
+          "unrealized_pnl": -198
         },
         {
           "symbol": "279530",
@@ -90,8 +90,8 @@
           "atr": 7.14,
           "stop_price": 17778.3,
           "target_price": 17858.4,
-          "current_price": 17785.0,
-          "unrealized_pnl": -280
+          "current_price": 17780.0,
+          "unrealized_pnl": -350
         },
         {
           "symbol": "133690",
@@ -101,8 +101,8 @@
           "atr": 39.71,
           "stop_price": 174512.8,
           "target_price": 175299.3,
-          "current_price": 174665.0,
-          "unrealized_pnl": -110
+          "current_price": 174725.0,
+          "unrealized_pnl": -50
         },
         {
           "symbol": "132030",
@@ -112,8 +112,8 @@
           "atr": 7.14,
           "stop_price": 24125.8,
           "target_price": 24234.5,
-          "current_price": 24165.0,
-          "unrealized_pnl": 30
+          "current_price": 24155.0,
+          "unrealized_pnl": -70
         }
       ]
     },
@@ -135,10 +135,10 @@
     }
   },
   "account": {
-    "buying_power": 4068685.0,
-    "stock_value_krw": 895570,
-    "total_value_krw": 4964255,
-    "unrealized_pnl_krw": -603
+    "buying_power": 4068291.0,
+    "stock_value_krw": 895505,
+    "total_value_krw": 4963796,
+    "unrealized_pnl_krw": -668
   },
   "threads": {
     "latest": {

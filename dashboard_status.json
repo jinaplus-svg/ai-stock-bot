@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T14:13:45.272768+09:00",
+  "updated_at": "2026-09-15T14:23:44.578216+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -79,8 +79,8 @@
           "atr": 2.14,
           "stop_price": 24093.8,
           "target_price": 24202.4,
-          "current_price": 24110.0,
-          "unrealized_pnl": -200
+          "current_price": 24095.0,
+          "unrealized_pnl": -350
         }
       ]
     },
@@ -103,9 +103,9 @@
   },
   "account": {
     "buying_power": 4717814.0,
-    "stock_value_krw": 241100,
-    "total_value_krw": 4958914,
-    "unrealized_pnl_krw": -200
+    "stock_value_krw": 240950,
+    "total_value_krw": 4958764,
+    "unrealized_pnl_krw": -350
   },
   "threads": {
     "latest": {

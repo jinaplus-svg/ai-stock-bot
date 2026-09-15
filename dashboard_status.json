@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T09:33:49.658398+09:00",
+  "updated_at": "2026-09-15T09:43:46.330365+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -90,8 +90,8 @@
           "atr": 74.29,
           "stop_price": 14363.6,
           "target_price": 14697.9,
-          "current_price": 14520.0,
-          "unrealized_pnl": 765
+          "current_price": 14655.0,
+          "unrealized_pnl": 3060
         },
         {
           "symbol": "133690",
@@ -101,8 +101,8 @@
           "atr": 168.93,
           "stop_price": 173574.2,
           "target_price": 174356.5,
-          "current_price": 174095.0,
-          "unrealized_pnl": 260
+          "current_price": 174195.0,
+          "unrealized_pnl": 360
         },
         {
           "symbol": "091160",
@@ -112,8 +112,8 @@
           "atr": 397.86,
           "stop_price": 124528.2,
           "target_price": 126318.6,
-          "current_price": 125130.0,
-          "unrealized_pnl": 5
+          "current_price": 125695.0,
+          "unrealized_pnl": 570
         }
       ]
     },
@@ -136,9 +136,9 @@
   },
   "account": {
     "buying_power": 4177103.0,
-    "stock_value_krw": 787415,
-    "total_value_krw": 4964518,
-    "unrealized_pnl_krw": 1930
+    "stock_value_krw": 790375,
+    "total_value_krw": 4967478,
+    "unrealized_pnl_krw": 4890
   },
   "threads": {
     "latest": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T09:13:43.992623+09:00",
+  "updated_at": "2026-09-15T09:23:45.752055+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "왜 끌어당김을 간절히 바랄수록 실패할까? 뇌과학과 축적의 법칙이 밝혀낸 부의 비밀",
-      "video_id": "fTql-gsB4Ck",
-      "published_kst": "09/15 05:37",
-      "views": 1,
-      "privacy": "public"
-    },
-    {
-      "title": "간절할수록 밀려나는 비밀",
-      "video_id": "3-FAW58pFHc",
-      "published_kst": "09/15 05:34",
-      "views": 2,
-      "privacy": "public"
-    },
-    {
-      "title": "불안과 결핍을 멈추고 원하는 현실을 끌어당기는 5분의 비밀 | 마음챙김과 양자 주파수의 법칙",
-      "video_id": "yaQnpIi2T1A",
-      "published_kst": "09/14 05:30",
-      "views": 13,
-      "privacy": "public"
-    },
-    {
-      "title": "결핍의 99%는 단 5분 착각",
-      "video_id": "w9qzDSP8nqo",
-      "published_kst": "09/14 05:29",
-      "views": 352,
-      "privacy": "public"
-    },
-    {
-      "title": "불안과 집착을 멈추고 뇌의 파동을 바꾸는 법 | 내면의 안전지대와 현실 창조의 비밀",
-      "video_id": "zDymjdmQFKw",
-      "published_kst": "09/13 05:33",
-      "views": 10,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {
@@ -98,10 +66,10 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": -1015.0,
-      "cumulative_pnl": -30836.0,
-      "trade_count_today": 9,
-      "consecutive_losses": 2,
+      "daily_pnl": -1795.0,
+      "cumulative_pnl": -31616.0,
+      "trade_count_today": 11,
+      "consecutive_losses": 3,
       "positions": [
         {
           "symbol": "266420",
@@ -111,8 +79,8 @@
           "atr": 26.43,
           "stop_price": 15990.4,
           "target_price": 16109.3,
-          "current_price": 16050.0,
-          "unrealized_pnl": 300
+          "current_price": 16055.0,
+          "unrealized_pnl": 375
         },
         {
           "symbol": "305720",
@@ -122,8 +90,8 @@
           "atr": 74.29,
           "stop_price": 14363.6,
           "target_price": 14697.9,
-          "current_price": 14450.0,
-          "unrealized_pnl": -425
+          "current_price": 14495.0,
+          "unrealized_pnl": 340
         },
         {
           "symbol": "133690",
@@ -133,8 +101,8 @@
           "atr": 168.93,
           "stop_price": 173574.2,
           "target_price": 174356.5,
-          "current_price": 173800.0,
-          "unrealized_pnl": -35
+          "current_price": 173970.0,
+          "unrealized_pnl": 135
         }
       ]
     },
@@ -156,10 +124,10 @@
     }
   },
   "account": {
-    "buying_power": 4304354.0,
-    "stock_value_krw": 660200,
-    "total_value_krw": 4964554,
-    "unrealized_pnl_krw": -160
+    "buying_power": 4303506.0,
+    "stock_value_krw": 661210,
+    "total_value_krw": 4964716,
+    "unrealized_pnl_krw": 850
   },
   "threads": {
     "latest": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T11:54:01.676855+09:00",
+  "updated_at": "2026-09-15T12:03:53.377194+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,10 +66,10 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": 1186.0,
-      "cumulative_pnl": -28635.0,
-      "trade_count_today": 55,
-      "consecutive_losses": 2,
+      "daily_pnl": 786.0,
+      "cumulative_pnl": -29035.0,
+      "trade_count_today": 58,
+      "consecutive_losses": 3,
       "positions": [
         {
           "symbol": "360750",
@@ -79,8 +79,8 @@
           "atr": 8.86,
           "stop_price": 25573.6,
           "target_price": 25688.8,
-          "current_price": 25600.0,
-          "unrealized_pnl": -108
+          "current_price": 25585.0,
+          "unrealized_pnl": -243
         },
         {
           "symbol": "279530",
@@ -90,19 +90,30 @@
           "atr": 7.14,
           "stop_price": 17778.3,
           "target_price": 17858.4,
-          "current_price": 17790.0,
-          "unrealized_pnl": -210
+          "current_price": 17785.0,
+          "unrealized_pnl": -280
         },
         {
-          "symbol": "305720",
-          "name": "KODEX 2차전지산업",
-          "qty": 16.0,
-          "entry_price": 14890.0,
-          "atr": 16.07,
-          "stop_price": 14865.9,
-          "target_price": 14938.2,
-          "current_price": 14885.0,
-          "unrealized_pnl": -80
+          "symbol": "133690",
+          "name": "TIGER 미국나스닥100",
+          "qty": 1.0,
+          "entry_price": 174775.0,
+          "atr": 39.71,
+          "stop_price": 174512.8,
+          "target_price": 175299.3,
+          "current_price": 174665.0,
+          "unrealized_pnl": -110
+        },
+        {
+          "symbol": "132030",
+          "name": "KODEX 골드선물(H)",
+          "qty": 10.0,
+          "entry_price": 24162.0,
+          "atr": 7.14,
+          "stop_price": 24125.8,
+          "target_price": 24234.5,
+          "current_price": 24165.0,
+          "unrealized_pnl": 30
         }
       ]
     },
@@ -124,10 +135,10 @@
     }
   },
   "account": {
-    "buying_power": 4247338.0,
-    "stock_value_krw": 717620,
-    "total_value_krw": 4964958,
-    "unrealized_pnl_krw": -398
+    "buying_power": 4068685.0,
+    "stock_value_krw": 895570,
+    "total_value_krw": 4964255,
+    "unrealized_pnl_krw": -603
   },
   "threads": {
     "latest": {

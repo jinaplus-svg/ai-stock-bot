@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T11:03:45.668393+09:00",
+  "updated_at": "2026-09-15T11:13:46.609932+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,10 +66,10 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": 355.0,
-      "cumulative_pnl": -29466.0,
-      "trade_count_today": 38,
-      "consecutive_losses": 1,
+      "daily_pnl": 971.0,
+      "cumulative_pnl": -28850.0,
+      "trade_count_today": 40,
+      "consecutive_losses": 0,
       "positions": [
         {
           "symbol": "132030",
@@ -90,19 +90,8 @@
           "atr": 217.5,
           "stop_price": 124563.8,
           "target_price": 125542.5,
-          "current_price": 125400.0,
-          "unrealized_pnl": 1020
-        },
-        {
-          "symbol": "091170",
-          "name": "KODEX 은행",
-          "qty": 14.0,
-          "entry_price": 16886.0,
-          "atr": 16.79,
-          "stop_price": 16860.7,
-          "target_price": 16936.7,
-          "current_price": 16930.0,
-          "unrealized_pnl": 616
+          "current_price": 125375.0,
+          "unrealized_pnl": 970
         },
         {
           "symbol": "305720",
@@ -112,8 +101,19 @@
           "atr": 27.5,
           "stop_price": 14858.8,
           "target_price": 14982.5,
-          "current_price": 14915.0,
-          "unrealized_pnl": 240
+          "current_price": 14935.0,
+          "unrealized_pnl": 560
+        },
+        {
+          "symbol": "266420",
+          "name": "KODEX 헬스케어",
+          "qty": 15.0,
+          "entry_price": 16223.0,
+          "atr": 1.43,
+          "stop_price": 16198.7,
+          "target_price": 16271.7,
+          "current_price": 16235.0,
+          "unrealized_pnl": 180
         }
       ]
     },
@@ -135,10 +135,10 @@
     }
   },
   "account": {
-    "buying_power": 3999447.0,
-    "stock_value_krw": 967910,
-    "total_value_krw": 4967357,
-    "unrealized_pnl_krw": 2226
+    "buying_power": 3993050.0,
+    "stock_value_krw": 974685,
+    "total_value_krw": 4967735,
+    "unrealized_pnl_krw": 2060
   },
   "threads": {
     "latest": {

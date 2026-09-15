@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T12:43:49.708692+09:00",
+  "updated_at": "2026-09-15T12:53:49.326182+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,10 +66,10 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": -147.0,
-      "cumulative_pnl": -29968.0,
-      "trade_count_today": 68,
-      "consecutive_losses": 1,
+      "daily_pnl": -567.0,
+      "cumulative_pnl": -30388.0,
+      "trade_count_today": 72,
+      "consecutive_losses": 2,
       "positions": [
         {
           "symbol": "133690",
@@ -83,17 +83,6 @@
           "unrealized_pnl": -145
         },
         {
-          "symbol": "132030",
-          "name": "KODEX 골드선물(H)",
-          "qty": 10.0,
-          "entry_price": 24162.0,
-          "atr": 7.14,
-          "stop_price": 24125.8,
-          "target_price": 24234.5,
-          "current_price": 24145.0,
-          "unrealized_pnl": -170
-        },
-        {
           "symbol": "069500",
           "name": "KODEX 200",
           "qty": 2.0,
@@ -101,8 +90,8 @@
           "atr": 78.29,
           "stop_price": 105431.6,
           "target_price": 105906.8,
-          "current_price": 105540.0,
-          "unrealized_pnl": -100
+          "current_price": 105570.0,
+          "unrealized_pnl": -40
         },
         {
           "symbol": "279530",
@@ -112,8 +101,41 @@
           "atr": 2.14,
           "stop_price": 17768.3,
           "target_price": 17848.4,
-          "current_price": 17780.0,
-          "unrealized_pnl": -210
+          "current_price": 17785.0,
+          "unrealized_pnl": -140
+        },
+        {
+          "symbol": "266420",
+          "name": "KODEX 헬스케어",
+          "qty": 15.0,
+          "entry_price": 16155.0,
+          "atr": 1.43,
+          "stop_price": 16130.8,
+          "target_price": 16203.5,
+          "current_price": 16165.0,
+          "unrealized_pnl": 150
+        },
+        {
+          "symbol": "091170",
+          "name": "KODEX 은행",
+          "qty": 14.0,
+          "entry_price": 16960.0,
+          "atr": 7.5,
+          "stop_price": 16934.6,
+          "target_price": 17010.9,
+          "current_price": 16955.0,
+          "unrealized_pnl": -70
+        },
+        {
+          "symbol": "132030",
+          "name": "KODEX 골드선물(H)",
+          "qty": 10.0,
+          "entry_price": 24130.0,
+          "atr": 2.14,
+          "stop_price": 24093.8,
+          "target_price": 24202.4,
+          "current_price": 24135.0,
+          "unrealized_pnl": 50
         }
       ]
     },
@@ -135,10 +157,10 @@
     }
   },
   "account": {
-    "buying_power": 3844543.0,
-    "stock_value_krw": 876080,
-    "total_value_krw": 4720623,
-    "unrealized_pnl_krw": -625
+    "buying_power": 3606895.0,
+    "stock_value_krw": 1355955,
+    "total_value_krw": 4962850,
+    "unrealized_pnl_krw": -195
   },
   "threads": {
     "latest": {

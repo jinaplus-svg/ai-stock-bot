@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T10:33:46.272500+09:00",
+  "updated_at": "2026-09-15T10:43:45.886991+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,10 +66,10 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": 1890.0,
-      "cumulative_pnl": -27931.0,
-      "trade_count_today": 27,
-      "consecutive_losses": 1,
+      "daily_pnl": 1260.0,
+      "cumulative_pnl": -28561.0,
+      "trade_count_today": 31,
+      "consecutive_losses": 2,
       "positions": [
         {
           "symbol": "133690",
@@ -79,8 +79,8 @@
           "atr": 168.93,
           "stop_price": 173574.2,
           "target_price": 174356.5,
-          "current_price": 174222.0,
-          "unrealized_pnl": 387
+          "current_price": 174027.0,
+          "unrealized_pnl": 192
         },
         {
           "symbol": "360750",
@@ -90,8 +90,8 @@
           "atr": 10.0,
           "stop_price": 25456.8,
           "target_price": 25571.5,
-          "current_price": 25525.0,
-          "unrealized_pnl": 270
+          "current_price": 25505.0,
+          "unrealized_pnl": 90
         },
         {
           "symbol": "279530",
@@ -112,19 +112,41 @@
           "atr": 11.79,
           "stop_price": 24073.8,
           "target_price": 24182.3,
-          "current_price": 24130.0,
-          "unrealized_pnl": 200
+          "current_price": 24075.0,
+          "unrealized_pnl": -350
         },
         {
-          "symbol": "069500",
-          "name": "KODEX 200",
+          "symbol": "091170",
+          "name": "KODEX 은행",
+          "qty": 14.0,
+          "entry_price": 16910.0,
+          "atr": 23.57,
+          "stop_price": 16874.6,
+          "target_price": 16980.7,
+          "current_price": 16905.0,
+          "unrealized_pnl": -70
+        },
+        {
+          "symbol": "305720",
+          "name": "KODEX 2차전지산업",
+          "qty": 16.0,
+          "entry_price": 14800.0,
+          "atr": 30.0,
+          "stop_price": 14755.0,
+          "target_price": 14890.0,
+          "current_price": 14765.0,
+          "unrealized_pnl": -560
+        },
+        {
+          "symbol": "091160",
+          "name": "KODEX 반도체",
           "qty": 2.0,
-          "entry_price": 105490.0,
-          "atr": 129.29,
-          "stop_price": 105296.1,
-          "target_price": 105877.9,
-          "current_price": 105610.0,
-          "unrealized_pnl": 240
+          "entry_price": 124890.0,
+          "atr": 217.5,
+          "stop_price": 124563.8,
+          "target_price": 125542.5,
+          "current_price": 124960.0,
+          "unrealized_pnl": 140
         }
       ]
     },
@@ -146,10 +168,10 @@
     }
   },
   "account": {
-    "buying_power": 3861856.0,
-    "stock_value_krw": 1106157,
-    "total_value_krw": 4968013,
-    "unrealized_pnl_krw": 957
+    "buying_power": 3348746.0,
+    "stock_value_krw": 1616842,
+    "total_value_krw": 4965588,
+    "unrealized_pnl_krw": -698
   },
   "threads": {
     "latest": {

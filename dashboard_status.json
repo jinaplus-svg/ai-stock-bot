@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T10:03:46.898061+09:00",
+  "updated_at": "2026-09-15T10:13:48.524102+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,9 +66,9 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": -330.0,
-      "cumulative_pnl": -30151.0,
-      "trade_count_today": 20,
+      "daily_pnl": 1290.0,
+      "cumulative_pnl": -28531.0,
+      "trade_count_today": 21,
       "consecutive_losses": 0,
       "positions": [
         {
@@ -79,8 +79,8 @@
           "atr": 26.43,
           "stop_price": 15990.4,
           "target_price": 16109.3,
-          "current_price": 16045.0,
-          "unrealized_pnl": 225
+          "current_price": 16090.0,
+          "unrealized_pnl": 900
         },
         {
           "symbol": "133690",
@@ -90,19 +90,8 @@
           "atr": 168.93,
           "stop_price": 173574.2,
           "target_price": 174356.5,
-          "current_price": 174065.0,
-          "unrealized_pnl": 230
-        },
-        {
-          "symbol": "229200",
-          "name": "KODEX 코스닥150",
-          "qty": 18.0,
-          "entry_price": 13735.0,
-          "atr": 27.5,
-          "stop_price": 13693.8,
-          "target_price": 13817.5,
-          "current_price": 13765.0,
-          "unrealized_pnl": 540
+          "current_price": 174110.0,
+          "unrealized_pnl": 275
         },
         {
           "symbol": "360750",
@@ -135,10 +124,10 @@
     }
   },
   "account": {
-    "buying_power": 4074082.0,
-    "stock_value_krw": 892055,
-    "total_value_krw": 4966137,
-    "unrealized_pnl_krw": 1085
+    "buying_power": 4322895.0,
+    "stock_value_krw": 645005,
+    "total_value_krw": 4967900,
+    "unrealized_pnl_krw": 1265
   },
   "threads": {
     "latest": {

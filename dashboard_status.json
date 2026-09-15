@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T11:43:45.183618+09:00",
+  "updated_at": "2026-09-15T11:54:01.676855+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,22 +66,11 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": 2036.0,
-      "cumulative_pnl": -27785.0,
-      "trade_count_today": 53,
-      "consecutive_losses": 1,
+      "daily_pnl": 1186.0,
+      "cumulative_pnl": -28635.0,
+      "trade_count_today": 55,
+      "consecutive_losses": 2,
       "positions": [
-        {
-          "symbol": "229200",
-          "name": "KODEX 코스닥150",
-          "qty": 17.0,
-          "entry_price": 13915.0,
-          "atr": 18.21,
-          "stop_price": 13887.7,
-          "target_price": 13969.6,
-          "current_price": 13900.0,
-          "unrealized_pnl": -255
-        },
         {
           "symbol": "360750",
           "name": "TIGER 미국S&P500",
@@ -90,8 +79,8 @@
           "atr": 8.86,
           "stop_price": 25573.6,
           "target_price": 25688.8,
-          "current_price": 25615.0,
-          "unrealized_pnl": 27
+          "current_price": 25600.0,
+          "unrealized_pnl": -108
         },
         {
           "symbol": "279530",
@@ -101,8 +90,19 @@
           "atr": 7.14,
           "stop_price": 17778.3,
           "target_price": 17858.4,
-          "current_price": 17815.0,
-          "unrealized_pnl": 140
+          "current_price": 17790.0,
+          "unrealized_pnl": -210
+        },
+        {
+          "symbol": "305720",
+          "name": "KODEX 2차전지산업",
+          "qty": 16.0,
+          "entry_price": 14890.0,
+          "atr": 16.07,
+          "stop_price": 14865.9,
+          "target_price": 14938.2,
+          "current_price": 14885.0,
+          "unrealized_pnl": -80
         }
       ]
     },
@@ -124,10 +124,10 @@
     }
   },
   "account": {
-    "buying_power": 4249944.0,
-    "stock_value_krw": 716245,
-    "total_value_krw": 4966189,
-    "unrealized_pnl_krw": -88
+    "buying_power": 4247338.0,
+    "stock_value_krw": 717620,
+    "total_value_krw": 4964958,
+    "unrealized_pnl_krw": -398
   },
   "threads": {
     "latest": {

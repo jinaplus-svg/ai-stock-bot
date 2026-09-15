@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T09:43:46.330365+09:00",
+  "updated_at": "2026-09-15T09:53:45.567612+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -68,7 +68,7 @@
       "date": "2026-09-15",
       "daily_pnl": -2985.0,
       "cumulative_pnl": -32806.0,
-      "trade_count_today": 14,
+      "trade_count_today": 17,
       "consecutive_losses": 4,
       "positions": [
         {
@@ -79,8 +79,8 @@
           "atr": 26.43,
           "stop_price": 15990.4,
           "target_price": 16109.3,
-          "current_price": 16090.0,
-          "unrealized_pnl": 900
+          "current_price": 16095.0,
+          "unrealized_pnl": 975
         },
         {
           "symbol": "305720",
@@ -90,8 +90,8 @@
           "atr": 74.29,
           "stop_price": 14363.6,
           "target_price": 14697.9,
-          "current_price": 14655.0,
-          "unrealized_pnl": 3060
+          "current_price": 14650.0,
+          "unrealized_pnl": 2975
         },
         {
           "symbol": "133690",
@@ -101,8 +101,8 @@
           "atr": 168.93,
           "stop_price": 173574.2,
           "target_price": 174356.5,
-          "current_price": 174195.0,
-          "unrealized_pnl": 360
+          "current_price": 174072.0,
+          "unrealized_pnl": 237
         },
         {
           "symbol": "091160",
@@ -112,8 +112,41 @@
           "atr": 397.86,
           "stop_price": 124528.2,
           "target_price": 126318.6,
-          "current_price": 125695.0,
-          "unrealized_pnl": 570
+          "current_price": 124665.0,
+          "unrealized_pnl": -460
+        },
+        {
+          "symbol": "229200",
+          "name": "KODEX 코스닥150",
+          "qty": 18.0,
+          "entry_price": 13735.0,
+          "atr": 27.5,
+          "stop_price": 13693.8,
+          "target_price": 13817.5,
+          "current_price": 13765.0,
+          "unrealized_pnl": 540
+        },
+        {
+          "symbol": "360750",
+          "name": "TIGER 미국S&P500",
+          "qty": 9.0,
+          "entry_price": 25495.0,
+          "atr": 10.0,
+          "stop_price": 25456.8,
+          "target_price": 25571.5,
+          "current_price": 25500.0,
+          "unrealized_pnl": 45
+        },
+        {
+          "symbol": "069500",
+          "name": "KODEX 200",
+          "qty": 2.0,
+          "entry_price": 105370.0,
+          "atr": 161.43,
+          "stop_price": 105127.9,
+          "target_price": 105854.3,
+          "current_price": 105315.0,
+          "unrealized_pnl": -110
         }
       ]
     },
@@ -135,10 +168,10 @@
     }
   },
   "account": {
-    "buying_power": 4177103.0,
-    "stock_value_krw": 790375,
-    "total_value_krw": 4967478,
-    "unrealized_pnl_krw": 4890
+    "buying_power": 3489575.0,
+    "stock_value_krw": 1477112,
+    "total_value_krw": 4966687,
+    "unrealized_pnl_krw": 4202
   },
   "threads": {
     "latest": {

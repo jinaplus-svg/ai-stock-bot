@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T08:53:43.636096+09:00",
+  "updated_at": "2026-09-15T09:03:45.632577+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "2026년 9월 14일 음력 달력 운세: 길시·궁합 띠·출발 방향 안내",
-      "url": "https://brandnew901.blogspot.com/2026/09/2026-9-14.html",
-      "published_kst": "09/14 09:01",
-      "published_raw": "2026-09-13T17:01:17-07:00"
+      "title": "2026년 9월 12일 음력 달력: 여행 길방과 길시 총정리",
+      "url": "https://brandnew901.blogspot.com/2026/09/2026-9-12.html",
+      "published_kst": "09/15 09:01",
+      "published_raw": "2026-09-14T17:01:17-07:00"
     },
     {
       "category": "News",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "왜 끌어당김을 간절히 바랄수록 실패할까? 뇌과학과 축적의 법칙이 밝혀낸 부의 비밀",
-      "video_id": "fTql-gsB4Ck",
-      "published_kst": "09/15 05:37",
-      "views": 1,
-      "privacy": "public"
-    },
-    {
-      "title": "간절할수록 밀려나는 비밀",
-      "video_id": "3-FAW58pFHc",
-      "published_kst": "09/15 05:34",
-      "views": 2,
-      "privacy": "public"
-    },
-    {
-      "title": "불안과 결핍을 멈추고 원하는 현실을 끌어당기는 5분의 비밀 | 마음챙김과 양자 주파수의 법칙",
-      "video_id": "yaQnpIi2T1A",
-      "published_kst": "09/14 05:30",
-      "views": 13,
-      "privacy": "public"
-    },
-    {
-      "title": "결핍의 99%는 단 5분 착각",
-      "video_id": "w9qzDSP8nqo",
-      "published_kst": "09/14 05:29",
-      "views": 352,
-      "privacy": "public"
-    },
-    {
-      "title": "불안과 집착을 멈추고 뇌의 파동을 바꾸는 법 | 내면의 안전지대와 현실 창조의 비밀",
-      "video_id": "zDymjdmQFKw",
-      "published_kst": "09/13 05:33",
-      "views": 10,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {
@@ -97,12 +65,24 @@
       "positions": []
     },
     "toss1min": {
-      "date": "2026-09-14",
-      "daily_pnl": -5909.0,
-      "cumulative_pnl": -29821.0,
-      "trade_count_today": 18,
-      "consecutive_losses": 7,
-      "positions": []
+      "date": "2026-09-15",
+      "daily_pnl": 770.0,
+      "cumulative_pnl": -29051.0,
+      "trade_count_today": 3,
+      "consecutive_losses": 0,
+      "positions": [
+        {
+          "symbol": "069500",
+          "name": "KODEX 200",
+          "qty": 2.0,
+          "entry_price": 105155.0,
+          "atr": 90.36,
+          "stop_price": 104997.3,
+          "target_price": 105470.5,
+          "current_price": 105105.0,
+          "unrealized_pnl": -100
+        }
+      ]
     },
     "binance": {
       "date": "2026-09-15",
@@ -122,10 +102,10 @@
     }
   },
   "account": {
-    "buying_power": 4966037.0,
-    "stock_value_krw": 0,
-    "total_value_krw": 4966037,
-    "unrealized_pnl_krw": 0
+    "buying_power": 4756392.0,
+    "stock_value_krw": 210210,
+    "total_value_krw": 4966602,
+    "unrealized_pnl_krw": -100
   },
   "threads": {
     "latest": {

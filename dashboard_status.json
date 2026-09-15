@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T11:33:44.295735+09:00",
+  "updated_at": "2026-09-15T11:43:45.183618+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -68,20 +68,9 @@
       "date": "2026-09-15",
       "daily_pnl": 2036.0,
       "cumulative_pnl": -27785.0,
-      "trade_count_today": 48,
-      "consecutive_losses": 2,
+      "trade_count_today": 53,
+      "consecutive_losses": 1,
       "positions": [
-        {
-          "symbol": "132030",
-          "name": "KODEX 골드선물(H)",
-          "qty": 10.0,
-          "entry_price": 24110.0,
-          "atr": 11.79,
-          "stop_price": 24073.8,
-          "target_price": 24182.3,
-          "current_price": 24160.0,
-          "unrealized_pnl": 500
-        },
         {
           "symbol": "229200",
           "name": "KODEX 코스닥150",
@@ -90,8 +79,30 @@
           "atr": 18.21,
           "stop_price": 13887.7,
           "target_price": 13969.6,
-          "current_price": 13915.0,
-          "unrealized_pnl": 0
+          "current_price": 13900.0,
+          "unrealized_pnl": -255
+        },
+        {
+          "symbol": "360750",
+          "name": "TIGER 미국S&P500",
+          "qty": 9.0,
+          "entry_price": 25612.0,
+          "atr": 8.86,
+          "stop_price": 25573.6,
+          "target_price": 25688.8,
+          "current_price": 25615.0,
+          "unrealized_pnl": 27
+        },
+        {
+          "symbol": "279530",
+          "name": "KODEX 고배당주",
+          "qty": 14.0,
+          "entry_price": 17805.0,
+          "atr": 7.14,
+          "stop_price": 17778.3,
+          "target_price": 17858.4,
+          "current_price": 17815.0,
+          "unrealized_pnl": 140
         }
       ]
     },
@@ -113,10 +124,10 @@
     }
   },
   "account": {
-    "buying_power": 4488801.0,
-    "stock_value_krw": 478155,
-    "total_value_krw": 4966956,
-    "unrealized_pnl_krw": 500
+    "buying_power": 4249944.0,
+    "stock_value_krw": 716245,
+    "total_value_krw": 4966189,
+    "unrealized_pnl_krw": -88
   },
   "threads": {
     "latest": {

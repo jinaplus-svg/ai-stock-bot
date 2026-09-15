@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T14:23:44.578216+09:00",
+  "updated_at": "2026-09-15T14:33:43.354572+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -66,23 +66,11 @@
     },
     "toss1min": {
       "date": "2026-09-15",
-      "daily_pnl": -4230.0,
-      "cumulative_pnl": -34051.0,
-      "trade_count_today": 81,
-      "consecutive_losses": 9,
-      "positions": [
-        {
-          "symbol": "132030",
-          "name": "KODEX 골드선물(H)",
-          "qty": 10.0,
-          "entry_price": 24130.0,
-          "atr": 2.14,
-          "stop_price": 24093.8,
-          "target_price": 24202.4,
-          "current_price": 24095.0,
-          "unrealized_pnl": -350
-        }
-      ]
+      "daily_pnl": -4780.0,
+      "cumulative_pnl": -34601.0,
+      "trade_count_today": 82,
+      "consecutive_losses": 10,
+      "positions": []
     },
     "binance": {
       "date": "2026-09-15",
@@ -102,10 +90,10 @@
     }
   },
   "account": {
-    "buying_power": 4717814.0,
-    "stock_value_krw": 240950,
-    "total_value_krw": 4958764,
-    "unrealized_pnl_krw": -350
+    "buying_power": 4958528.0,
+    "stock_value_krw": 0,
+    "total_value_krw": 4958528,
+    "unrealized_pnl_krw": 0
   },
   "threads": {
     "latest": {

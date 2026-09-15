@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T21:23:42.479396+09:00",
+  "updated_at": "2026-09-15T21:33:42.951749+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "돈이 모이는 사람들의 7가지 습관 — 부자와 가난한 사람의 결정적 차이",
+      "video_id": "up_OJJRiAFE",
+      "published_kst": "09/15 21:32",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
       "title": "왜 끌어당김을 간절히 바랄수록 실패할까? 뇌과학과 축적의 법칙이 밝혀낸 부의 비밀",
       "video_id": "fTql-gsB4Ck",
       "published_kst": "09/15 05:37",
@@ -77,13 +84,6 @@
       "video_id": "w9qzDSP8nqo",
       "published_kst": "09/14 05:29",
       "views": 351,
-      "privacy": "public"
-    },
-    {
-      "title": "불안과 집착을 멈추고 뇌의 파동을 바꾸는 법 | 내면의 안전지대와 현실 창조의 비밀",
-      "video_id": "zDymjdmQFKw",
-      "published_kst": "09/13 05:33",
-      "views": 10,
       "privacy": "public"
     }
   ],

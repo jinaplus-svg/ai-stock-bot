@@ -910,6 +910,12 @@ if __name__ == "__main__":
     if not blog_id: exit(1)
 
     recent_titles = get_recent_post_titles(blog_id, max_results=5)
+    # 🚨 [v6] 2026-09-19: AdSense가 brandnew901을 '가치 없는 콘텐츠'로 거절. 원인 조사 결과
+    # 3~4월에 동일 제목 글이 블로그당 최대 81개까지 중복 발행돼 있었음(예: "✨ 막 찍어도 인생샷,
+    # 핫플레이스 공간 투어 심층 리뷰" 81회). 기존 중복검사는 (1) '소재 제목'만 보고 (2) 최근 5개와만
+    # 비교해서, 최종 발행 제목은 아무 검사도 받지 않고 나갔다. 발행 직전에 최종 제목을 넓은
+    # 범위(60개)와 대조하는 안전장치를 둔다.
+    recent_titles_wide = get_recent_post_titles(blog_id, max_results=60)
 
     ref_url = args.reference_url
     if ref_url:
@@ -930,6 +936,18 @@ if __name__ == "__main__":
     image_paths = generate_and_split_images_xai(photo_prompt, use_character=(category in CHARACTER_CATEGORIES))
     images = image_paths_to_b64(image_paths)
     title, html_output = write_blog_post(category, images, ref_content, topic)
+
+    # 🚨 [v6] 최종 제목 중복 차단 — 겹치면 딱 한 번 다시 써보고, 그래도 겹치면 발행을 포기한다.
+    # 하루 거르는 편이 같은 제목을 또 쌓는 것보다 낫다(AdSense 거절의 직접 원인이었음).
+    if is_recent_duplicate(title, recent_titles_wide):
+        print(f"⚠️ 최종 제목이 최근 글과 중복 — 재작성 시도: {title}")
+        title, html_output = write_blog_post(category, images, ref_content, topic)
+        if is_recent_duplicate(title, recent_titles_wide):
+            print(f"❌ 재작성 후에도 중복 — 발행을 건너뜁니다: {title}")
+            send_telegram(
+                f"⏭️ [{category.upper()}] 최종 제목이 최근 60개 글과 중복이라 발행을 건너뛰었습니다.\n"
+                f"📝 {title}\n(같은 제목 반복 발행을 막는 안전장치)")
+            exit(0)
 
     # [NEW] 쿠팡 관련 상품 섹션 삽입 (본문 출처 링크보다 먼저)
     html_output = inject_coupang_section(html_output, category, topic, ref_content)

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-24T07:53:46.755225+09:00",
+  "updated_at": "2026-09-24T08:03:44.229344+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "투자 유튜버 99%가 '수익 인증'만 하는 소름 돋는 이유",
+      "video_id": "0rHST7UwI7A",
+      "published_kst": "09/24 08:00",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "투자 유튜브 썸네일이 전부 성공담뿐인 진짜 이유",
+      "video_id": "4_Gu5TiH0KA",
+      "published_kst": "09/24 07:58",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "신경과학과 양자물리학이 밝혀낸 치유의 비밀 | 몸의 긴장을 끄고 현실을 바꾸는 '느낌의 힘' 소마틱스 명상",
       "video_id": "SIxreOT_7qI",
       "published_kst": "09/23 05:32",
@@ -62,7 +76,7 @@
       "title": "생각 말고 느낌의 파동",
       "video_id": "ZNmOnBNQh7w",
       "published_kst": "09/23 05:29",
-      "views": 1247,
+      "views": 1250,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "5qvmVwv2N8s",
       "published_kst": "09/22 04:20",
       "views": 56,
-      "privacy": "public"
-    },
-    {
-      "title": "증권사 리포트의 프레이밍 트릭 — '하방이 제한적이다'라는 말의 진짜 의미",
-      "video_id": "vYxtt8jU1_U",
-      "published_kst": "09/22 04:19",
-      "views": 3,
-      "privacy": "public"
-    },
-    {
-      "title": "95% 무의식 심장의 주파수",
-      "video_id": "8owj9PUp3gM",
-      "published_kst": "09/21 06:11",
-      "views": 1214,
       "privacy": "public"
     }
   ],

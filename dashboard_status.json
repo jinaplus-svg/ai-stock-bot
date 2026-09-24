@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-25T00:13:43.922969+09:00",
+  "updated_at": "2026-09-25T00:23:42.707879+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -116,9 +116,19 @@
       "date": "2026-09-25",
       "daily_pnl": 0.0,
       "cumulative_pnl": 0.13182299999999358,
-      "trade_count_today": 0,
+      "trade_count_today": 1,
       "consecutive_losses": 0,
-      "positions": []
+      "positions": [
+        {
+          "symbol": "BTCUSDT",
+          "name": "BTCUSDT",
+          "qty": 0.00023,
+          "entry_price": 84063.19,
+          "atr": 95.56928571428269,
+          "stop_price": 83728.66,
+          "target_price": 84961.61
+        }
+      ]
     }
   },
   "account": {

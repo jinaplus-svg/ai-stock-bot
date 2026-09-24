@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-25T05:33:47.931279+09:00",
+  "updated_at": "2026-09-25T05:43:41.997846+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "불안 속에서 억지로 외치지 마세요: 1% 부자들과 양자역학이 증명한 마음의 영점 조절법 (45분 마음챙김 다큐)",
+      "video_id": "NN3PdW8kiQQ",
+      "published_kst": "09/25 05:34",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "억지 확언은 오히려 독이다",
+      "video_id": "DMrdRkpNZNw",
+      "published_kst": "09/25 05:34",
+      "views": 168,
+      "privacy": "public"
+    },
+    {
       "title": "투자 유튜버 99%가 '수익 인증'만 하는 소름 돋는 이유",
       "video_id": "0rHST7UwI7A",
       "published_kst": "09/24 08:00",
@@ -70,20 +84,6 @@
       "video_id": "SIxreOT_7qI",
       "published_kst": "09/23 05:32",
       "views": 2,
-      "privacy": "public"
-    },
-    {
-      "title": "생각 말고 느낌의 파동",
-      "video_id": "ZNmOnBNQh7w",
-      "published_kst": "09/23 05:29",
-      "views": 1250,
-      "privacy": "public"
-    },
-    {
-      "title": "95% 무의식 심장의 주파수",
-      "video_id": "8owj9PUp3gM",
-      "published_kst": "09/21 06:11",
-      "views": 1213,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-24T14:23:42.732138+09:00",
+  "updated_at": "2026-09-24T14:33:42.709430+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,14 +55,14 @@
       "title": "투자 유튜버 99%가 '수익 인증'만 하는 소름 돋는 이유",
       "video_id": "0rHST7UwI7A",
       "published_kst": "09/24 08:00",
-      "views": 368,
+      "views": 367,
       "privacy": "public"
     },
     {
       "title": "투자 유튜브 썸네일이 전부 성공담뿐인 진짜 이유",
       "video_id": "4_Gu5TiH0KA",
       "published_kst": "09/24 07:58",
-      "views": 1,
+      "views": 2,
       "privacy": "public"
     },
     {
@@ -106,9 +106,9 @@
     },
     "binance": {
       "date": "2026-09-24",
-      "daily_pnl": 4.499275452941184,
-      "cumulative_pnl": 7.241518670588253,
-      "trade_count_today": 3,
+      "daily_pnl": 6.028108370588246,
+      "cumulative_pnl": 8.770351588235314,
+      "trade_count_today": 4,
       "consecutive_losses": 0,
       "positions": []
     },

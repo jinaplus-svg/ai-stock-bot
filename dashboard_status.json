@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-24T19:23:42.399640+09:00",
+  "updated_at": "2026-09-24T19:33:42.533593+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -106,9 +106,9 @@
     },
     "binance": {
       "date": "2026-09-24",
-      "daily_pnl": 6.028108370588246,
-      "cumulative_pnl": 8.770351588235314,
-      "trade_count_today": 4,
+      "daily_pnl": 7.328961664705897,
+      "cumulative_pnl": 10.071204882352966,
+      "trade_count_today": 5,
       "consecutive_losses": 0,
       "positions": []
     },
@@ -132,14 +132,14 @@
       "date": "2026-09-23T19:31:22.957232+09:00",
       "title": "원룸 주방 공간과 감성을 모두 잡는 나비엔매직 버튼 다이얼식 전자레인지 20L",
       "permalink": "https://www.threads.com/@brandnew0789/post/DdoGa34Gml7",
-      "views": 0,
+      "views": 20,
       "likes": 0,
-      "replies": 0,
+      "replies": 1,
       "reposts": 0,
       "quotes": 0
     },
     "total_posts": 8,
-    "total_views": 276,
+    "total_views": 297,
     "total_likes": 3
   }
 }

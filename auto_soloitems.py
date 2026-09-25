@@ -6,6 +6,7 @@ import time
 import base64
 import hmac
 import hashlib
+import random
 import datetime
 import unicodedata
 import requests
@@ -83,7 +84,6 @@ def coupang_search_products(keyword, limit=5):
 
 
 def scan_trending_products(top_n=8):
-    import random
     candidates, seen_names = [], set()
     chosen_keywords = random.sample(TREND_KEYWORDS, k=min(3, len(TREND_KEYWORDS)))
     for kw in chosen_keywords:
@@ -150,6 +150,17 @@ def pick_product_auto(candidates, recent_titles):
 # ==========================================
 # 3. Gemini 블로그 대본 생성 (0817과 동일 프롬프트)
 # ==========================================
+# 🚨 [2026-09-22] "옷은 매번 다르게"라고 Gemini/이미지 생성 모델에 맡겨두기만 했더니 계속 베이지
+# 계열 무난한 상의로 수렴하는 게 실측 확인됨 — 매 호출마다 파이썬에서 직접 하나를 뽑아 프롬프트에
+# 못박아 넣어서 실제로 다양해지게 강제한다(사람/일관성은 그대로 글 하나당 4칸 내내 유지).
+OUTFIT_POOL = [
+    "a red hoodie", "a navy cardigan", "an olive green oversized shirt",
+    "a mustard yellow knit sweater", "a dusty pink turtleneck",
+    "a charcoal gray sweatshirt", "a denim jacket over a white t-shirt",
+    "a burgundy flannel shirt", "a black knit vest over a light shirt",
+    "a lavender hoodie", "a forest green cardigan", "a striped long-sleeve top",
+]
+
 BLOG_SYSTEM_PROMPT = """당신은 '자취템' 블로그(soloitems.blogspot.com)의 전문 카피라이터입니다.
 타겟 독자는 1인가구/자취/원룸 생활을 하는 20~30대이며, 실용적인 정보와 솔직한 제품 추천을 원합니다.
 
@@ -181,20 +192,23 @@ photography, soft natural lighting, cozy modern one-room apartment interior, min
 uncluttered composition, 100 percent photorealistic, contemporary 2020s interior and lifestyle,
 no text, no logos, no visible brand names, no readable text of any kind in the image."
 
-[캐릭터 통합 - 매우 중요, 별도 합성 없이 이미지 생성 시점에 같이 그림]
-4칸 전부에 하나의 일관된 카툰 캐릭터가 그 실사 배경 속에 자연스럽게 녹아들어 등장해야 합니다
+[인물 통합 - 매우 중요, 별도 합성 없이 이미지 생성 시점에 같이 그림]
+🚨 [2026-09-22] 카툰(지브리풍) 캐릭터가 실사 배경 위에 있으니 붕 떠 보이고 이질감이 든다는
+피드백으로 실사 인물로 전환함 — 절대 카툰/일러스트/애니메이션 캐릭터를 넣지 말 것.
+4칸 전부에 하나의 일관된 인물이 그 실사 배경 속에 자연스럽게 등장해야 합니다
 (배경만 있는 칸은 안 됩니다). grid_image_prompt 문장 안에 이 내용을 함께 녹여서 작성하세요:
-- 캐릭터 스타일: 스튜디오 지브리(Ghibli) 애니메이션풍의 부드러운 셀 셰이딩, 따뜻하고 자연스러운
-  색감의 페인터리 카툰이어야 합니다. 평면적인 흰색 단색 실루엣이나 두꺼운 검은 윤곽선의 심플
-  라인아트는 절대 금지 — 배경의 조명/그림자와 어울리는 부드러운 채색과 음영이 있어야 합니다.
-- 캐릭터가 반드시 전신으로 나올 필요는 없습니다. 손, 상반신, 뒷모습, 프레임 구석의 작은 인물 등
+- 인물은 100% 포토리얼리스틱한 실사 인물이어야 합니다(카툰/일러스트/애니메이션 절대 금지).
+  반드시 한국인(20~30대)으로 명시하세요(예: "a Korean woman in her 20s" / "a Korean man in his
+  20s" — sections 내용에 맞는 성별로 매 칸 동일 인물 유지). 사진의 나머지 부분(조명/화질/구도)과
+  완전히 같은 사실적 사진 톤으로, 실제 그 방에 있는 사람처럼 그려야 합니다.
+- 인물이 반드시 전신으로 나올 필요는 없습니다. 손, 상반신, 뒷모습, 프레임 구석의 모습 등
   장면에 자연스럽게 녹아드는 구도면 충분합니다.
-- 각 칸(intro/problem/solution/tips)의 감정/상황에 어울리는 캐릭터의 반응(공감, 고민, 놀람,
+- 각 칸(intro/problem/solution/tips)의 감정/상황에 어울리는 인물의 반응(공감, 고민, 놀람,
   만족 등)을 표현하되, **실제 리뷰 상품(가전제품 자체)을 직접 가리키거나 안고 있거나 조작하는
-  묘사는 절대 하지 마세요** — solution 칸에는 실제 상품 사진이 별도 카드로 삽입되므로, 그림 속
-  캐릭터가 상품을 만지거나 들고 있으면 시각적으로 충돌합니다. 대신 빈 허공을 가리키거나 감탄하는
+  묘사는 절대 하지 마세요** — solution 칸에는 실제 상품 사진이 별도 카드로 삽입되므로, 사진 속
+  인물이 상품을 만지거나 들고 있으면 시각적으로 충돌합니다. 대신 빈 허공을 가리키거나 감탄하는
   표정만으로 표현하세요 (빨래더미, 양동이 같은 일반 소품은 괜찮음).
-- 얼굴/헤어스타일/의상 등 캐릭터 디자인 자체는 4칸 내내 동일하게 유지하고, 포즈/표정/구도만
+- 얼굴/헤어스타일/옷차림 등 인물의 생김새 자체는 4칸 내내 동일하게 유지하고, 포즈/표정/구도만
   칸마다 다르게 하세요.
 
 [핵심 - 실제 상품 스펙]
@@ -324,7 +338,12 @@ def generate_blog_script(product, specs_text=""):
             f"\n\n[형태 확인 - grid_image_prompt의 solution 패널에 이 내용을 영어로 그대로 반영, "
             f"헷갈리는 유사 형태는 절대 그리지 않도록 명시]\n{shape_hint}"
         )
-    full_prompt = f"{BLOG_SYSTEM_PROMPT}\n\n[상품 정보]\n{product_info}"
+    outfit_hint = random.choice(OUTFIT_POOL)
+    full_prompt = (
+        f"{BLOG_SYSTEM_PROMPT}\n\n[상품 정보]\n{product_info}\n\n"
+        f"[이번 글의 인물 옷차림 - 반드시 이 설명을 grid_image_prompt에 영어로 그대로 반영, "
+        f"임의로 다른 색/옷으로 바꾸지 말 것]\n{outfit_hint}"
+    )
     payload = {
         "contents": [{"parts": [{"text": full_prompt}]}],
         "generationConfig": {"response_mime_type": "application/json", "temperature": 0.9, "maxOutputTokens": 8192,

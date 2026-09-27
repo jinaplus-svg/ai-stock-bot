@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-09-25T06:13:44.065219+09:00",
+  "updated_at": "2026-09-28T06:03:48.156111+09:00",
   "blogs": [
     {
       "category": "Stock",
       "domain": "brandnew678.blogspot.com",
-      "title": "증시 반등 견인한 3가지 변수: 중동 리스크 완화와 대형주 수급 집중 분석",
-      "url": "https://brandnew678.blogspot.com/2026/09/3.html",
-      "published_kst": "09/24 07:01",
-      "published_raw": "2026-09-23T15:01:50-07:00"
+      "title": "삼성전자 3%대 급등, 미 국채 5% 돌파에도 반도체로 돈 몰리는 이유",
+      "url": "https://brandnew678.blogspot.com/2026/09/3-5.html",
+      "published_kst": "09/27 07:01",
+      "published_raw": "2026-09-26T15:01:25-07:00"
     },
     {
       "category": "IT",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "제주 추석 연휴 명절 행사 총정리: 23만 명 몰리는 주요 축제 일정",
-      "url": "https://brandnew901.blogspot.com/2026/09/23.html",
-      "published_kst": "09/24 09:01",
-      "published_raw": "2026-09-23T17:01:26-07:00"
+      "title": "추석 연휴 제주 방문객 22만9천명 전망과 항공·크루즈 이동 지표",
+      "url": "https://brandnew901.blogspot.com/2026/09/229.html",
+      "published_kst": "09/27 09:01",
+      "published_raw": "2026-09-26T17:01:23-07:00"
     },
     {
       "category": "News",
@@ -44,45 +44,45 @@
     {
       "category": "자취템",
       "domain": "soloitems.blogspot.com",
-      "title": "원룸 빨래 냄새와 좁은 공간 고민 끝, 한일 UV살균 미니 의류건조기 5kg 솔직 후기",
-      "url": "https://soloitems.blogspot.com/2026/09/uv-5kg_0212991878.html",
-      "published_kst": "09/24 19:34",
-      "published_raw": "2026-09-24T03:34:32-07:00"
+      "title": "원룸 침대 옆 너저분한 짐 깔끔하게 정리하는 패브릭 서랍형 협탁 추천",
+      "url": "https://soloitems.blogspot.com/2026/09/blog-post_27.html",
+      "published_kst": "09/27 19:53",
+      "published_raw": "2026-09-27T03:53:42-07:00"
     }
   ],
   "youtube": [
     {
-      "title": "불안 속에서 억지로 외치지 마세요: 1% 부자들과 양자역학이 증명한 마음의 영점 조절법 (45분 마음챙김 다큐)",
-      "video_id": "NN3PdW8kiQQ",
-      "published_kst": "09/25 05:34",
-      "views": 0,
+      "title": "당신이 눈을 깜빡일 때마다 우주가 변하는 소름 돋는 이유",
+      "video_id": "0QqRbIVRh44",
+      "published_kst": "09/28 04:24",
+      "views": 429,
       "privacy": "public"
     },
     {
-      "title": "억지 확언은 오히려 독이다",
-      "video_id": "DMrdRkpNZNw",
-      "published_kst": "09/25 05:34",
-      "views": 269,
-      "privacy": "public"
-    },
-    {
-      "title": "투자 유튜버 99%가 '수익 인증'만 하는 소름 돋는 이유",
-      "video_id": "0rHST7UwI7A",
-      "published_kst": "09/24 08:00",
-      "views": 369,
-      "privacy": "public"
-    },
-    {
-      "title": "투자 유튜브 썸네일이 전부 성공담뿐인 진짜 이유",
-      "video_id": "4_Gu5TiH0KA",
-      "published_kst": "09/24 07:58",
+      "title": "양자역학의 관찰자 효과 — 보는 행위가 현실을 바꾼다는 것의 진짜 의미",
+      "video_id": "WGC3npU0y48",
+      "published_kst": "09/28 04:23",
       "views": 2,
       "privacy": "public"
     },
     {
-      "title": "신경과학과 양자물리학이 밝혀낸 치유의 비밀 | 몸의 긴장을 끄고 현실을 바꾸는 '느낌의 힘' 소마틱스 명상",
-      "video_id": "SIxreOT_7qI",
-      "published_kst": "09/23 05:32",
+      "title": "8주의 기적 뇌가 바뀐다",
+      "video_id": "okWh6C5Y5Ww",
+      "published_kst": "09/27 05:32",
+      "views": 1308,
+      "privacy": "public"
+    },
+    {
+      "title": "하루 8분, 뇌의 구조를 물리적으로 바꾸고 주파수를 정렬하는 양자 치유 명상",
+      "video_id": "j5whqDrVZrE",
+      "published_kst": "09/27 05:32",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "억압된 분노가 100배의 추진력이 되는 심리학의 비밀",
+      "video_id": "YvMIN8pbbUo",
+      "published_kst": "09/26 17:14",
       "views": 2,
       "privacy": "public"
     }
@@ -105,30 +105,20 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-09-25",
+      "date": "2026-09-28",
       "daily_pnl": 0.0,
-      "cumulative_pnl": 11.417929400000027,
+      "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,
       "consecutive_losses": 0,
       "positions": []
     },
     "binance_1min": {
-      "date": "2026-09-25",
+      "date": "2026-09-28",
       "daily_pnl": 0.0,
-      "cumulative_pnl": 0.13182299999999358,
-      "trade_count_today": 1,
+      "cumulative_pnl": 0.3539431999999927,
+      "trade_count_today": 0,
       "consecutive_losses": 0,
-      "positions": [
-        {
-          "symbol": "BTCUSDT",
-          "name": "BTCUSDT",
-          "qty": 0.00023,
-          "entry_price": 84063.19,
-          "atr": 95.56928571428269,
-          "stop_price": 83728.66,
-          "target_price": 84961.61
-        }
-      ]
+      "positions": []
     }
   },
   "account": {
@@ -142,14 +132,14 @@
       "date": "2026-09-23T19:31:22.957232+09:00",
       "title": "원룸 주방 공간과 감성을 모두 잡는 나비엔매직 버튼 다이얼식 전자레인지 20L",
       "permalink": "https://www.threads.com/@brandnew0789/post/DdoGa34Gml7",
-      "views": 20,
+      "views": 21,
       "likes": 0,
       "replies": 1,
       "reposts": 0,
       "quotes": 0
     },
     "total_posts": 8,
-    "total_views": 297,
+    "total_views": 300,
     "total_likes": 3
   }
 }

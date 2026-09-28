@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29T05:33:42.527763+09:00",
+  "updated_at": "2026-09-29T05:43:42.608284+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "무의식의 95%를 바꾸는 단 5초의 법칙과 양자 몰입의 비밀",
+      "video_id": "-zyBpGKmTR0",
+      "published_kst": "09/29 05:33",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
       "title": "무의식 95% 5초의 재설계",
       "video_id": "J28QFIZ8Do0",
       "published_kst": "09/29 05:31",
-      "views": 0,
+      "views": 145,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "okWh6C5Y5Ww",
       "published_kst": "09/27 05:32",
       "views": 1308,
-      "privacy": "public"
-    },
-    {
-      "title": "하루 8분, 뇌의 구조를 물리적으로 바꾸고 주파수를 정렬하는 양자 치유 명상",
-      "video_id": "j5whqDrVZrE",
-      "published_kst": "09/27 05:32",
-      "views": 5,
       "privacy": "public"
     }
   ],

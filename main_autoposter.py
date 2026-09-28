@@ -1060,6 +1060,18 @@ def sources_html(sources):
             f'가격·수수료·운영 정보는 바뀔 수 있으니 방문·가입 전 공식 채널에서 한 번 더 확인하세요.</p>')
 
 
+def blog_info_footer(blog_id):
+    """소개·문의·개인정보처리방침 링크 — 테마 상단 메뉴에 페이지 목록이 안 보여서, 심사자가 어느 글에서든
+    운영자 정보에 닿을 수 있게 글 하단에 붙인다."""
+    try:
+        pages = _get_blogger_service().pages().list(blogId=blog_id, status="LIVE").execute().get("items", [])
+    except Exception:
+        return ""
+    links = " · ".join(f'<a href="{p["url"]}">{html.escape(p["title"])}</a>'
+                       for p in sorted(pages, key=lambda p: p["title"] != "소개"))
+    return f'<p style="margin-top:36px;font-size:0.85em;color:#718096;border-top:1px solid #e2e8f0;padding-top:14px;">블로그 안내: {links}</p>' if links else ""
+
+
 def run_evergreen(category, blog_id):
     """주제 선정 → 자료 조사 → 작성 → 품질 검사 → 발행. 품질 기준을 못 넘으면 발행하지 않는다."""
     existing = get_recent_post_titles(blog_id, max_results=200)
@@ -1084,7 +1096,7 @@ def run_evergreen(category, blog_id):
         if n < MIN_BODY_CHARS or is_recent_duplicate(title, existing):
             print(f"⚠️ 품질/중복 기준 미달({n}자) — 다른 주제로")
             continue
-        body += sources_html(sources)
+        body += sources_html(sources) + blog_info_footer(blog_id)
         url = post_to_blogger(blog_id, title, body, labels=[BLOG_NICHE[category]["topic"].split("·")[0]])
         _save_topic_history(category, topic)
         send_telegram(f"📝 [{category.upper()}] 정보글 발행\n{title}\n{n:,}자 · 참고자료 {len(sources)}건\n👉 {url}")

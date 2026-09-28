@@ -416,6 +416,10 @@ INFO_CATEGORIES = {"food", "travel"}
 # NONE을 반환하면 아래 FALLBACK_PRODUCT_KEYWORDS로 대체해서 "이 글과 관련된 상품"이 아니라
 # "요즘 많이 찾는 생활템" 식으로 문구를 바꿔 자연스럽게 수익화 섹션을 항상 붙인다(사용자 요청).
 COUPANG_CATEGORIES = {"stock", "it", "food", "news", "travel"}
+# 🚨 [v7] 2026-09-28 애드센스 '가치가 별로 없는 콘텐츠' 2차 거절(901, 567) 대응 — 심사 기간에는
+# 본문과 무관한 제휴 링크('요즘 많이 찾는 생활템')가 얇은 제휴 콘텐츠 신호가 되므로 전 카테고리에서 끈다.
+# 승인 후 다시 켜려면 이 줄을 지우면 된다.
+COUPANG_CATEGORIES = set()
 FALLBACK_PRODUCT_KEYWORDS = {
     "stock": ["투자 경제 서적", "모니터암", "가계부 다이어리", "블루라이트 차단 안경"],
     "it": ["무선 마우스 키보드 세트", "모니터암", "보조배터리", "웹캠"],
@@ -866,6 +870,230 @@ def generate_longform_script_from_transcript(source):
 
 
 # ==========================================
+# 3.9 [v7] 에버그린 정보글 모드 (기본값)
+# ==========================================
+# 🚨 2026-09-28: 애드센스가 901(여행)·567(음식)을 '가치가 별로 없는 콘텐츠'로 거절. 전수 조사 결과
+# 글 대부분이 "최근 48시간 뉴스 1건을 요약한 1,000~1,500자 단신"이었고, 여행 블로그에 날씨·운세·
+# 음력 달력·정치 순방·금값·목표주가 글이 섞여 있었다. 며칠 지나면 가치가 사라지는 남의 기사 요약은
+# 애드센스가 말하는 '독창적 가치'가 없다. 이제 기본 모드는 "블로그 주제 안에서 사람들이 실제로
+# 검색하는 질문 하나를, 여러 자료를 교차 확인해 끝까지 답해주는 정보글"이다.
+BLOG_NICHE = {
+    "travel": {
+        "topic": "국내·해외 여행 준비와 여행지 정보",
+        "angles": ["지역별 코스·일정 짜기", "교통·이동 방법 비교", "숙소 고르는 법", "계절별 여행지",
+                   "여행 준비물·서류·보험", "공항·출입국 절차", "예산·환전·결제 팁", "아이/부모님 동반 여행"],
+        "reader": "여행을 계획 중인 사람",
+    },
+    "stock": {
+        "topic": "주식·ETF 투자 기초와 재테크 지식",
+        "angles": ["투자 용어·지표 해설(PER, PBR, 배당수익률 등)", "ETF 고르는 기준", "계좌·세금(ISA, 연금저축, 해외주식 양도세)",
+                   "자산배분·리밸런싱", "투자 심리와 흔한 실수", "공시·재무제표 읽는 법", "금리·환율이 주가에 미치는 영향"],
+        "reader": "투자를 시작했거나 배우는 중인 개인 투자자",
+    },
+    "food": {
+        "topic": "요리·식재료·식생활 정보",
+        "angles": ["제철 식재료 고르기·보관법", "기본 요리 레시피와 실패 원인", "조리도구 사용법", "영양·칼로리 상식",
+                   "식품 표시·유통기한 읽는 법", "명절·계절 음식"],
+        "reader": "집에서 요리하는 사람",
+    },
+    "it": {
+        "topic": "스마트폰·PC·앱·AI 활용법",
+        "angles": ["스마트폰 설정·문제 해결", "PC 성능·저장공간 관리", "보안·개인정보 보호", "AI 도구 활용법",
+                   "생산성 앱 사용법", "기기 구매 가이드"],
+        "reader": "기기를 더 잘 쓰고 싶은 일반 사용자",
+    },
+    "news": {
+        "topic": "생활 제도·정책·행정 정보",
+        "angles": ["정부 지원금·신청 방법", "세금·연말정산", "주거·전월세 제도", "교통·운전 제도", "건강보험·의료 제도",
+                   "민원·서류 발급"],
+        "reader": "생활 속 제도를 알아보는 사람",
+    },
+}
+# 며칠만 지나도 가치가 없거나 블로그 신뢰를 떨어뜨리는 소재 — 주제 후보에서 걸러낸다.
+BANNED_TOPIC_WORDS = ["날씨", "운세", "음력", "길시", "궁합", "띠별", "속보", "선거", "대통령", "전당대회",
+                      "순방", "징역", "실형", "사망", "사고", "목표주가", "오늘의"]
+TOPIC_HISTORY_FILE = "used_topics.json"
+MIN_BODY_CHARS = 2500
+
+
+def _load_topic_history():
+    try:
+        with open(TOPIC_HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _save_topic_history(category, topic):
+    hist = _load_topic_history()
+    hist.setdefault(category, []).append(topic)
+    hist[category] = hist[category][-300:]
+    with open(TOPIC_HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(hist, f, ensure_ascii=False, indent=2)
+
+
+def pick_evergreen_topic(category, existing_titles):
+    """블로그 주제 안에서, 이미 쓴 글과 겹치지 않는 '검색되는 질문' 하나를 고른다."""
+    niche = BLOG_NICHE[category]
+    kst = datetime.timezone(datetime.timedelta(hours=9))
+    month = datetime.datetime.now(kst).month
+    used = existing_titles + _load_topic_history().get(category, [])
+    angle = random.choice(niche["angles"])
+    raw = _call_gemini_text(
+        None,
+        f"블로그 주제: {niche['topic']}\n독자: {niche['reader']}\n이번 글의 방향: {angle}\n현재: {month}월(계절감 참고)\n\n"
+        "이 독자가 네이버·구글에 실제로 검색할 법한 구체적인 질문형 글감 8개를 제안해. 조건:\n"
+        "- 1년 뒤에 읽어도 쓸모 있는 정보(특정 날짜의 뉴스·행사·시세·날씨·운세 금지)\n"
+        "- 하나의 글에서 끝까지 답할 수 있을 만큼 구체적 (예: '제주 2박3일 뚜벅이 코스 짜는 법', 'ETF 총보수 비교하는 법')\n"
+        "- 아래 이미 쓴 글과 겹치지 않게\n"
+        "JSON 배열로만 답해: [\"글감1\", ...]\n\n이미 쓴 글(일부):\n" + "\n".join(f"- {t}" for t in used[-80:]),
+        temperature=0.9, max_output_tokens=1024,
+    )
+    try:
+        cands = json.loads(re.search(r"\[.*\]", raw, re.DOTALL).group(0))
+    except Exception:
+        cands = []
+    for c in cands:
+        c = str(c).strip()
+        if not c or any(w in c for w in BANNED_TOPIC_WORDS):
+            continue
+        if not is_recent_duplicate(c, used, threshold=0.3):
+            return c
+    return None
+
+
+def research_topic(topic):
+    """여러 출처를 모아 사실 근거로 쓴다(한 기사 요약이 아니라 교차 확인). (자료 텍스트, [(제목, url)])"""
+    if not TAVILY_API_KEY:
+        return "", []
+    try:
+        res = requests.post("https://api.tavily.com/search", json={
+            "api_key": TAVILY_API_KEY, "query": topic, "search_depth": "advanced",
+            "include_raw_content": True, "max_results": 6}, timeout=30)
+        res.raise_for_status()
+        chunks, sources = [], []
+        for r in res.json().get("results", []):
+            body = (r.get("raw_content") or r.get("content") or "").strip()
+            if len(body) < 300:
+                continue
+            chunks.append(f"[자료 {len(chunks) + 1}] {r.get('title', '')}\n{body[:2500]}")
+            sources.append((r.get("title", "참고 자료"), r.get("url", "")))
+            if len(chunks) >= 4:
+                break
+        return "\n\n".join(chunks), sources
+    except Exception as e:
+        print(f"⚠️ 자료 조사 실패: {e}")
+        return "", []
+
+
+def write_evergreen_post(category, topic, research, base64_images):
+    niche = BLOG_NICHE[category]
+    blockquote_style = 'style="border-left: 5px solid #2b6cb0; padding: 16px 22px; margin: 30px 0; background-color: #f5f9ff; color: #1a202c; font-weight: 700; line-height: 1.7; border-radius: 0 10px 10px 0;"'
+    table_style = 'style="width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 0.95em;"'
+    cell = 'style="padding: 12px 14px; border: 1px solid #e2e8f0; text-align: left;"'
+    head = 'style="padding: 12px 14px; border: 1px solid #e2e8f0; background:#edf2f7; text-align:left;"'
+    disclaimer = ("<p style=\"font-size:0.85em;color:#718096;\">※ 이 글은 일반적인 정보 제공을 위한 것이며 투자 권유가 아닙니다. "
+                  "투자 판단과 책임은 본인에게 있습니다.</p>") if category == "stock" else ""
+
+    system_prompt = f"""
+    당신은 '{niche['topic']}' 분야 블로그의 편집자입니다. 독자는 {niche['reader']}입니다.
+    오늘 글의 질문: "{topic}"
+    목표: 이 질문을 검색한 사람이 다른 글을 더 찾아볼 필요가 없을 만큼, 구체적이고 정리된 답을 주는 것.
+
+    🚨 [반드시 지킬 것]
+    1. 제공된 [조사 자료]의 사실만 근거로 쓰세요. 자료에 없는 가격·수치·날짜·규정은 만들지 말고,
+       필요하면 "정확한 금액은 공식 사이트에서 확인" 식으로 확인 경로를 안내하세요.
+    2. 직접 가보거나 써본 것처럼 쓰지 마세요("가보니", "먹어보니" 금지). 정리·비교·해설자의 시점으로 쓰세요.
+    3. 자료 문장을 그대로 옮기지 말고, 독자 입장에서 다시 구성하세요(단계별 방법, 비교 기준, 선택 팁, 흔한 실수).
+    4. 본문(태그 제외) 3,000자 이상. 같은 말 반복이나 어디에나 붙는 일반론으로 분량을 채우지 마세요.
+    5. 마크다운 기호(```, **, #) 금지. 순수 HTML만.
+
+    [글 구조 — 순서 유지]
+    <h2>검색어가 앞에 오는 명확한 제목 (예: 제주 2박3일 뚜벅이 코스, 버스로 도는 법)</h2>
+    <p>이 글이 누구에게, 무엇을 해결해주는지 2~3문장</p>
+    <blockquote {blockquote_style}>핵심 답 3줄 요약 (바쁜 독자용)</blockquote>
+    [IMAGE_1]
+    <h2>소제목 1</h2> 본문 (필요하면 <h3>로 세분)
+    <h2>소제목 2</h2> 본문
+    <table {table_style}><thead><tr><th {head}>비교 항목</th><th {head}>내용</th></tr></thead><tbody><tr><td {cell}>..</td><td {cell}>..</td></tr></tbody></table>
+      (비교·정리할 데이터가 자료에 있을 때만. 없으면 표 생략)
+    [IMAGE_2]
+    <h2>소제목 3 (선택 팁 / 흔한 실수 / 체크리스트 중 글에 맞는 것)</h2> <ul><li>..</li></ul>
+    <h2>자주 묻는 질문</h2>
+    <h3>Q. 질문</h3><p>A. 2~4문장 답</p> (3~4개)
+    <h2>정리</h2> <p>결론 2~3문장</p>
+    """
+    html_content = _call_gemini_text(system_prompt, f"[조사 자료]\n{research}", temperature=0.7,
+                                     max_output_tokens=8192)
+    html_content = re.sub(r'^```[a-zA-Z]*\n', '', html_content)
+    html_content = re.sub(r'```$', '', html_content).strip().replace('**', '')
+
+    title = topic
+    if h2 := re.search(r'<h2>(.*?)</h2>', html_content, re.DOTALL):
+        title = re.sub(r'<[^>]+>', '', h2.group(1)).strip()
+        html_content = html_content.replace(h2.group(0), '', 1).strip()
+
+    img_tags = [f'<div style="text-align:center; margin: 36px 0;"><img src="{b64}" alt="{html.escape(title)}" '
+                f'style="max-width:100%; border-radius:12px;"><p style="font-size:0.8em;color:#a0aec0;">이해를 돕기 위한 이미지</p></div>'
+                for b64 in base64_images[:2]]
+    for i in range(2):
+        marker = f"[IMAGE_{i + 1}]"
+        html_content = html_content.replace(marker, img_tags[i] if i < len(img_tags) else "")
+    html_content = re.sub(r'\[IMAGE_\d+\]', '', html_content)
+    html_content += build_faq_jsonld(html_content) + disclaimer
+    return title, html_content
+
+
+def body_chars(html_content):
+    return len(re.sub(r"\s+", " ", re.sub(r"<script.*?</script>|<[^>]+>", " ", html_content, flags=re.DOTALL)).strip())
+
+
+def sources_html(sources):
+    if not sources:
+        return ""
+    items = "".join(f'<li><a href="{html.escape(u)}" target="_blank" rel="nofollow noopener">{html.escape(t)}</a></li>'
+                    for t, u in sources if u)
+    kst = datetime.timezone(datetime.timedelta(hours=9))
+    stamp = datetime.datetime.now(kst).strftime("%Y년 %m월 %d일")
+    return (f'<h3 style="margin-top:40px;">참고 자료</h3><ul style="font-size:0.9em;">{items}</ul>'
+            f'<p style="font-size:0.85em;color:#718096;">※ {stamp} 기준 공개 자료를 정리한 글입니다. '
+            f'가격·수수료·운영 정보는 바뀔 수 있으니 방문·가입 전 공식 채널에서 한 번 더 확인하세요.</p>')
+
+
+def run_evergreen(category, blog_id):
+    """주제 선정 → 자료 조사 → 작성 → 품질 검사 → 발행. 품질 기준을 못 넘으면 발행하지 않는다."""
+    existing = get_recent_post_titles(blog_id, max_results=200)
+    for attempt in range(3):
+        topic = pick_evergreen_topic(category, existing)
+        if not topic:
+            continue
+        research, sources = research_topic(topic)
+        if len(research) < 1500:
+            print(f"⚠️ 자료 부족 — 다른 주제로: {topic}")
+            continue
+        print(f"✅ 주제: {topic} (자료 {len(sources)}건)")
+        photo_prompt = create_photo_prompt(category, topic, research[:1500])
+        images = image_paths_to_b64(generate_and_split_images_xai(
+            photo_prompt, use_character=False))
+        title, body = write_evergreen_post(category, topic, research, images)
+        n = body_chars(body)
+        if n < MIN_BODY_CHARS or body.count("<h2") < 3:
+            print(f"⚠️ 품질 미달({n}자, h2 {body.count('<h2')}개) — 재작성")
+            title, body = write_evergreen_post(category, topic, research, images)
+            n = body_chars(body)
+        if n < MIN_BODY_CHARS or is_recent_duplicate(title, existing):
+            print(f"⚠️ 품질/중복 기준 미달({n}자) — 다른 주제로")
+            continue
+        body += sources_html(sources)
+        url = post_to_blogger(blog_id, title, body, labels=[BLOG_NICHE[category]["topic"].split("·")[0]])
+        _save_topic_history(category, topic)
+        send_telegram(f"📝 [{category.upper()}] 정보글 발행\n{title}\n{n:,}자 · 참고자료 {len(sources)}건\n👉 {url}")
+        return True
+    send_telegram(f"⏭️ [{category.upper()}] 품질 기준(본문 {MIN_BODY_CHARS}자·자료 확보)을 넘는 글을 못 만들어 오늘은 건너뜀")
+    return False
+
+
+# ==========================================
 # 4. Blogger 발행 + 최근 포스트 조회(중복체크용)
 # ==========================================
 def _get_blogger_service():
@@ -887,9 +1115,12 @@ def get_recent_post_titles(blog_id, max_results=5):
         return []
 
 
-def post_to_blogger(blog_id, title, content):
+def post_to_blogger(blog_id, title, content, labels=None):
     service = _get_blogger_service()
-    request = service.posts().insert(blogId=blog_id, body={"title": title, "content": content}, isDraft=False)
+    body = {"title": title, "content": content}
+    if labels:
+        body["labels"] = labels
+    request = service.posts().insert(blogId=blog_id, body=body, isDraft=False)
     return request.execute().get('url')
 
 if __name__ == "__main__":
@@ -898,6 +1129,8 @@ if __name__ == "__main__":
     parser.add_argument("--reference_url", default="")
     parser.add_argument("--topic", default="")
     parser.add_argument("--with_longform", action="store_true", help="같은 소재로 롱폼 대본도 생성해서 텔레그램으로 보냄")
+    parser.add_argument("--mode", choices=["evergreen", "news"], default="evergreen",
+                        help="evergreen(기본, v7): 주제 안의 검색 질문을 여러 자료로 답하는 정보글 / news: 예전 뉴스 요약 방식")
     args = parser.parse_args()
 
     category = args.category
@@ -908,6 +1141,11 @@ if __name__ == "__main__":
 
     blog_id = BLOG_REGISTRY.get(category)
     if not blog_id: exit(1)
+
+    # 🌟 [v7] 기본은 에버그린 정보글. 롱폼 대본(--with_longform)은 뉴스 모드에서만 쓰던 기능이라 건너뛴다.
+    if args.mode == "evergreen" and not args.reference_url:
+        run_evergreen(category, blog_id)
+        exit(0)
 
     recent_titles = get_recent_post_titles(blog_id, max_results=5)
     # 🚨 [v6] 2026-09-19: AdSense가 brandnew901을 '가치 없는 콘텐츠'로 거절. 원인 조사 결과

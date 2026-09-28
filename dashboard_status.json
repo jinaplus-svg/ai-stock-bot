@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-28T23:53:42.302313+09:00",
+  "updated_at": "2026-09-29T00:03:42.779833+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -113,7 +113,7 @@
       "positions": []
     },
     "binance_1min": {
-      "date": "2026-09-28",
+      "date": "2026-09-29",
       "daily_pnl": 0.0,
       "cumulative_pnl": 0.3539431999999927,
       "trade_count_today": 0,

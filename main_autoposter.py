@@ -990,7 +990,8 @@ def research_topic(topic):
 
 def write_evergreen_post(category, topic, research):
     niche = BLOG_NICHE[category]
-    blockquote_style = 'style="border-left: 5px solid #2b6cb0; padding: 16px 22px; margin: 30px 0; background-color: #f5f9ff; color: #1a202c; font-weight: 700; line-height: 1.7; border-radius: 0 10px 10px 0;"'
+    # 테마 기본 인용구 스타일(가운데 정렬·큰 이탤릭)이 요약 박스를 읽기 어렵게 만들어서 명시적으로 덮어쓴다
+    blockquote_style = 'style="border-left: 5px solid #2b6cb0; padding: 16px 22px; margin: 30px 0; background-color: #f5f9ff; color: #1a202c; font-weight: 600; font-style: normal; font-size: 1em; text-align: left; line-height: 1.75; border-radius: 0 10px 10px 0;"'
     table_style = 'style="width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 0.95em;"'
     cell = 'style="padding: 12px 14px; border: 1px solid #e2e8f0; text-align: left;"'
     head = 'style="padding: 12px 14px; border: 1px solid #e2e8f0; background:#edf2f7; text-align:left;"'

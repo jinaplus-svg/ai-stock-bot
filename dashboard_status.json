@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29T05:23:42.494685+09:00",
+  "updated_at": "2026-09-29T05:33:42.527763+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "무의식 95% 5초의 재설계",
+      "video_id": "J28QFIZ8Do0",
+      "published_kst": "09/29 05:31",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "당신이 눈을 깜빡일 때마다 우주가 변하는 소름 돋는 이유",
       "video_id": "0QqRbIVRh44",
       "published_kst": "09/28 04:24",
@@ -77,13 +84,6 @@
       "video_id": "j5whqDrVZrE",
       "published_kst": "09/27 05:32",
       "views": 5,
-      "privacy": "public"
-    },
-    {
-      "title": "억압된 분노가 100배의 추진력이 되는 심리학의 비밀",
-      "video_id": "YvMIN8pbbUo",
-      "published_kst": "09/26 17:14",
-      "views": 2,
       "privacy": "public"
     }
   ],

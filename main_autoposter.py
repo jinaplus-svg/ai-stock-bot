@@ -1064,6 +1064,7 @@ def attach_images(category, title, body):
     except Exception as e:
         print(f"⚠️ 본문 사진 생성 실패: {e}")
 
+    chart_label = None
     try:
         plain = re.sub(r"\s+", " ", re.sub(r"<script.*?</script>|<[^>]+>", " ", body, flags=re.DOTALL))
         spec = bi.extract_chart_spec(_call_gemini_text, title, plain)
@@ -1072,6 +1073,7 @@ def attach_images(category, title, body):
                          f"{spec.get('title', '')}: " + ", ".join(f"{l} {v:g}{spec.get('unit', '')}"
                                                                for l, v in zip(spec["labels"], spec["values"])),
                          None))
+            chart_label = spec["labels"][0]
             print(f"📊 도표 생성: {spec.get('title')} ({spec['type']})")
     except Exception as e:
         print(f"⚠️ 도표 생성 실패: {e}")
@@ -1095,11 +1097,16 @@ def attach_images(category, title, body):
         h2s = [m.start() for m in re.finditer(r"<h2", body)]
         at = h2s[1] if len(h2s) > 1 else len(body)
         body = body[:at] + mid_html + body[at:]
-    if chart_html:  # 첫 번째 표 바로 뒤(숫자가 모인 곳), 표가 없으면 '자주 묻는 질문' 앞
-        t_end = body.find("</table>")
-        if t_end != -1:
-            at = t_end + len("</table>")
-        else:
+    if chart_html:  # 도표 숫자가 처음 나온 목록/표/문단 바로 뒤, 못 찾으면 '자주 묻는 질문' 앞
+        at = -1
+        first = body.find(chart_label) if chart_label else -1
+        if first != -1:
+            ends = [(body.find(t, first), t) for t in ("</ul>", "</table>", "</p>")]
+            ends = [(i, t) for i, t in ends if i != -1]
+            if ends:
+                i, t = min(ends)
+                at = i + len(t)
+        if at == -1:
             faq = re.search(r"<h2[^>]*>[^<]*자주 묻는", body)
             at = faq.start() if faq else len(body)
         body = body[:at] + chart_html + body[at:]

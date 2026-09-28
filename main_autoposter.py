@@ -912,6 +912,7 @@ BLOG_NICHE = {
 # 며칠만 지나도 가치가 없거나 블로그 신뢰를 떨어뜨리는 소재 — 주제 후보에서 걸러낸다.
 BANNED_TOPIC_WORDS = ["날씨", "운세", "음력", "길시", "궁합", "띠별", "속보", "선거", "대통령", "전당대회",
                       "순방", "징역", "실형", "사망", "사고", "목표주가", "오늘의"]
+BLOG_LABEL = {"travel": "여행", "stock": "주식·투자", "food": "음식·요리", "it": "IT·디지털", "news": "생활정보"}
 TOPIC_HISTORY_FILE = "used_topics.json"
 MIN_BODY_CHARS = 2500
 
@@ -1097,7 +1098,7 @@ def run_evergreen(category, blog_id):
             print(f"⚠️ 품질/중복 기준 미달({n}자) — 다른 주제로")
             continue
         body += sources_html(sources) + blog_info_footer(blog_id)
-        url = post_to_blogger(blog_id, title, body, labels=[BLOG_NICHE[category]["topic"].split("·")[0]])
+        url = post_to_blogger(blog_id, title, body, labels=[BLOG_LABEL.get(category, category)])
         _save_topic_history(category, topic)
         send_telegram(f"📝 [{category.upper()}] 정보글 발행\n{title}\n{n:,}자 · 참고자료 {len(sources)}건\n👉 {url}")
         return True

@@ -1065,8 +1065,8 @@ def attach_images(category, title, body):
         print(f"⚠️ 본문 사진 생성 실패: {e}")
 
     chart_label = None
+    plain = re.sub(r"\s+", " ", re.sub(r"<script.*?</script>|<[^>]+>", " ", body, flags=re.DOTALL))
     try:
-        plain = re.sub(r"\s+", " ", re.sub(r"<script.*?</script>|<[^>]+>", " ", body, flags=re.DOTALL))
         spec = bi.extract_chart_spec(_call_gemini_text, title, plain)
         if spec:
             made.append((bi.render_chart(spec, category, "_chart.png"), "chart",
@@ -1078,9 +1078,22 @@ def attach_images(category, title, body):
     except Exception as e:
         print(f"⚠️ 도표 생성 실패: {e}")
 
+    route_label = None
+    if category == "travel":
+        try:
+            rspec = bi.extract_route_spec(_call_gemini_text, title, plain)
+            if rspec:
+                alt = (rspec.get("title") or "코스") + ": " + " / ".join(
+                    f"{d.get('label', '')} " + " → ".join(d["stops"]) for d in rspec["days"])
+                made.append((bi.render_route(rspec, category, "_route.png"), "route", alt, None))
+                route_label = rspec["days"][0]["stops"][0]
+                print(f"🗺️ 동선도 생성: {alt[:80]}")
+        except Exception as e:
+            print(f"⚠️ 동선도 생성 실패: {e}")
+
     urls = bi.publish_files([m[0] for m in made], category) if made else None
     srcs = urls or [bi.to_data_uri(m[0]) for m in made]
-    top_html, mid_html, chart_html = "", "", ""
+    top_html, mid_html, chart_html, route_html = "", "", "", ""
     for (path, where, alt, caption), src in zip(made, srcs):
         cap = f'<p style="font-size:0.8em;color:#a0aec0;margin-top:6px;">{caption}</p>' if caption else ""
         tag = (f'<div style="text-align:center;margin:28px 0;"><img src="{src}" alt="{html.escape(alt)}" '
@@ -1089,6 +1102,8 @@ def attach_images(category, title, body):
             top_html = tag
         elif where == "chart":
             chart_html = tag
+        elif where == "route":
+            route_html = tag
         else:
             mid_html = tag
     body = body.replace("[IMAGE_1]", "").replace("[IMAGE_2]", mid_html)
@@ -1097,11 +1112,12 @@ def attach_images(category, title, body):
         h2s = [m.start() for m in re.finditer(r"<h2", body)]
         at = h2s[1] if len(h2s) > 1 else len(body)
         body = body[:at] + mid_html + body[at:]
-    if chart_html:  # 도표 숫자가 처음 나온 목록/표/문단 바로 뒤, 못 찾으면 '자주 묻는 질문' 앞
+    def _insert_after_mention(body, tag, label):
+        """label이 처음 나온 목록/표/문단 바로 뒤에 넣고, 못 찾으면 '자주 묻는 질문' 앞에 넣는다."""
         at = -1
-        first = body.find(chart_label) if chart_label else -1
+        first = body.find(label) if label else -1
         if first != -1:
-            ends = [(body.find(t, first), t) for t in ("</ul>", "</table>", "</p>")]
+            ends = [(body.find(t, first), t) for t in ("</ul>", "</ol>", "</table>", "</p>")]
             ends = [(i, t) for i, t in ends if i != -1]
             if ends:
                 i, t = min(ends)
@@ -1109,7 +1125,12 @@ def attach_images(category, title, body):
         if at == -1:
             faq = re.search(r"<h2[^>]*>[^<]*자주 묻는", body)
             at = faq.start() if faq else len(body)
-        body = body[:at] + chart_html + body[at:]
+        return body[:at] + tag + body[at:]
+
+    if route_html:
+        body = _insert_after_mention(body, route_html, route_label)
+    if chart_html:
+        body = _insert_after_mention(body, chart_html, chart_label)
     return top_html + body
 
 

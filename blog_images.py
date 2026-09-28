@@ -259,7 +259,8 @@ def render_chart(spec, category, out_path):
                (0.53, 0.81, 0.62), (0.80, 0.60, 0.85)]
     labels, values, unit = spec["labels"], spec["values"], spec.get("unit", "")
 
-    fig, ax = plt.subplots(figsize=(10, 5.6), dpi=120)
+    height = 5.6 if spec["type"] == "pie" else 1.6 + 0.75 * len(values)  # 막대 수에 맞춰 높이 조절
+    fig, ax = plt.subplots(figsize=(10, height), dpi=120)
     fig.patch.set_facecolor("white")
     if spec["type"] == "pie":
         wedges, _t, autot = ax.pie(values, colors=palette[:len(values)], startangle=90, counterclock=False,
@@ -286,4 +287,89 @@ def render_chart(spec, category, out_path):
     fig.tight_layout()
     fig.savefig(out_path, format="png", bbox_inches="tight", facecolor="white")
     plt.close(fig)
+    return out_path
+
+
+# ------------------------------------------------------------------
+# [v10] 여행 코스 동선도 — 본문에 순서대로 적힌 장소만으로 그린다(없으면 만들지 않음)
+# ------------------------------------------------------------------
+def extract_route_spec(gemini_text, title, body_text):
+    raw = gemini_text(
+        None,
+        f"글 제목: {title}\n본문:\n{body_text[:6000]}\n\n"
+        "이 본문이 '방문 순서가 있는 여행 코스/일정'을 소개하고 있으면, 본문에 적힌 장소명을 순서대로 뽑아줘.\n"
+        "- 일자(또는 코스)별 최대 4개 구간, 구간마다 장소 2~5개\n"
+        "- 장소명은 본문 표기 그대로(새로 만들거나 바꾸지 말 것), 12자 이내로 짧게\n"
+        "- 이동수단·소요시간이 본문에 있으면 move에 짧게(예: '버스 20분'), 없으면 빈 문자열\n"
+        "- 코스가 아닌 글(보험·준비물·제도 설명 등)이면 days를 빈 배열로\n"
+        'JSON으로만: {"title":"도표 제목(20자 이내)","days":[{"label":"1일차","stops":["장소"],"move":""}]}',
+        temperature=0.1, max_output_tokens=1000,
+    )
+    try:
+        spec = json.loads(re.search(r"\{.*\}", raw, re.DOTALL).group(0))
+    except Exception:
+        return None
+    days = [d for d in (spec.get("days") or []) if len(d.get("stops") or []) >= 2][:4]
+    if not days:
+        return None
+    flat = body_text.replace(" ", "")
+    for d in days:
+        d["stops"] = [str(s).strip() for s in d["stops"]][:5]
+        for s in d["stops"]:
+            if s.replace(" ", "") not in flat:  # 🚨 본문에 없는 장소는 그리지 않는다
+                print(f"⚠️ 동선도 장소 '{s}'가 본문에 없어 동선도를 만들지 않음")
+                return None
+    spec["days"] = days
+    return spec
+
+
+def render_route(spec, category, out_path):
+    top, bottom, accent = THEME.get(category, THEME["travel"])
+    days = spec["days"]
+    row_h, head_h = 150, 120
+    h = head_h + row_h * len(days) + 50
+    img = Image.new("RGB", (W, h), (248, 250, 252))
+    d = ImageDraw.Draw(img)
+    pad = 56
+    d.text((pad, 42), spec.get("title") or "코스 한눈에 보기", font=_font("bold", 40), fill=(15, 23, 42))
+    d.line((pad, 104, W - pad, 104), fill=(226, 232, 240), width=2)
+
+    f_label, f_stop, f_move = _font("bold", 26), _font("regular", 26), _font("regular", 20)
+    label_w = 130
+    for r, day in enumerate(days):
+        y = head_h + r * row_h + 20
+        cy = y + 44
+        d.rounded_rectangle((pad, cy - 26, pad + label_w - 16, cy + 26), radius=26, fill=top)
+        lb = str(day.get("label", f"{r + 1}구간"))[:6]
+        d.text((pad + (label_w - 16 - d.textlength(lb, font=f_label)) / 2, cy - 16), lb, font=f_label, fill=(255, 255, 255))
+
+        stops = day["stops"]
+        area_x0, area_x1 = pad + label_w + 10, W - pad
+        n = len(stops)
+        gap = 44
+        box_w = (area_x1 - area_x0 - gap * (n - 1)) / n
+        for i, s in enumerate(stops):
+            x0 = area_x0 + i * (box_w + gap)
+            d.rounded_rectangle((x0, cy - 38, x0 + box_w, cy + 38), radius=14, fill=(255, 255, 255),
+                                outline=top, width=3)
+            fs = f_stop  # 긴 장소명은 두 줄로(필요하면 글자 크기를 줄여서) 모두 보이게
+            lines = _wrap(d, s, fs, box_w - 16, 2)
+            if lines[-1].endswith("…"):
+                fs = _font("regular", 21)
+                lines = _wrap(d, s, fs, box_w - 12, 2)
+            lh = fs.size + 4
+            ty = cy - (lh * len(lines)) / 2 - 2
+            for ln in lines:
+                d.text((x0 + (box_w - d.textlength(ln, font=fs)) / 2, ty), ln, font=fs, fill=(30, 41, 59))
+                ty += lh
+            if i < n - 1:  # 화살표
+                ax0, ax1 = x0 + box_w + 8, x0 + box_w + gap - 8
+                d.line((ax0, cy, ax1, cy), fill=accent if sum(accent) < 600 else top, width=4)
+                d.polygon([(ax1, cy), (ax1 - 10, cy - 8), (ax1 - 10, cy + 8)], fill=top)
+        mv = str(day.get("move") or "").strip()
+        if mv:
+            d.text((area_x0, cy + 46), f"이동: {mv[:40]}", font=f_move, fill=(100, 116, 139))
+    note = "본문에 소개된 순서대로 정리"
+    d.text((W - pad - d.textlength(note, font=f_move), h - 40), note, font=f_move, fill=(148, 163, 184))
+    img.save(out_path, "PNG", optimize=True)
     return out_path

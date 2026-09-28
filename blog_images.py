@@ -198,3 +198,92 @@ def publish_files(paths, category):
 def to_data_uri(path):
     mime = "image/png" if path.endswith(".png") else "image/jpeg"
     return f"data:{mime};base64,{base64.b64encode(open(path, 'rb').read()).decode()}"
+
+
+# ------------------------------------------------------------------
+# [v9] 데이터 도표 — 글 본문에 실제로 나온 숫자만으로 그린다(없으면 만들지 않음)
+# ------------------------------------------------------------------
+def extract_chart_spec(gemini_text, title, body_text):
+    """본문에 나온 수치 중 비교·비중을 한눈에 보여줄 만한 것 하나를 도표 사양(JSON)으로 뽑는다."""
+    raw = gemini_text(
+        None,
+        f"글 제목: {title}\n본문:\n{body_text[:6000]}\n\n"
+        "이 본문에 '직접 적힌 숫자'만 사용해서, 독자가 한눈에 이해하기 좋은 도표 1개를 설계해줘.\n"
+        "- 비중(합이 100%인 구성)이면 pie, 항목 간 크기 비교면 bar\n"
+        "- 항목 2~6개, 값은 본문에 적힌 숫자 그대로(계산·추정·반올림 금지)\n"
+        "- 본문에 그런 숫자 묶음이 없으면 type을 none으로\n"
+        'JSON으로만: {"type":"pie|bar|none","title":"도표 제목(20자 이내)","labels":["..."],"values":[숫자],"unit":"%|원|만원|시간|배 등"}',
+        temperature=0.1, max_output_tokens=800,
+    )
+    try:
+        spec = json.loads(re.search(r"\{.*\}", raw, re.DOTALL).group(0))
+    except Exception:
+        return None
+    if spec.get("type") not in ("pie", "bar"):
+        return None
+    labels, values = spec.get("labels") or [], spec.get("values") or []
+    if not (2 <= len(labels) == len(values) <= 6):
+        return None
+    try:
+        values = [float(v) for v in values]
+    except Exception:
+        return None
+    # 🚨 지어낸 숫자 방지: 모든 값이 본문에 그대로 적혀 있어야 한다
+    flat = body_text.replace(",", "")
+    for v in values:
+        s = str(int(v)) if v == int(v) else str(v)
+        if s not in flat:
+            print(f"⚠️ 도표 값 {s}이(가) 본문에 없어 도표를 만들지 않음")
+            return None
+    if spec["type"] == "pie" and not (95 <= sum(values) <= 105):
+        spec["type"] = "bar"
+    spec["values"] = values
+    return spec
+
+
+def render_chart(spec, category, out_path):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+
+    for p in _FONT_CANDIDATES["regular"]:
+        if os.path.exists(p):
+            font_manager.fontManager.addfont(p)
+            plt.rcParams["font.family"] = font_manager.FontProperties(fname=p).get_name()
+            break
+    plt.rcParams["axes.unicode_minus"] = False
+    top, bottom, accent = THEME.get(category, THEME["news"])
+    base = tuple(c / 255 for c in top)
+    palette = [base, tuple(c / 255 for c in accent), (0.58, 0.64, 0.72), (0.99, 0.73, 0.45),
+               (0.53, 0.81, 0.62), (0.80, 0.60, 0.85)]
+    labels, values, unit = spec["labels"], spec["values"], spec.get("unit", "")
+
+    fig, ax = plt.subplots(figsize=(10, 5.6), dpi=120)
+    fig.patch.set_facecolor("white")
+    if spec["type"] == "pie":
+        wedges, _t, autot = ax.pie(values, colors=palette[:len(values)], startangle=90, counterclock=False,
+                                   autopct=lambda p: f"{p:.0f}%", pctdistance=0.72,
+                                   wedgeprops={"width": 0.48, "edgecolor": "white", "linewidth": 2})
+        for t in autot:
+            t.set_color("white"); t.set_fontsize(15); t.set_fontweight("bold")
+        ax.legend(wedges, [f"{l}  {v:g}{unit}" for l, v in zip(labels, values)], loc="center left",
+                  bbox_to_anchor=(1.0, 0.5), frameon=False, fontsize=14)
+        ax.set_aspect("equal")
+    else:
+        y = range(len(labels))[::-1]
+        bars = ax.barh(list(y), values, color=[palette[0]] * len(values), height=0.55)
+        ax.set_yticks(list(y)); ax.set_yticklabels(labels, fontsize=14)
+        for b, v in zip(bars, values):
+            ax.text(b.get_width(), b.get_y() + b.get_height() / 2, f"  {v:g}{unit}", va="center", fontsize=14,
+                    color="#1e293b", fontweight="bold")
+        ax.set_xlim(0, max(values) * 1.25)
+        for s in ("top", "right", "bottom"):
+            ax.spines[s].set_visible(False)
+        ax.set_xticks([])
+    ax.set_title(spec.get("title", ""), fontsize=19, fontweight="bold", color="#0f172a", loc="left", pad=16)
+    fig.text(0.99, 0.02, "본문 수치로 그린 도표", ha="right", fontsize=10, color="#94a3b8")
+    fig.tight_layout()
+    fig.savefig(out_path, format="png", bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    return out_path

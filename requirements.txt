@@ -13,3 +13,4 @@ numpy
 streamlit
 plotly
 pandas
+matplotlib

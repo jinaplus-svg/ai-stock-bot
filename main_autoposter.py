@@ -1064,15 +1064,29 @@ def attach_images(category, title, body):
     except Exception as e:
         print(f"⚠️ 본문 사진 생성 실패: {e}")
 
+    try:
+        plain = re.sub(r"\s+", " ", re.sub(r"<script.*?</script>|<[^>]+>", " ", body, flags=re.DOTALL))
+        spec = bi.extract_chart_spec(_call_gemini_text, title, plain)
+        if spec:
+            made.append((bi.render_chart(spec, category, "_chart.png"), "chart",
+                         f"{spec.get('title', '')}: " + ", ".join(f"{l} {v:g}{spec.get('unit', '')}"
+                                                               for l, v in zip(spec["labels"], spec["values"])),
+                         None))
+            print(f"📊 도표 생성: {spec.get('title')} ({spec['type']})")
+    except Exception as e:
+        print(f"⚠️ 도표 생성 실패: {e}")
+
     urls = bi.publish_files([m[0] for m in made], category) if made else None
     srcs = urls or [bi.to_data_uri(m[0]) for m in made]
-    top_html, mid_html = "", ""
+    top_html, mid_html, chart_html = "", "", ""
     for (path, where, alt, caption), src in zip(made, srcs):
         cap = f'<p style="font-size:0.8em;color:#a0aec0;margin-top:6px;">{caption}</p>' if caption else ""
         tag = (f'<div style="text-align:center;margin:28px 0;"><img src="{src}" alt="{html.escape(alt)}" '
                f'loading="lazy" style="max-width:100%;height:auto;border-radius:12px;">{cap}</div>')
         if where == "top":
             top_html = tag
+        elif where == "chart":
+            chart_html = tag
         else:
             mid_html = tag
     body = body.replace("[IMAGE_1]", "").replace("[IMAGE_2]", mid_html)
@@ -1081,6 +1095,14 @@ def attach_images(category, title, body):
         h2s = [m.start() for m in re.finditer(r"<h2", body)]
         at = h2s[1] if len(h2s) > 1 else len(body)
         body = body[:at] + mid_html + body[at:]
+    if chart_html:  # 첫 번째 표 바로 뒤(숫자가 모인 곳), 표가 없으면 '자주 묻는 질문' 앞
+        t_end = body.find("</table>")
+        if t_end != -1:
+            at = t_end + len("</table>")
+        else:
+            faq = re.search(r"<h2[^>]*>[^<]*자주 묻는", body)
+            at = faq.start() if faq else len(body)
+        body = body[:at] + chart_html + body[at:]
     return top_html + body
 
 

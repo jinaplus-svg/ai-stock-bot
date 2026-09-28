@@ -74,7 +74,8 @@ def _call_gemini_text(system_prompt, user_content, temperature=0.8, max_output_t
             res = requests.post(url, json=payload, timeout=120)
             res.raise_for_status()
             data = res.json()
-            text = data["candidates"][0]["content"]["parts"][0]["text"]
+            # 응답이 여러 part로 쪼개져 올 때가 있어(예: "```json" 한 줄만 첫 part) 전부 이어붙인다
+            text = "".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"])
             return text.strip()
         except Exception as e:
             last_error = f"[{model}] {e}"
@@ -987,7 +988,7 @@ def research_topic(topic):
         return "", []
 
 
-def write_evergreen_post(category, topic, research, base64_images):
+def write_evergreen_post(category, topic, research):
     niche = BLOG_NICHE[category]
     blockquote_style = 'style="border-left: 5px solid #2b6cb0; padding: 16px 22px; margin: 30px 0; background-color: #f5f9ff; color: #1a202c; font-weight: 700; line-height: 1.7; border-radius: 0 10px 10px 0;"'
     table_style = 'style="width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 0.95em;"'
@@ -1034,15 +1035,48 @@ def write_evergreen_post(category, topic, research, base64_images):
         title = re.sub(r'<[^>]+>', '', h2.group(1)).strip()
         html_content = html_content.replace(h2.group(0), '', 1).strip()
 
-    img_tags = [f'<div style="text-align:center; margin: 36px 0;"><img src="{b64}" alt="{html.escape(title)}" '
-                f'style="max-width:100%; border-radius:12px;"><p style="font-size:0.8em;color:#a0aec0;">이해를 돕기 위한 이미지</p></div>'
-                for b64 in base64_images[:2]]
-    for i in range(2):
-        marker = f"[IMAGE_{i + 1}]"
-        html_content = html_content.replace(marker, img_tags[i] if i < len(img_tags) else "")
-    html_content = re.sub(r'\[IMAGE_\d+\]', '', html_content)
+    # 이미지 마커는 attach_images()가 채운다([IMAGE_1]은 비우고 대표 카드는 맨 위, 사진은 [IMAGE_2])
     html_content += build_faq_jsonld(html_content) + disclaimer
     return title, html_content
+
+
+def attach_images(category, title, body):
+    """[v8] 대표 정보 카드(맨 위) + 주제 사진 1장([IMAGE_2] 자리). 이미지 실패는 발행을 막지 않는다."""
+    import blog_images as bi
+    made = []  # (경로, 위치, alt, 캡션)
+    try:
+        summary = re.search(r"<blockquote[^>]*>(.*?)</blockquote>", body, re.DOTALL)
+        summary_text = re.sub(r"<[^>]+>", " ", summary.group(1)) if summary else title
+        points = bi.card_points(_call_gemini_text, title, summary_text)
+        if points:
+            made.append((bi.make_title_card(category, title, points, "_card.png"), "top",
+                         f"{title} 핵심 정리: " + " / ".join(points), None))
+    except Exception as e:
+        print(f"⚠️ 대표 카드 생성 실패: {e}")
+    try:
+        made.append((bi.generate_scene_photo(xai_client, _call_gemini_text, category, title, "_scene.jpg"),
+                     "mid", title, "이해를 돕기 위해 생성한 이미지"))
+    except Exception as e:
+        print(f"⚠️ 본문 사진 생성 실패: {e}")
+
+    urls = bi.publish_files([m[0] for m in made], category) if made else None
+    srcs = urls or [bi.to_data_uri(m[0]) for m in made]
+    top_html, mid_html = "", ""
+    for (path, where, alt, caption), src in zip(made, srcs):
+        cap = f'<p style="font-size:0.8em;color:#a0aec0;margin-top:6px;">{caption}</p>' if caption else ""
+        tag = (f'<div style="text-align:center;margin:28px 0;"><img src="{src}" alt="{html.escape(alt)}" '
+               f'loading="lazy" style="max-width:100%;height:auto;border-radius:12px;">{cap}</div>')
+        if where == "top":
+            top_html = tag
+        else:
+            mid_html = tag
+    body = body.replace("[IMAGE_1]", "").replace("[IMAGE_2]", mid_html)
+    body = re.sub(r"\[IMAGE_\d+\]", "", body)
+    if mid_html and mid_html not in body:  # 마커가 빠졌으면 두 번째 소제목 앞에 넣는다
+        h2s = [m.start() for m in re.finditer(r"<h2", body)]
+        at = h2s[1] if len(h2s) > 1 else len(body)
+        body = body[:at] + mid_html + body[at:]
+    return top_html + body
 
 
 def body_chars(html_content):
@@ -1085,18 +1119,16 @@ def run_evergreen(category, blog_id):
             print(f"⚠️ 자료 부족 — 다른 주제로: {topic}")
             continue
         print(f"✅ 주제: {topic} (자료 {len(sources)}건)")
-        photo_prompt = create_photo_prompt(category, topic, research[:1500])
-        images = image_paths_to_b64(generate_and_split_images_xai(
-            photo_prompt, use_character=False))
-        title, body = write_evergreen_post(category, topic, research, images)
+        title, body = write_evergreen_post(category, topic, research)
         n = body_chars(body)
         if n < MIN_BODY_CHARS or body.count("<h2") < 3:
             print(f"⚠️ 품질 미달({n}자, h2 {body.count('<h2')}개) — 재작성")
-            title, body = write_evergreen_post(category, topic, research, images)
+            title, body = write_evergreen_post(category, topic, research)
             n = body_chars(body)
         if n < MIN_BODY_CHARS or is_recent_duplicate(title, existing):
             print(f"⚠️ 품질/중복 기준 미달({n}자) — 다른 주제로")
             continue
+        body = attach_images(category, title, body)
         body += sources_html(sources) + blog_info_footer(blog_id)
         url = post_to_blogger(blog_id, title, body, labels=[BLOG_LABEL.get(category, category)])
         _save_topic_history(category, topic)

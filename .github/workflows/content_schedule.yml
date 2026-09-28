@@ -43,6 +43,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Korean font (blog title cards)
+        run: sudo apt-get install -y -qq fonts-nanum
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

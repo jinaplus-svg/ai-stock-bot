@@ -162,6 +162,7 @@ def card_points(gemini_text, title, summary_text):
         pts = json.loads(re.search(r"\[.*\]", raw, re.DOTALL).group(0))
         return [str(p).strip() for p in pts if str(p).strip()][:3]
     except Exception:
+        print(f"⚠️ 카드 요약 파싱 실패: {raw[:120]!r}")
         return []
 
 

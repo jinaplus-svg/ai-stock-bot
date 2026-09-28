@@ -1048,6 +1048,10 @@ def attach_images(category, title, body):
         summary = re.search(r"<blockquote[^>]*>(.*?)</blockquote>", body, re.DOTALL)
         summary_text = re.sub(r"<[^>]+>", " ", summary.group(1)) if summary else title
         points = bi.card_points(_call_gemini_text, title, summary_text)
+        if not points:  # 요약 추출이 실패하면 본문 소제목으로 대신한다(항상 존재)
+            heads = [re.sub(r"<[^>]+>", "", h).strip() for h in re.findall(r"<h2[^>]*>(.*?)</h2>", body, re.DOTALL)]
+            points = [h for h in heads if h and not any(k in h for k in ("자주 묻는", "정리", "FAQ"))][:3]
+            print(f"ℹ️ 카드 요약 대신 소제목 사용: {points}")
         if points:
             made.append((bi.make_title_card(category, title, points, "_card.png"), "top",
                          f"{title} 핵심 정리: " + " / ".join(points), None))

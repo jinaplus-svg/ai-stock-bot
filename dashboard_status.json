@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29T09:23:43.923251+09:00",
+  "updated_at": "2026-09-29T09:33:42.815704+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "무의식의 95%를 바꾸는 단 5초의 법칙과 양자 몰입의 비밀",
-      "video_id": "-zyBpGKmTR0",
-      "published_kst": "09/29 05:33",
-      "views": 2,
-      "privacy": "public"
-    },
-    {
-      "title": "무의식 95% 5초의 재설계",
-      "video_id": "J28QFIZ8Do0",
-      "published_kst": "09/29 05:31",
-      "views": 660,
-      "privacy": "public"
-    },
-    {
-      "title": "당신이 눈을 깜빡일 때마다 우주가 변하는 소름 돋는 이유",
-      "video_id": "0QqRbIVRh44",
-      "published_kst": "09/28 04:24",
-      "views": 1186,
-      "privacy": "public"
-    },
-    {
-      "title": "양자역학의 관찰자 효과 — 보는 행위가 현실을 바꾼다는 것의 진짜 의미",
-      "video_id": "WGC3npU0y48",
-      "published_kst": "09/28 04:23",
-      "views": 7,
-      "privacy": "public"
-    },
-    {
-      "title": "8주의 기적 뇌가 바뀐다",
-      "video_id": "okWh6C5Y5Ww",
-      "published_kst": "09/27 05:32",
-      "views": 1308,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29T09:03:43.317554+09:00",
+  "updated_at": "2026-09-29T09:13:42.801821+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -90,9 +90,9 @@
     }
   },
   "account": {
-    "error": "HTTPSConnectionPool(host='openapi.tossinvest.com', port=443): Max retries exceeded with url: /oauth2/token (Caused by SSLError(SSLError(1, '[SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1032)')))",
+    "buying_power": 4922979.0,
     "stock_value_krw": 0,
-    "total_value_krw": 0,
+    "total_value_krw": 4922979,
     "unrealized_pnl_krw": 0
   },
   "threads": {

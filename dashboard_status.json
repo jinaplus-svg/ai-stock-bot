@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-30T08:43:42.511787+09:00",
+  "updated_at": "2026-09-30T08:53:42.615122+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "50대 이후 인생이 폭발하는 사람들의 공통점 — 결정성 지능과 경험의 복리",
+      "video_id": "tYH6u4i6vbI",
+      "published_kst": "09/30 04:22",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "나이 들수록 천재가 되는 사람들의 비밀",
+      "video_id": "aYVWIY150fo",
+      "published_kst": "09/30 04:23",
+      "views": 822,
+      "privacy": "public"
+    },
+    {
+      "title": "무의식의 95%를 바꾸는 단 5초의 법칙과 양자 몰입의 비밀",
+      "video_id": "-zyBpGKmTR0",
+      "published_kst": "09/29 05:33",
+      "views": 9,
+      "privacy": "public"
+    },
+    {
+      "title": "무의식 95% 5초의 재설계",
+      "video_id": "J28QFIZ8Do0",
+      "published_kst": "09/29 05:31",
+      "views": 1004,
+      "privacy": "public"
+    },
+    {
+      "title": "당신이 눈을 깜빡일 때마다 우주가 변하는 소름 돋는 이유",
+      "video_id": "0QqRbIVRh44",
+      "published_kst": "09/28 04:24",
+      "views": 1192,
+      "privacy": "public"
     }
   ],
   "bots": {

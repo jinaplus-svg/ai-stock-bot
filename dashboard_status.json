@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-30T03:03:43.048842+09:00",
+  "updated_at": "2026-09-30T03:13:42.495497+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -69,7 +69,7 @@
       "title": "당신이 눈을 깜빡일 때마다 우주가 변하는 소름 돋는 이유",
       "video_id": "0QqRbIVRh44",
       "published_kst": "09/28 04:24",
-      "views": 1188,
+      "views": 1191,
       "privacy": "public"
     },
     {
@@ -116,9 +116,19 @@
       "date": "2026-09-30",
       "daily_pnl": 0.0,
       "cumulative_pnl": 0.5757583999999909,
-      "trade_count_today": 0,
+      "trade_count_today": 1,
       "consecutive_losses": 0,
-      "positions": []
+      "positions": [
+        {
+          "symbol": "BTCUSDT",
+          "name": "BTCUSDT",
+          "qty": 0.00023,
+          "entry_price": 83346.01,
+          "atr": 61.963571428568684,
+          "stop_price": 83012.63,
+          "target_price": 84235.03
+        }
+      ]
     }
   },
   "account": {

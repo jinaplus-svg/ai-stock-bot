@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-30T19:23:42.077519+09:00",
+  "updated_at": "2026-09-30T19:33:42.072463+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -83,7 +83,7 @@
       "title": "당신이 눈을 깜빡일 때마다 우주가 변하는 소름 돋는 이유",
       "video_id": "0QqRbIVRh44",
       "published_kst": "09/28 04:24",
-      "views": 1192,
+      "views": 1193,
       "privacy": "public"
     }
   ],
@@ -129,17 +129,17 @@
   },
   "threads": {
     "latest": {
-      "date": "2026-09-29T19:30:42.940156+09:00",
-      "title": "원룸 배수구 냄새 차단 및 관리법",
-      "permalink": "https://www.threads.com/@brandnew0789/post/Dd3jJdXGvTP",
+      "date": "2026-09-30T19:30:43.120780+09:00",
+      "title": "좁은 원룸 택배 상자와 비닐 분리배출 요령",
+      "permalink": "https://www.threads.com/@brandnew0789/post/Dd6H8VDmiy-",
       "views": 0,
       "likes": 0,
       "replies": 0,
       "reposts": 0,
       "quotes": 0
     },
-    "total_posts": 3,
-    "total_views": 1,
-    "total_likes": 0
+    "total_posts": 4,
+    "total_views": 37,
+    "total_likes": 2
   }
 }

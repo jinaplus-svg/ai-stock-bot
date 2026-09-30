@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-01T05:13:43.929240+09:00",
+  "updated_at": "2026-10-01T05:23:43.789238+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "잠들기 전 5분, 뇌의 주파수를 바꾸면 인생의 결핍이 사라집니다 (마음 디톡스와 무의식 재프로그래밍)",
+      "video_id": "iBGbJtJSyUs",
+      "published_kst": "10/01 05:21",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "잠들기 전 5분 무의식의 기적",
+      "video_id": "M1yGAIV7d3Y",
+      "published_kst": "10/01 05:21",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "50대 이후 인생이 폭발하는 사람들의 공통점 — 결정성 지능과 경험의 복리",
       "video_id": "tYH6u4i6vbI",
       "published_kst": "09/30 04:22",
@@ -70,20 +84,6 @@
       "video_id": "-zyBpGKmTR0",
       "published_kst": "09/29 05:33",
       "views": 15,
-      "privacy": "public"
-    },
-    {
-      "title": "무의식 95% 5초의 재설계",
-      "video_id": "J28QFIZ8Do0",
-      "published_kst": "09/29 05:31",
-      "views": 1092,
-      "privacy": "public"
-    },
-    {
-      "title": "당신이 눈을 깜빡일 때마다 우주가 변하는 소름 돋는 이유",
-      "video_id": "0QqRbIVRh44",
-      "published_kst": "09/28 04:24",
-      "views": 1194,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T08:23:43.952924+09:00",
+  "updated_at": "2026-10-02T08:33:43.957608+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "최악의 배신을 당한 사람이 결국 인생 역전하는 심리학적 이유",
-      "video_id": "QhLxiE-o1fg",
-      "published_kst": "10/02 04:17",
-      "views": 450,
-      "privacy": "public"
-    },
-    {
-      "title": "배신과 이별이 인생의 전환점이 되는 이유 — 외상 후 성장의 심리학",
-      "video_id": "3NOgAGfZC3U",
-      "published_kst": "10/02 04:16",
-      "views": 1,
-      "privacy": "public"
-    },
-    {
-      "title": "잠들기 전 5분, 뇌의 주파수를 바꾸면 인생의 결핍이 사라집니다 (마음 디톡스와 무의식 재프로그래밍)",
-      "video_id": "iBGbJtJSyUs",
-      "published_kst": "10/01 05:21",
-      "views": 0,
-      "privacy": "public"
-    },
-    {
-      "title": "잠들기 전 5분 무의식의 기적",
-      "video_id": "M1yGAIV7d3Y",
-      "published_kst": "10/01 05:21",
-      "views": 390,
-      "privacy": "public"
-    },
-    {
-      "title": "50대 이후 인생이 폭발하는 사람들의 공통점 — 결정성 지능과 경험의 복리",
-      "video_id": "tYH6u4i6vbI",
-      "published_kst": "09/30 04:22",
-      "views": 3,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

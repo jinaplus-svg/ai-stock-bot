@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T04:13:44.176002+09:00",
+  "updated_at": "2026-10-02T04:23:43.477382+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "최악의 배신을 당한 사람이 결국 인생 역전하는 심리학적 이유",
+      "video_id": "QhLxiE-o1fg",
+      "published_kst": "10/02 04:17",
+      "views": 12,
+      "privacy": "public"
+    },
+    {
+      "title": "배신과 이별이 인생의 전환점이 되는 이유 — 외상 후 성장의 심리학",
+      "video_id": "3NOgAGfZC3U",
+      "published_kst": "10/02 04:16",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "잠들기 전 5분, 뇌의 주파수를 바꾸면 인생의 결핍이 사라집니다 (마음 디톡스와 무의식 재프로그래밍)",
       "video_id": "iBGbJtJSyUs",
       "published_kst": "10/01 05:21",
@@ -62,7 +76,7 @@
       "title": "잠들기 전 5분 무의식의 기적",
       "video_id": "M1yGAIV7d3Y",
       "published_kst": "10/01 05:21",
-      "views": 385,
+      "views": 384,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "tYH6u4i6vbI",
       "published_kst": "09/30 04:22",
       "views": 3,
-      "privacy": "public"
-    },
-    {
-      "title": "나이 들수록 천재가 되는 사람들의 비밀",
-      "video_id": "aYVWIY150fo",
-      "published_kst": "09/30 04:23",
-      "views": 1354,
-      "privacy": "public"
-    },
-    {
-      "title": "무의식의 95%를 바꾸는 단 5초의 법칙과 양자 몰입의 비밀",
-      "video_id": "-zyBpGKmTR0",
-      "published_kst": "09/29 05:33",
-      "views": 20,
       "privacy": "public"
     }
   ],

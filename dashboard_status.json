@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T23:53:42.899524+09:00",
+  "updated_at": "2026-10-03T00:03:43.270729+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "최악의 배신을 당한 사람이 결국 인생 역전하는 심리학적 이유",
       "video_id": "QhLxiE-o1fg",
       "published_kst": "10/02 04:17",
-      "views": 891,
+      "views": 893,
       "privacy": "public"
     },
     {
@@ -113,11 +113,11 @@
       "positions": []
     },
     "binance_1min": {
-      "date": "2026-10-02",
-      "daily_pnl": 0.1138385000000035,
+      "date": "2026-10-03",
+      "daily_pnl": 0.0,
       "cumulative_pnl": 0.40948459999999187,
-      "trade_count_today": 4,
-      "consecutive_losses": 1,
+      "trade_count_today": 0,
+      "consecutive_losses": 0,
       "positions": []
     }
   },

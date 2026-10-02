@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-03T05:23:43.441889+09:00",
+  "updated_at": "2026-10-03T05:33:44.625505+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "잠들기 전 5분, 1100만 배의 잠재의식을 깨워 원하는 현실을 끌어당기는 법",
+      "video_id": "DLKG4z2ZAOw",
+      "published_kst": "10/03 05:30",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "40비트 의식 1100만 배 기적",
+      "video_id": "gavsabLmfWw",
+      "published_kst": "10/03 05:28",
+      "views": 5,
+      "privacy": "public"
+    },
+    {
       "title": "최악의 배신을 당한 사람이 결국 인생 역전하는 심리학적 이유",
       "video_id": "QhLxiE-o1fg",
       "published_kst": "10/02 04:17",
@@ -70,20 +84,6 @@
       "video_id": "iBGbJtJSyUs",
       "published_kst": "10/01 05:21",
       "views": 0,
-      "privacy": "public"
-    },
-    {
-      "title": "잠들기 전 5분 무의식의 기적",
-      "video_id": "M1yGAIV7d3Y",
-      "published_kst": "10/01 05:21",
-      "views": 426,
-      "privacy": "public"
-    },
-    {
-      "title": "50대 이후 인생이 폭발하는 사람들의 공통점 — 결정성 지능과 경험의 복리",
-      "video_id": "tYH6u4i6vbI",
-      "published_kst": "09/30 04:22",
-      "views": 3,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T08:53:43.986230+09:00",
+  "updated_at": "2026-10-02T09:03:45.250412+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "경주 가을 억새와 단풍 명소 중심 2박 3일 뚜벅이 여행 코스 동선 가이드",
-      "url": "https://brandnew901.blogspot.com/2026/09/2-3.html",
-      "published_kst": "10/01 09:02",
-      "published_raw": "2026-09-30T17:02:13-07:00"
+      "title": "트래블로그 트래블월렛 차이점 비교 및 해외여행 결제 카드 선택 가이드",
+      "url": "https://brandnew901.blogspot.com/2026/10/blog-post.html",
+      "published_kst": "10/02 09:01",
+      "published_raw": "2026-10-01T17:01:42-07:00"
     },
     {
       "category": "News",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "최악의 배신을 당한 사람이 결국 인생 역전하는 심리학적 이유",
+      "video_id": "QhLxiE-o1fg",
+      "published_kst": "10/02 04:17",
+      "views": 482,
+      "privacy": "public"
+    },
+    {
+      "title": "배신과 이별이 인생의 전환점이 되는 이유 — 외상 후 성장의 심리학",
+      "video_id": "3NOgAGfZC3U",
+      "published_kst": "10/02 04:16",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
+      "title": "잠들기 전 5분, 뇌의 주파수를 바꾸면 인생의 결핍이 사라집니다 (마음 디톡스와 무의식 재프로그래밍)",
+      "video_id": "iBGbJtJSyUs",
+      "published_kst": "10/01 05:21",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "잠들기 전 5분 무의식의 기적",
+      "video_id": "M1yGAIV7d3Y",
+      "published_kst": "10/01 05:21",
+      "views": 401,
+      "privacy": "public"
+    },
+    {
+      "title": "50대 이후 인생이 폭발하는 사람들의 공통점 — 결정성 지능과 경험의 복리",
+      "video_id": "tYH6u4i6vbI",
+      "published_kst": "09/30 04:22",
+      "views": 3,
+      "privacy": "public"
     }
   ],
   "bots": {

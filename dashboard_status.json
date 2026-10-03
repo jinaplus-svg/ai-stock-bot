@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T07:43:42.052037+09:00",
+  "updated_at": "2026-10-04T07:53:42.106772+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "같은 일을 해도, 생각 하나가 몸을 바꿉니다 #shorts",
+      "video_id": "-dlfEz3vDho",
+      "published_kst": "10/04 07:49",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "매번 운 좋은 사람들의 충격적인 뇌 비밀 (리처드 와이즈먼)",
       "video_id": "aag6UEXgRvo",
       "published_kst": "10/04 04:08",
-      "views": 304,
+      "views": 311,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "gavsabLmfWw",
       "published_kst": "10/03 05:28",
       "views": 1274,
-      "privacy": "public"
-    },
-    {
-      "title": "최악의 배신을 당한 사람이 결국 인생 역전하는 심리학적 이유",
-      "video_id": "QhLxiE-o1fg",
-      "published_kst": "10/02 04:17",
-      "views": 1012,
       "privacy": "public"
     }
   ],

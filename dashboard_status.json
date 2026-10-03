@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T00:03:52.265934+09:00",
+  "updated_at": "2026-10-04T00:13:42.808163+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -122,9 +122,9 @@
     }
   },
   "account": {
-    "error": "500 Server Error: Internal Server Error for url: https://openapi.tossinvest.com/api/v1/buying-power?currency=KRW",
+    "buying_power": 4926257.0,
     "stock_value_krw": 0,
-    "total_value_krw": 0,
+    "total_value_krw": 4926257,
     "unrealized_pnl_krw": 0
   },
   "threads": {

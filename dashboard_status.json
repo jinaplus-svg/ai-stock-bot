@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T07:43:42.326105+09:00",
+  "updated_at": "2026-10-05T07:53:42.193397+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "말을 아낄수록 운이 차오르는 양자역학의 비밀 (조용한 사람이 결국 끌어당기는 이유)",
+      "video_id": "FxEuKIaLRrU",
+      "published_kst": "10/05 05:29",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "침묵하는 사람 결국 부자 된다",
+      "video_id": "z0qSohKvAJc",
+      "published_kst": "10/05 05:27",
+      "views": 307,
+      "privacy": "public"
+    },
+    {
+      "title": "책상 위 스마트폰이 당신의 집중력을 빼앗는 이유 #shorts",
+      "video_id": "KPwLrJxNFbo",
+      "published_kst": "10/04 19:01",
+      "views": 625,
+      "privacy": "public"
+    },
+    {
+      "title": "같은 일을 해도, 생각 하나가 몸을 바꿉니다 #shorts",
+      "video_id": "-dlfEz3vDho",
+      "published_kst": "10/04 07:49",
+      "views": 1070,
+      "privacy": "public"
+    },
+    {
+      "title": "매번 운 좋은 사람들의 충격적인 뇌 비밀 (리처드 와이즈먼)",
+      "video_id": "aag6UEXgRvo",
+      "published_kst": "10/04 04:08",
+      "views": 948,
+      "privacy": "public"
     }
   ],
   "bots": {

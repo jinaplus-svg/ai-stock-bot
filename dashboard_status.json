@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T18:53:42.770447+09:00",
+  "updated_at": "2026-10-04T19:03:42.729042+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "책상 위 스마트폰이 당신의 집중력을 빼앗는 이유 #shorts",
+      "video_id": "KPwLrJxNFbo",
+      "published_kst": "10/04 19:01",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "같은 일을 해도, 생각 하나가 몸을 바꿉니다 #shorts",
       "video_id": "-dlfEz3vDho",
       "published_kst": "10/04 07:49",
@@ -62,7 +69,7 @@
       "title": "매번 운 좋은 사람들의 충격적인 뇌 비밀 (리처드 와이즈먼)",
       "video_id": "aag6UEXgRvo",
       "published_kst": "10/04 04:08",
-      "views": 716,
+      "views": 807,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "DLKG4z2ZAOw",
       "published_kst": "10/03 05:30",
       "views": 5,
-      "privacy": "public"
-    },
-    {
-      "title": "40비트 의식 1100만 배 기적",
-      "video_id": "gavsabLmfWw",
-      "published_kst": "10/03 05:28",
-      "views": 1295,
       "privacy": "public"
     }
   ],

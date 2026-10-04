@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T00:23:42.925250+09:00",
+  "updated_at": "2026-10-05T00:33:42.944503+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "책상 위 스마트폰이 당신의 집중력을 빼앗는 이유 #shorts",
       "video_id": "KPwLrJxNFbo",
       "published_kst": "10/04 19:01",
-      "views": 285,
+      "views": 293,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-04",
+      "date": "2026-10-05",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 1,

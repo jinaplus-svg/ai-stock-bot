@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T09:43:42.073952+09:00",
+  "updated_at": "2026-10-04T09:53:42.174698+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -59,13 +59,6 @@
       "privacy": "public"
     },
     {
-      "title": "매번 운 좋은 사람들의 충격적인 뇌 비밀 (리처드 와이즈먼)",
-      "video_id": "aag6UEXgRvo",
-      "published_kst": "10/04 04:08",
-      "views": 409,
-      "privacy": "public"
-    },
-    {
       "title": "운이 좋은 사람들의 뇌는 기회를 먼저 본다 — 리처드 와이즈먼의 행운 연구",
       "video_id": "STgpNxDFTeU",
       "published_kst": "10/04 04:07",
@@ -84,6 +77,13 @@
       "video_id": "gavsabLmfWw",
       "published_kst": "10/03 05:28",
       "views": 1274,
+      "privacy": "public"
+    },
+    {
+      "title": "배신과 이별이 인생의 전환점이 되는 이유 — 외상 후 성장의 심리학",
+      "video_id": "3NOgAGfZC3U",
+      "published_kst": "10/02 04:16",
+      "views": 5,
       "privacy": "public"
     }
   ],

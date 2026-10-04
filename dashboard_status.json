@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T09:33:42.800552+09:00",
+  "updated_at": "2026-10-04T09:43:42.073952+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "같은 일을 해도, 생각 하나가 몸을 바꿉니다 #shorts",
+      "video_id": "-dlfEz3vDho",
+      "published_kst": "10/04 07:49",
+      "views": 443,
+      "privacy": "public"
+    },
+    {
+      "title": "매번 운 좋은 사람들의 충격적인 뇌 비밀 (리처드 와이즈먼)",
+      "video_id": "aag6UEXgRvo",
+      "published_kst": "10/04 04:08",
+      "views": 409,
+      "privacy": "public"
+    },
+    {
+      "title": "운이 좋은 사람들의 뇌는 기회를 먼저 본다 — 리처드 와이즈먼의 행운 연구",
+      "video_id": "STgpNxDFTeU",
+      "published_kst": "10/04 04:07",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
+      "title": "잠들기 전 5분, 1100만 배의 잠재의식을 깨워 원하는 현실을 끌어당기는 법",
+      "video_id": "DLKG4z2ZAOw",
+      "published_kst": "10/03 05:30",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "40비트 의식 1100만 배 기적",
+      "video_id": "gavsabLmfWw",
+      "published_kst": "10/03 05:28",
+      "views": 1274,
+      "privacy": "public"
     }
   ],
   "bots": {

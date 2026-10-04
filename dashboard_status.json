@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T05:23:42.186394+09:00",
+  "updated_at": "2026-10-05T05:33:42.135740+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,24 @@
   ],
   "youtube": [
     {
+      "title": "말을 아낄수록 운이 차오르는 양자역학의 비밀 (조용한 사람이 결국 끌어당기는 이유)",
+      "video_id": "FxEuKIaLRrU",
+      "published_kst": "10/05 05:29",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "침묵하는 사람 결국 부자 된다",
+      "video_id": "z0qSohKvAJc",
+      "published_kst": "10/05 05:27",
+      "views": 14,
+      "privacy": "public"
+    },
+    {
       "title": "책상 위 스마트폰이 당신의 집중력을 빼앗는 이유 #shorts",
       "video_id": "KPwLrJxNFbo",
       "published_kst": "10/04 19:01",
-      "views": 439,
+      "views": 504,
       "privacy": "public"
     },
     {
@@ -69,21 +83,7 @@
       "title": "매번 운 좋은 사람들의 충격적인 뇌 비밀 (리처드 와이즈먼)",
       "video_id": "aag6UEXgRvo",
       "published_kst": "10/04 04:08",
-      "views": 910,
-      "privacy": "public"
-    },
-    {
-      "title": "운이 좋은 사람들의 뇌는 기회를 먼저 본다 — 리처드 와이즈먼의 행운 연구",
-      "video_id": "STgpNxDFTeU",
-      "published_kst": "10/04 04:07",
-      "views": 4,
-      "privacy": "public"
-    },
-    {
-      "title": "잠들기 전 5분, 1100만 배의 잠재의식을 깨워 원하는 현실을 끌어당기는 법",
-      "video_id": "DLKG4z2ZAOw",
-      "published_kst": "10/03 05:30",
-      "views": 5,
+      "views": 948,
       "privacy": "public"
     }
   ],

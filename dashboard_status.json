@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T19:03:43.442503+09:00",
+  "updated_at": "2026-10-05T19:13:43.051910+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "공짜 돈이 생겼을 때 가장 행복하게 쓰는 방법 #shorts",
+      "video_id": "ZeqVVjohSBo",
+      "published_kst": "10/05 19:10",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "말을 아낄수록 운이 차오르는 양자역학의 비밀 (조용한 사람이 결국 끌어당기는 이유)",
       "video_id": "FxEuKIaLRrU",
       "published_kst": "10/05 05:29",
@@ -77,13 +84,6 @@
       "video_id": "-dlfEz3vDho",
       "published_kst": "10/04 07:49",
       "views": 1072,
-      "privacy": "public"
-    },
-    {
-      "title": "매번 운 좋은 사람들의 충격적인 뇌 비밀 (리처드 와이즈먼)",
-      "video_id": "aag6UEXgRvo",
-      "published_kst": "10/04 04:08",
-      "views": 935,
       "privacy": "public"
     }
   ],

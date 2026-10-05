@@ -1,14 +1,5 @@
 [
   {
-    "ts": "2026-09-28T21:23:42.115877+09:00",
-    "total_value_krw": 4922979,
-    "cash_krw": 4922979.0,
-    "stock_value_krw": 0,
-    "cum_pnl_toss30": 0.0,
-    "cum_pnl_toss1min": -56283.0,
-    "cum_pnl_binance_usdt": 12.852799417647088
-  },
-  {
     "ts": "2026-09-28T21:33:42.075870+09:00",
     "total_value_krw": 4922979,
     "cash_krw": 4922979.0,
@@ -8992,6 +8983,15 @@
   },
   {
     "ts": "2026-10-05T20:13:44.892585+09:00",
+    "total_value_krw": 4926257,
+    "cash_krw": 4926257.0,
+    "stock_value_krw": 0,
+    "cum_pnl_toss30": 0.0,
+    "cum_pnl_toss1min": -56283.0,
+    "cum_pnl_binance_usdt": 12.852799417647088
+  },
+  {
+    "ts": "2026-10-05T20:23:43.149498+09:00",
     "total_value_krw": 4926257,
     "cash_krw": 4926257.0,
     "stock_value_krw": 0,

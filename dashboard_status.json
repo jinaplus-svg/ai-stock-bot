@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T23:23:42.035610+09:00",
+  "updated_at": "2026-10-05T23:33:42.225387+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "공짜 돈이 생겼을 때 가장 행복하게 쓰는 방법 #shorts",
       "video_id": "ZeqVVjohSBo",
       "published_kst": "10/05 19:10",
-      "views": 336,
+      "views": 343,
       "privacy": "public"
     },
     {
@@ -69,7 +69,7 @@
       "title": "침묵하는 사람 결국 부자 된다",
       "video_id": "z0qSohKvAJc",
       "published_kst": "10/05 05:27",
-      "views": 977,
+      "views": 979,
       "privacy": "public"
     },
     {
@@ -114,21 +114,11 @@
     },
     "binance_1min": {
       "date": "2026-10-05",
-      "daily_pnl": -0.07970650000000035,
-      "cumulative_pnl": 0.3297780999999915,
-      "trade_count_today": 3,
-      "consecutive_losses": 1,
-      "positions": [
-        {
-          "symbol": "BTCUSDT",
-          "name": "BTCUSDT",
-          "qty": 0.00023,
-          "entry_price": 86294.04999999999,
-          "atr": 113.7935714285694,
-          "stop_price": 85950.83,
-          "target_price": 87216.5
-        }
-      ]
+      "daily_pnl": -0.18068799999999996,
+      "cumulative_pnl": 0.2287965999999919,
+      "trade_count_today": 4,
+      "consecutive_losses": 2,
+      "positions": []
     }
   },
   "account": {

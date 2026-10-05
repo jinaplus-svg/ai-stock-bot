@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T04:03:45.418530+09:00",
+  "updated_at": "2026-10-06T04:13:43.789671+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,24 @@
   ],
   "youtube": [
     {
+      "title": "수익률 1위 펀드 사면 쪽박 차는 충격적인 이유",
+      "video_id": "rrgERhAyxmc",
+      "published_kst": "10/06 04:07",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
+      "title": "평균 회귀의 법칙 — 작년 수익률 1위 펀드가 왜 항상 무너지는가",
+      "video_id": "hHgSPWUUEs0",
+      "published_kst": "10/06 04:06",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "공짜 돈이 생겼을 때 가장 행복하게 쓰는 방법 #shorts",
       "video_id": "ZeqVVjohSBo",
       "published_kst": "10/05 19:10",
-      "views": 662,
+      "views": 677,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "z0qSohKvAJc",
       "published_kst": "10/05 05:27",
       "views": 980,
-      "privacy": "public"
-    },
-    {
-      "title": "책상 위 스마트폰이 당신의 집중력을 빼앗는 이유 #shorts",
-      "video_id": "KPwLrJxNFbo",
-      "published_kst": "10/04 19:01",
-      "views": 959,
-      "privacy": "public"
-    },
-    {
-      "title": "같은 일을 해도, 생각 하나가 몸을 바꿉니다 #shorts",
-      "video_id": "-dlfEz3vDho",
-      "published_kst": "10/04 07:49",
-      "views": 1072,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-05T23:53:42.207067+09:00",
+  "updated_at": "2026-10-06T00:03:42.773511+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "공짜 돈이 생겼을 때 가장 행복하게 쓰는 방법 #shorts",
       "video_id": "ZeqVVjohSBo",
       "published_kst": "10/05 19:10",
-      "views": 398,
+      "views": 417,
       "privacy": "public"
     },
     {
@@ -113,11 +113,11 @@
       "positions": []
     },
     "binance_1min": {
-      "date": "2026-10-05",
-      "daily_pnl": -0.18068799999999996,
+      "date": "2026-10-06",
+      "daily_pnl": 0.0,
       "cumulative_pnl": 0.2287965999999919,
-      "trade_count_today": 4,
-      "consecutive_losses": 2,
+      "trade_count_today": 0,
+      "consecutive_losses": 0,
       "positions": []
     }
   },

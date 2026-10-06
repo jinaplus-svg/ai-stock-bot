@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-07T00:23:43.719402+09:00",
+  "updated_at": "2026-10-07T00:33:43.582928+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "181구를 혼자 던지고도 이기지 못한 신인 투수 #shorts",
       "video_id": "RIZCALKrpgM",
       "published_kst": "10/06 19:01",
-      "views": 806,
+      "views": 822,
       "privacy": "public"
     },
     {
@@ -69,7 +69,7 @@
       "title": "평균 회귀의 법칙 — 작년 수익률 1위 펀드가 왜 항상 무너지는가",
       "video_id": "hHgSPWUUEs0",
       "published_kst": "10/06 04:06",
-      "views": 0,
+      "views": 1,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-06",
+      "date": "2026-10-07",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

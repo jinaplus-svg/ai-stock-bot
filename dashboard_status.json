@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T19:23:44.205667+09:00",
+  "updated_at": "2026-10-06T19:33:44.288324+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,14 +55,14 @@
       "title": "181구를 혼자 던지고도 이기지 못한 신인 투수 #shorts",
       "video_id": "RIZCALKrpgM",
       "published_kst": "10/06 19:01",
-      "views": 17,
+      "views": 45,
       "privacy": "public"
     },
     {
       "title": "수익률 1위 펀드 사면 쪽박 차는 충격적인 이유",
       "video_id": "rrgERhAyxmc",
       "published_kst": "10/06 04:07",
-      "views": 111,
+      "views": 104,
       "privacy": "public"
     },
     {
@@ -129,17 +129,17 @@
   },
   "threads": {
     "latest": {
-      "date": "2026-10-05T19:30:47.783424+09:00",
-      "title": "혼자 살 때 꼭 챙겨야 할 현관 및 화재 안전 점검법",
-      "permalink": "https://www.threads.com/@brandnew0789/post/DeG_7XcGp-C",
+      "date": "2026-10-06T19:30:46.759851+09:00",
+      "title": "모르고 새나가는 원룸 대기전력과 온수 낭비 잡는 법",
+      "permalink": "https://www.threads.com/@brandnew0789/post/DeJkuOkmltF",
       "views": 0,
       "likes": 0,
       "replies": 0,
       "reposts": 0,
       "quotes": 0
     },
-    "total_posts": 9,
-    "total_views": 226,
+    "total_posts": 10,
+    "total_views": 303,
     "total_likes": 7
   }
 }

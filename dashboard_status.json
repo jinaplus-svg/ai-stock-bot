@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T15:53:42.853247+09:00",
+  "updated_at": "2026-10-06T16:03:44.720969+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "수익률 1위 펀드 사면 쪽박 차는 충격적인 이유",
+      "video_id": "rrgERhAyxmc",
+      "published_kst": "10/06 04:07",
+      "views": 102,
+      "privacy": "public"
+    },
+    {
+      "title": "평균 회귀의 법칙 — 작년 수익률 1위 펀드가 왜 항상 무너지는가",
+      "video_id": "hHgSPWUUEs0",
+      "published_kst": "10/06 04:06",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "공짜 돈이 생겼을 때 가장 행복하게 쓰는 방법 #shorts",
+      "video_id": "ZeqVVjohSBo",
+      "published_kst": "10/05 19:10",
+      "views": 995,
+      "privacy": "public"
+    },
+    {
+      "title": "말을 아낄수록 운이 차오르는 양자역학의 비밀 (조용한 사람이 결국 끌어당기는 이유)",
+      "video_id": "FxEuKIaLRrU",
+      "published_kst": "10/05 05:29",
+      "views": 7,
+      "privacy": "public"
+    },
+    {
+      "title": "침묵하는 사람 결국 부자 된다",
+      "video_id": "z0qSohKvAJc",
+      "published_kst": "10/05 05:27",
+      "views": 974,
+      "privacy": "public"
     }
   ],
   "bots": {

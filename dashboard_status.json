@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T07:23:42.577332+09:00",
+  "updated_at": "2026-10-08T07:33:42.580030+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "게을러서 미루는 게 아닙니다 (충격적인 뇌의 비밀)",
-      "video_id": "86o8UFUVFYs",
-      "published_kst": "10/08 04:07",
-      "views": 614,
-      "privacy": "public"
-    },
-    {
-      "title": "미루는 습관의 진짜 원인 — 의지력 부족이 아니라 감정 회피다",
-      "video_id": "bwDmSJcW0Ws",
-      "published_kst": "10/08 04:06",
-      "views": 4,
-      "privacy": "public"
-    },
-    {
-      "title": "잠을 못 자면 성격이 나빠지는 진짜 이유 #shorts",
-      "video_id": "DZ6Hm2DS9Tw",
-      "published_kst": "10/07 19:08",
-      "views": 993,
-      "privacy": "public"
-    },
-    {
-      "title": "간절할수록 실패하는 진짜 이유: 4초 호흡과 미주신경으로 잠재의식을 여는 법 (양자역학 명상 가이드)",
-      "video_id": "OLzbNt2wtvQ",
-      "published_kst": "10/07 05:32",
-      "views": 6,
-      "privacy": "public"
-    },
-    {
-      "title": "간절할수록 오히려 잃습니다",
-      "video_id": "adjuamqwgg0",
-      "published_kst": "10/07 05:30",
-      "views": 987,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

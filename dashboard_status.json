@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-07T13:03:43.255024+09:00",
+  "updated_at": "2026-10-07T13:13:42.883717+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "간절할수록 실패하는 진짜 이유: 4초 호흡과 미주신경으로 잠재의식을 여는 법 (양자역학 명상 가이드)",
+      "video_id": "OLzbNt2wtvQ",
+      "published_kst": "10/07 05:32",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
+      "title": "간절할수록 오히려 잃습니다",
+      "video_id": "adjuamqwgg0",
+      "published_kst": "10/07 05:30",
+      "views": 798,
+      "privacy": "public"
+    },
+    {
+      "title": "181구를 혼자 던지고도 이기지 못한 신인 투수 #shorts",
+      "video_id": "RIZCALKrpgM",
+      "published_kst": "10/06 19:01",
+      "views": 1320,
+      "privacy": "public"
+    },
+    {
+      "title": "수익률 1위 펀드 사면 쪽박 차는 충격적인 이유",
+      "video_id": "rrgERhAyxmc",
+      "published_kst": "10/06 04:07",
+      "views": 124,
+      "privacy": "public"
+    },
+    {
+      "title": "평균 회귀의 법칙 — 작년 수익률 1위 펀드가 왜 항상 무너지는가",
+      "video_id": "hHgSPWUUEs0",
+      "published_kst": "10/06 04:06",
+      "views": 1,
+      "privacy": "public"
     }
   ],
   "bots": {

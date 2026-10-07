@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T04:13:43.789816+09:00",
+  "updated_at": "2026-10-08T04:23:42.439694+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,14 +55,14 @@
       "title": "게을러서 미루는 게 아닙니다 (충격적인 뇌의 비밀)",
       "video_id": "86o8UFUVFYs",
       "published_kst": "10/08 04:07",
-      "views": 57,
+      "views": 193,
       "privacy": "public"
     },
     {
       "title": "미루는 습관의 진짜 원인 — 의지력 부족이 아니라 감정 회피다",
       "video_id": "bwDmSJcW0Ws",
       "published_kst": "10/08 04:06",
-      "views": 0,
+      "views": 1,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "간절할수록 오히려 잃습니다",
       "video_id": "adjuamqwgg0",
       "published_kst": "10/07 05:30",
-      "views": 963,
+      "views": 966,
       "privacy": "public"
     }
   ],

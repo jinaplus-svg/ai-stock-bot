@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-09T04:03:43.319485+09:00",
+  "updated_at": "2026-10-09T04:13:42.655177+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "직원 0명 회사를 꿈꾼다면, 이 책 3권부터 #shorts",
       "video_id": "WY2ppS_anUA",
       "published_kst": "10/08 23:15",
-      "views": 616,
+      "views": 638,
       "privacy": "public"
     },
     {
@@ -63,6 +63,13 @@
       "video_id": "g84E37Qx0VA",
       "published_kst": "10/08 19:08",
       "views": 140,
+      "privacy": "public"
+    },
+    {
+      "title": "게을러서 미루는 게 아닙니다 (충격적인 뇌의 비밀)",
+      "video_id": "86o8UFUVFYs",
+      "published_kst": "10/08 04:07",
+      "views": 1049,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "DZ6Hm2DS9Tw",
       "published_kst": "10/07 19:08",
       "views": 1006,
-      "privacy": "public"
-    },
-    {
-      "title": "간절할수록 실패하는 진짜 이유: 4초 호흡과 미주신경으로 잠재의식을 여는 법 (양자역학 명상 가이드)",
-      "video_id": "OLzbNt2wtvQ",
-      "published_kst": "10/07 05:32",
-      "views": 6,
       "privacy": "public"
     }
   ],

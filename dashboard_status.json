@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T08:53:42.642297+09:00",
+  "updated_at": "2026-10-08T09:03:44.784098+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "10월 11월 늦가을 제주도 억새와 핑크뮬리 명소 3박 4일 동선 짜는 법",
-      "url": "https://brandnew901.blogspot.com/2026/10/10-11-3-4.html",
-      "published_kst": "10/07 09:01",
-      "published_raw": "2026-10-06T17:01:39-07:00"
+      "title": "도쿄 나리타 공항에서 시내 갈 때 넥스(N'EX) vs 스카이라이너 소요시간과 가성비 비교",
+      "url": "https://brandnew901.blogspot.com/2026/10/nex-vs.html",
+      "published_kst": "10/08 09:01",
+      "published_raw": "2026-10-07T17:01:56-07:00"
     },
     {
       "category": "News",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "게을러서 미루는 게 아닙니다 (충격적인 뇌의 비밀)",
+      "video_id": "86o8UFUVFYs",
+      "published_kst": "10/08 04:07",
+      "views": 760,
+      "privacy": "public"
+    },
+    {
+      "title": "미루는 습관의 진짜 원인 — 의지력 부족이 아니라 감정 회피다",
+      "video_id": "bwDmSJcW0Ws",
+      "published_kst": "10/08 04:06",
+      "views": 4,
+      "privacy": "public"
+    },
+    {
+      "title": "잠을 못 자면 성격이 나빠지는 진짜 이유 #shorts",
+      "video_id": "DZ6Hm2DS9Tw",
+      "published_kst": "10/07 19:08",
+      "views": 999,
+      "privacy": "public"
+    },
+    {
+      "title": "간절할수록 실패하는 진짜 이유: 4초 호흡과 미주신경으로 잠재의식을 여는 법 (양자역학 명상 가이드)",
+      "video_id": "OLzbNt2wtvQ",
+      "published_kst": "10/07 05:32",
+      "views": 6,
+      "privacy": "public"
+    },
+    {
+      "title": "간절할수록 오히려 잃습니다",
+      "video_id": "adjuamqwgg0",
+      "published_kst": "10/07 05:30",
+      "views": 987,
+      "privacy": "public"
     }
   ],
   "bots": {

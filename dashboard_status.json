@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-10T00:23:42.763284+09:00",
+  "updated_at": "2026-10-10T00:33:42.516475+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "절대 생각하지 말아야지 다짐했다면 일어나는 일 #shorts",
       "video_id": "i44PIFfCYRA",
       "published_kst": "10/09 19:01",
-      "views": 65,
+      "views": 44,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-09",
+      "date": "2026-10-10",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

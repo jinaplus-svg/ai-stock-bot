@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-11T05:23:42.887194+09:00",
+  "updated_at": "2026-10-11T05:33:43.004004+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "미래는 12층에 이미 있다",
+      "video_id": "mQEtbLo7hak",
+      "published_kst": "10/11 05:31",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "내가 아는 걸 남도 알 거라는 착각 #shorts",
       "video_id": "PmdcnKOThwI",
       "published_kst": "10/10 19:06",
-      "views": 713,
+      "views": 734,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "i44PIFfCYRA",
       "published_kst": "10/09 19:01",
       "views": 977,
-      "privacy": "public"
-    },
-    {
-      "title": "왜 결심만 하면 제자리일까? 양자물리학과 1장의 기록이 증명한 현실 창조의 비밀",
-      "video_id": "SYsMBmHOgP4",
-      "published_kst": "10/09 05:32",
-      "views": 5,
       "privacy": "public"
     }
   ],

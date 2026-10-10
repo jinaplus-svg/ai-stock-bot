@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-11T00:03:52.270172+09:00",
+  "updated_at": "2026-10-11T00:13:42.604082+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "내가 아는 걸 남도 알 거라는 착각 #shorts",
       "video_id": "PmdcnKOThwI",
       "published_kst": "10/10 19:06",
-      "views": 264,
+      "views": 276,
       "privacy": "public"
     },
     {
@@ -76,7 +76,7 @@
       "title": "절대 생각하지 말아야지 다짐했다면 일어나는 일 #shorts",
       "video_id": "i44PIFfCYRA",
       "published_kst": "10/09 19:01",
-      "views": 762,
+      "views": 800,
       "privacy": "public"
     },
     {
@@ -122,9 +122,9 @@
     }
   },
   "account": {
-    "error": "500 Server Error: Internal Server Error for url: https://openapi.tossinvest.com/api/v1/buying-power?currency=KRW",
+    "buying_power": 4926257.0,
     "stock_value_krw": 0,
-    "total_value_krw": 0,
+    "total_value_krw": 4926257,
     "unrealized_pnl_krw": 0
   },
   "threads": {

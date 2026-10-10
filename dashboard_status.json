@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-10T19:03:47.170277+09:00",
+  "updated_at": "2026-10-10T19:13:42.450890+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "내가 아는 걸 남도 알 거라는 착각 #shorts",
+      "video_id": "PmdcnKOThwI",
+      "published_kst": "10/10 19:06",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "과학적으로 증명된 우리가 하는 걱정의 소름 돋는 진실",
       "video_id": "NPEECtmsqVI",
       "published_kst": "10/10 04:12",
@@ -69,7 +76,7 @@
       "title": "절대 생각하지 말아야지 다짐했다면 일어나는 일 #shorts",
       "video_id": "i44PIFfCYRA",
       "published_kst": "10/09 19:01",
-      "views": 564,
+      "views": 576,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "SYsMBmHOgP4",
       "published_kst": "10/09 05:32",
       "views": 5,
-      "privacy": "public"
-    },
-    {
-      "title": "80억 인류가 각설탕 1개?",
-      "video_id": "AOlm11D-DeU",
-      "published_kst": "10/09 05:29",
-      "views": 1,
       "privacy": "public"
     }
   ],

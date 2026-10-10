@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-10T15:53:42.392671+09:00",
+  "updated_at": "2026-10-10T16:03:42.853957+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "과학적으로 증명된 우리가 하는 걱정의 소름 돋는 진실",
+      "video_id": "NPEECtmsqVI",
+      "published_kst": "10/10 04:12",
+      "views": 971,
+      "privacy": "public"
+    },
+    {
+      "title": "당신이 하는 걱정의 91%는 일어나지 않는다",
+      "video_id": "UpIhnAVKvA0",
+      "published_kst": "10/10 04:10",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
+      "title": "절대 생각하지 말아야지 다짐했다면 일어나는 일 #shorts",
+      "video_id": "i44PIFfCYRA",
+      "published_kst": "10/09 19:01",
+      "views": 379,
+      "privacy": "public"
+    },
+    {
+      "title": "왜 결심만 하면 제자리일까? 양자물리학과 1장의 기록이 증명한 현실 창조의 비밀",
+      "video_id": "SYsMBmHOgP4",
+      "published_kst": "10/09 05:32",
+      "views": 5,
+      "privacy": "public"
+    },
+    {
+      "title": "80억 인류가 각설탕 1개?",
+      "video_id": "AOlm11D-DeU",
+      "published_kst": "10/09 05:29",
+      "views": 1,
+      "privacy": "public"
     }
   ],
   "bots": {

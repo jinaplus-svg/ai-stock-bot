@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-11T05:33:43.004004+09:00",
+  "updated_at": "2026-10-11T05:43:42.902811+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,17 +52,24 @@
   ],
   "youtube": [
     {
+      "title": "시간은 흐르지 않습니다: 미래를 새로 짓지 않고 이미 존재하는 층을 고르는 법",
+      "video_id": "WUq1WRcDaiM",
+      "published_kst": "10/11 05:33",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "미래는 12층에 이미 있다",
       "video_id": "mQEtbLo7hak",
       "published_kst": "10/11 05:31",
-      "views": 0,
+      "views": 59,
       "privacy": "public"
     },
     {
       "title": "내가 아는 걸 남도 알 거라는 착각 #shorts",
       "video_id": "PmdcnKOThwI",
       "published_kst": "10/10 19:06",
-      "views": 734,
+      "views": 748,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "UpIhnAVKvA0",
       "published_kst": "10/10 04:10",
       "views": 3,
-      "privacy": "public"
-    },
-    {
-      "title": "절대 생각하지 말아야지 다짐했다면 일어나는 일 #shorts",
-      "video_id": "i44PIFfCYRA",
-      "published_kst": "10/09 19:01",
-      "views": 977,
       "privacy": "public"
     }
   ],

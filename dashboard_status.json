@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-10T19:23:42.460631+09:00",
+  "updated_at": "2026-10-10T19:33:42.310453+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "내가 아는 걸 남도 알 거라는 착각 #shorts",
       "video_id": "PmdcnKOThwI",
       "published_kst": "10/10 19:06",
-      "views": 6,
+      "views": 11,
       "privacy": "public"
     },
     {
@@ -76,7 +76,7 @@
       "title": "절대 생각하지 말아야지 다짐했다면 일어나는 일 #shorts",
       "video_id": "i44PIFfCYRA",
       "published_kst": "10/09 19:01",
-      "views": 593,
+      "views": 605,
       "privacy": "public"
     },
     {
@@ -129,16 +129,16 @@
   },
   "threads": {
     "latest": {
-      "date": "2026-10-09T19:30:47.318109+09:00",
-      "title": "외출 전 1분 원룸 가스·화재 안전 체크리스트",
-      "permalink": "https://www.threads.com/@brandnew0789/post/DeRTGziGlT8",
-      "views": 33,
+      "date": "2026-10-10T19:30:51.553446+09:00",
+      "title": "원룸에 꼭 구비해둘 기본 공구와 비상용품 4가지",
+      "permalink": "https://www.threads.com/@brandnew0789/post/DeT36ThGksJ",
+      "views": 0,
       "likes": 0,
       "replies": 0,
       "reposts": 0,
       "quotes": 0
     },
-    "total_posts": 13,
+    "total_posts": 14,
     "total_views": 453,
     "total_likes": 7
   }

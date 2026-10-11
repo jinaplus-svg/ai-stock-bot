@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-11T18:53:42.657491+09:00",
+  "updated_at": "2026-10-11T19:03:43.108322+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "돈으로 행복을 사는 가장 확실한 방법 #shorts",
+      "video_id": "WM59rpGGjvU",
+      "published_kst": "10/11 19:01",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "시간은 흐르지 않습니다: 미래를 새로 짓지 않고 이미 존재하는 층을 고르는 법",
       "video_id": "WUq1WRcDaiM",
       "published_kst": "10/11 05:33",
@@ -77,13 +84,6 @@
       "video_id": "NPEECtmsqVI",
       "published_kst": "10/10 04:12",
       "views": 1013,
-      "privacy": "public"
-    },
-    {
-      "title": "당신이 하는 걱정의 91%는 일어나지 않는다",
-      "video_id": "UpIhnAVKvA0",
-      "published_kst": "10/10 04:10",
-      "views": 3,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-11T09:13:42.438692+09:00",
+  "updated_at": "2026-10-11T09:23:43.218039+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "시간은 흐르지 않습니다: 미래를 새로 짓지 않고 이미 존재하는 층을 고르는 법",
+      "video_id": "WUq1WRcDaiM",
+      "published_kst": "10/11 05:33",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "미래는 12층에 이미 있다",
+      "video_id": "mQEtbLo7hak",
+      "published_kst": "10/11 05:31",
+      "views": 333,
+      "privacy": "public"
+    },
+    {
+      "title": "내가 아는 걸 남도 알 거라는 착각 #shorts",
+      "video_id": "PmdcnKOThwI",
+      "published_kst": "10/10 19:06",
+      "views": 989,
+      "privacy": "public"
+    },
+    {
+      "title": "과학적으로 증명된 우리가 하는 걱정의 소름 돋는 진실",
+      "video_id": "NPEECtmsqVI",
+      "published_kst": "10/10 04:12",
+      "views": 974,
+      "privacy": "public"
+    },
+    {
+      "title": "당신이 하는 걱정의 91%는 일어나지 않는다",
+      "video_id": "UpIhnAVKvA0",
+      "published_kst": "10/10 04:10",
+      "views": 3,
+      "privacy": "public"
     }
   ],
   "bots": {

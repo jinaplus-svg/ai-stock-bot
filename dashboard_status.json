@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-12T11:53:42.238358+09:00",
+  "updated_at": "2026-10-12T12:03:42.663836+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "금붕어보다 집중력 떨어진 당신의 뇌, 진짜 범인은?",
-      "video_id": "VJ76b9NfKbU",
-      "published_kst": "10/12 04:11",
-      "views": 958,
-      "privacy": "public"
-    },
-    {
-      "title": "당신의 뇌가 8초 만에 무너지는 이유: 도파민의 함정과 집중력의 뇌과학",
-      "video_id": "B-uMTioephI",
-      "published_kst": "10/12 04:09",
-      "views": 2,
-      "privacy": "public"
-    },
-    {
-      "title": "돈으로 행복을 사는 가장 확실한 방법 #shorts",
-      "video_id": "WM59rpGGjvU",
-      "published_kst": "10/11 19:01",
-      "views": 1013,
-      "privacy": "public"
-    },
-    {
-      "title": "시간은 흐르지 않습니다: 미래를 새로 짓지 않고 이미 존재하는 층을 고르는 법",
-      "video_id": "WUq1WRcDaiM",
-      "published_kst": "10/11 05:33",
-      "views": 5,
-      "privacy": "public"
-    },
-    {
-      "title": "미래는 12층에 이미 있다",
-      "video_id": "mQEtbLo7hak",
-      "published_kst": "10/11 05:31",
-      "views": 982,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-12T19:03:48.591831+09:00",
+  "updated_at": "2026-10-12T19:13:42.780861+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "25번 마주친 낯선 사람에게 끌리는 이유 #shorts",
+      "video_id": "jpun-5pHHKY",
+      "published_kst": "10/12 19:06",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
       "title": "금붕어보다 집중력 떨어진 당신의 뇌, 진짜 범인은?",
       "video_id": "VJ76b9NfKbU",
       "published_kst": "10/12 04:11",
@@ -77,13 +84,6 @@
       "video_id": "WUq1WRcDaiM",
       "published_kst": "10/11 05:33",
       "views": 5,
-      "privacy": "public"
-    },
-    {
-      "title": "미래는 12층에 이미 있다",
-      "video_id": "mQEtbLo7hak",
-      "published_kst": "10/11 05:31",
-      "views": 975,
       "privacy": "public"
     }
   ],

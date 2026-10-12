@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-12T19:23:42.648456+09:00",
+  "updated_at": "2026-10-12T19:33:42.912924+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "25번 마주친 낯선 사람에게 끌리는 이유 #shorts",
       "video_id": "jpun-5pHHKY",
       "published_kst": "10/12 19:06",
-      "views": 2,
+      "views": 4,
       "privacy": "public"
     },
     {
@@ -129,17 +129,17 @@
   },
   "threads": {
     "latest": {
-      "date": "2026-10-11T19:30:50.905184+09:00",
-      "title": "원룸 가구 뒤 결로와 곰팡이 방지 틈새 관리법",
-      "permalink": "https://www.threads.com/@brandnew0789/post/DeWctCGGrXp",
+      "date": "2026-10-12T19:30:46.723978+09:00",
+      "title": "한율 쑥판텐 크림",
+      "permalink": "https://www.threads.com/@brandnew0789/post/DeZBfKnGtSC",
       "views": 0,
       "likes": 0,
       "replies": 0,
       "reposts": 0,
       "quotes": 0
     },
-    "total_posts": 15,
-    "total_views": 458,
-    "total_likes": 7
+    "total_posts": 16,
+    "total_views": 575,
+    "total_likes": 16
   }
 }

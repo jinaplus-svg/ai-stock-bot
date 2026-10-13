@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14T00:23:42.042912+09:00",
+  "updated_at": "2026-10-14T00:33:41.956267+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "8000명이 증명한 '만약'의 힘 #shorts",
       "video_id": "kFNL3cVP0DE",
       "published_kst": "10/13 19:07",
-      "views": 235,
+      "views": 247,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-13",
+      "date": "2026-10-14",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

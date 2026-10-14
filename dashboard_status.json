@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15T00:23:42.601418+09:00",
+  "updated_at": "2026-10-15T00:33:42.639174+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "연기가 차오르는 방에 갇힌 24명 #shorts",
       "video_id": "XlTCcfHvl7Y",
       "published_kst": "10/14 19:06",
-      "views": 513,
+      "views": 571,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-14",
+      "date": "2026-10-15",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

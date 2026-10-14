@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14T09:13:44.664706+09:00",
+  "updated_at": "2026-10-14T09:23:44.078109+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "8000명이 증명한 '만약'의 힘 #shorts",
+      "video_id": "kFNL3cVP0DE",
+      "published_kst": "10/13 19:07",
+      "views": 652,
+      "privacy": "public"
+    },
+    {
+      "title": "25번 마주친 낯선 사람에게 끌리는 이유 #shorts",
+      "video_id": "jpun-5pHHKY",
+      "published_kst": "10/12 19:06",
+      "views": 1029,
+      "privacy": "public"
+    },
+    {
+      "title": "금붕어보다 집중력 떨어진 당신의 뇌, 진짜 범인은?",
+      "video_id": "VJ76b9NfKbU",
+      "published_kst": "10/12 04:11",
+      "views": 996,
+      "privacy": "public"
+    },
+    {
+      "title": "당신의 뇌가 8초 만에 무너지는 이유: 도파민의 함정과 집중력의 뇌과학",
+      "video_id": "B-uMTioephI",
+      "published_kst": "10/12 04:09",
+      "views": 4,
+      "privacy": "public"
+    },
+    {
+      "title": "돈으로 행복을 사는 가장 확실한 방법 #shorts",
+      "video_id": "WM59rpGGjvU",
+      "published_kst": "10/11 19:01",
+      "views": 1014,
+      "privacy": "public"
     }
   ],
   "bots": {

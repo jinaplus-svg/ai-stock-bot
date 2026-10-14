@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14T19:23:42.295361+09:00",
+  "updated_at": "2026-10-14T19:33:42.432227+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "연기가 차오르는 방에 갇힌 24명 #shorts",
       "video_id": "XlTCcfHvl7Y",
       "published_kst": "10/14 19:06",
-      "views": 2,
+      "views": 8,
       "privacy": "public"
     },
     {
@@ -129,17 +129,17 @@
   },
   "threads": {
     "latest": {
-      "date": "2026-10-13T19:30:26.474511+09:00",
-      "title": "전기요금 줄이는 전기밥솥 보온 기능 끄기 습관",
-      "permalink": "https://www.threads.com/@brandnew0789/post/DebmQDimgur",
+      "date": "2026-10-14T19:30:47.771498+09:00",
+      "title": "슈퍼캘리 아쿠아 필링기",
+      "permalink": "https://www.threads.com/@brandnew0789/post/DeeLFFsGo8y",
       "views": 0,
       "likes": 0,
       "replies": 0,
       "reposts": 0,
       "quotes": 0
     },
-    "total_posts": 17,
-    "total_views": 626,
-    "total_likes": 19
+    "total_posts": 18,
+    "total_views": 872,
+    "total_likes": 20
   }
 }

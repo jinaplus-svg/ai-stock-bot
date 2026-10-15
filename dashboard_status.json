@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15T19:23:42.842495+09:00",
+  "updated_at": "2026-10-15T19:33:42.522723+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -44,10 +44,10 @@
     {
       "category": "자취템",
       "domain": "soloitems.blogspot.com",
-      "title": "좁은 원룸 공간 살리는 감성 접이식 테이블 솔직 후기",
-      "url": "https://soloitems.blogspot.com/2026/10/blog-post_14.html",
-      "published_kst": "10/14 19:41",
-      "published_raw": "2026-10-14T03:41:41-07:00"
+      "title": "원룸 빨래 꿉꿉함 끝내는 한일 미니 건조기 5kg 솔직 후기",
+      "url": "https://soloitems.blogspot.com/2026/10/5kg.html",
+      "published_kst": "10/15 19:25",
+      "published_raw": "2026-10-15T03:25:15-07:00"
     }
   ],
   "youtube": [
@@ -55,7 +55,7 @@
       "title": "낯선 소리에 자지러진 20% 아기의 미래 #shorts",
       "video_id": "oNYs7M0wBSM",
       "published_kst": "10/15 19:01",
-      "views": 72,
+      "views": 89,
       "privacy": "public"
     },
     {
@@ -129,17 +129,17 @@
   },
   "threads": {
     "latest": {
-      "date": "2026-10-14T19:30:47.771498+09:00",
-      "title": "슈퍼캘리 아쿠아 필링기",
-      "permalink": "https://www.threads.com/@brandnew0789/post/DeeLFFsGo8y",
+      "date": "2026-10-15T19:30:27.412333+09:00",
+      "title": "전월세 계약 전 등기부등본 당일 열람 체크",
+      "permalink": "https://www.threads.com/@brandnew0789/post/Degv1ynGhIg",
       "views": 0,
       "likes": 0,
       "replies": 0,
       "reposts": 0,
       "quotes": 0
     },
-    "total_posts": 18,
-    "total_views": 872,
+    "total_posts": 19,
+    "total_views": 928,
     "total_likes": 20
   }
 }

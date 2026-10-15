@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15T18:53:42.368701+09:00",
+  "updated_at": "2026-10-15T19:03:42.684948+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "낯선 소리에 자지러진 20% 아기의 미래 #shorts",
+      "video_id": "oNYs7M0wBSM",
+      "published_kst": "10/15 19:01",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "연기가 차오르는 방에 갇힌 24명 #shorts",
       "video_id": "XlTCcfHvl7Y",
       "published_kst": "10/14 19:06",
@@ -77,13 +84,6 @@
       "video_id": "VJ76b9NfKbU",
       "published_kst": "10/12 04:11",
       "views": 998,
-      "privacy": "public"
-    },
-    {
-      "title": "당신의 뇌가 8초 만에 무너지는 이유: 도파민의 함정과 집중력의 뇌과학",
-      "video_id": "B-uMTioephI",
-      "published_kst": "10/12 04:09",
-      "views": 4,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-16T06:43:43.312794+09:00",
+  "updated_at": "2026-10-16T06:53:43.139795+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "낯선 소리에 자지러진 20% 아기의 미래 #shorts",
-      "video_id": "oNYs7M0wBSM",
-      "published_kst": "10/15 19:01",
-      "views": 1018,
-      "privacy": "public"
-    },
-    {
-      "title": "연기가 차오르는 방에 갇힌 24명 #shorts",
-      "video_id": "XlTCcfHvl7Y",
-      "published_kst": "10/14 19:06",
-      "views": 1107,
-      "privacy": "public"
-    },
-    {
-      "title": "8000명이 증명한 '만약'의 힘 #shorts",
-      "video_id": "kFNL3cVP0DE",
-      "published_kst": "10/13 19:07",
-      "views": 1027,
-      "privacy": "public"
-    },
-    {
-      "title": "25번 마주친 낯선 사람에게 끌리는 이유 #shorts",
-      "video_id": "jpun-5pHHKY",
-      "published_kst": "10/12 19:06",
-      "views": 1036,
-      "privacy": "public"
-    },
-    {
-      "title": "금붕어보다 집중력 떨어진 당신의 뇌, 진짜 범인은?",
-      "video_id": "VJ76b9NfKbU",
-      "published_kst": "10/12 04:11",
-      "views": 996,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

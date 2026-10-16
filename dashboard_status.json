@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-16T19:03:46.158049+09:00",
+  "updated_at": "2026-10-16T19:13:42.788587+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -44,13 +44,20 @@
     {
       "category": "자취템",
       "domain": "soloitems.blogspot.com",
-      "title": "원룸 빨래 꿉꿉함 끝내는 한일 미니 건조기 5kg 솔직 후기",
-      "url": "https://soloitems.blogspot.com/2026/10/5kg.html",
-      "published_kst": "10/15 19:25",
-      "published_raw": "2026-10-15T03:25:15-07:00"
+      "title": "원룸 주방 화력 고민 끝내는 1구 전기레인지 솔직 후기",
+      "url": "https://soloitems.blogspot.com/2026/10/1_033407529.html",
+      "published_kst": "10/16 19:12",
+      "published_raw": "2026-10-16T03:12:52-07:00"
     }
   ],
   "youtube": [
+    {
+      "title": "잔소리 듣는 10명 중 9명의 진짜 속마음 #shorts",
+      "video_id": "zyBZMeUMOhU",
+      "published_kst": "10/16 19:06",
+      "views": 0,
+      "privacy": "public"
+    },
     {
       "title": "낯선 소리에 자지러진 20% 아기의 미래 #shorts",
       "video_id": "oNYs7M0wBSM",
@@ -77,13 +84,6 @@
       "video_id": "jpun-5pHHKY",
       "published_kst": "10/12 19:06",
       "views": 1036,
-      "privacy": "public"
-    },
-    {
-      "title": "금붕어보다 집중력 떨어진 당신의 뇌, 진짜 범인은?",
-      "video_id": "VJ76b9NfKbU",
-      "published_kst": "10/12 04:11",
-      "views": 996,
       "privacy": "public"
     }
   ],

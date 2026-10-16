@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-16T19:33:42.717479+09:00",
+  "updated_at": "2026-10-16T19:43:43.032979+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,7 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "타이베이 타오위안 공항에서 시내 갈 때 MRT 급행 vs 국광버스 1819 막차 시간과 편의성 비교",
-      "url": "https://brandnew901.blogspot.com/2026/10/mrt-vs-1819.html",
-      "published_kst": "10/16 09:02",
-      "published_raw": "2026-10-15T17:02:05-07:00"
+      "error": "<HttpError 503 when requesting https://blogger.googleapis.com/v3/blogs/4346940314985817707/posts?maxResults=1&orderBy=PUBLISHED&fetchBodies=false&status=LIVE&alt=json returned \"The service is currently unavailable.\". Details: \"[{'message': 'The service is currently unavailable.', 'domain': 'global', 'reason': 'backendError'}]\">"
     },
     {
       "category": "News",
@@ -55,7 +52,7 @@
       "title": "잔소리 듣는 10명 중 9명의 진짜 속마음 #shorts",
       "video_id": "zyBZMeUMOhU",
       "published_kst": "10/16 19:06",
-      "views": 32,
+      "views": 63,
       "privacy": "public"
     },
     {

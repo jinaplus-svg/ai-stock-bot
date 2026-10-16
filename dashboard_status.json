@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17T00:13:42.926993+09:00",
+  "updated_at": "2026-10-17T00:53:42.821429+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "잔소리 듣는 10명 중 9명의 진짜 속마음 #shorts",
       "video_id": "zyBZMeUMOhU",
       "published_kst": "10/16 19:06",
-      "views": 395,
+      "views": 447,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-16",
+      "date": "2026-10-17",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17T07:43:42.262518+09:00",
+  "updated_at": "2026-10-17T07:53:42.190401+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "뇌는 왜 행복 대신 불안을 골랐을까? | 불안의 진짜 정체",
+      "video_id": "lr11Hd6f-jM",
+      "published_kst": "10/17 07:44",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "잔소리 듣는 10명 중 9명의 진짜 속마음 #shorts",
       "video_id": "zyBZMeUMOhU",
       "published_kst": "10/16 19:06",
@@ -77,13 +84,6 @@
       "video_id": "kFNL3cVP0DE",
       "published_kst": "10/13 19:07",
       "views": 1027,
-      "privacy": "public"
-    },
-    {
-      "title": "25번 마주친 낯선 사람에게 끌리는 이유 #shorts",
-      "video_id": "jpun-5pHHKY",
-      "published_kst": "10/12 19:06",
-      "views": 1036,
       "privacy": "public"
     }
   ],

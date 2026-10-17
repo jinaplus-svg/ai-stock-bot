@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17T08:53:45.853369+09:00",
+  "updated_at": "2026-10-17T09:04:03.911664+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "타이베이 타오위안 공항에서 시내 갈 때 MRT 급행 vs 국광버스 1819 막차 시간과 편의성 비교",
-      "url": "https://brandnew901.blogspot.com/2026/10/mrt-vs-1819.html",
-      "published_kst": "10/16 09:02",
-      "published_raw": "2026-10-15T17:02:05-07:00"
+      "title": "해외 호텔 예약 시티택스·리조트피 현장 추가 요금 확인법과 주의점",
+      "url": "https://brandnew901.blogspot.com/2026/10/blog-post_16.html",
+      "published_kst": "10/17 09:01",
+      "published_raw": "2026-10-16T17:01:35-07:00"
     },
     {
       "category": "News",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "뇌는 왜 행복 대신 불안을 골랐을까? | 불안의 진짜 정체",
+      "video_id": "lr11Hd6f-jM",
+      "published_kst": "10/17 07:44",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "잔소리 듣는 10명 중 9명의 진짜 속마음 #shorts",
+      "video_id": "zyBZMeUMOhU",
+      "published_kst": "10/16 19:06",
+      "views": 1044,
+      "privacy": "public"
+    },
+    {
+      "title": "낯선 소리에 자지러진 20% 아기의 미래 #shorts",
+      "video_id": "oNYs7M0wBSM",
+      "published_kst": "10/15 19:01",
+      "views": 1046,
+      "privacy": "public"
+    },
+    {
+      "title": "연기가 차오르는 방에 갇힌 24명 #shorts",
+      "video_id": "XlTCcfHvl7Y",
+      "published_kst": "10/14 19:06",
+      "views": 1108,
+      "privacy": "public"
+    },
+    {
+      "title": "8000명이 증명한 '만약'의 힘 #shorts",
+      "video_id": "kFNL3cVP0DE",
+      "published_kst": "10/13 19:07",
+      "views": 1027,
+      "privacy": "public"
     }
   ],
   "bots": {
@@ -90,9 +122,9 @@
     }
   },
   "account": {
-    "buying_power": 4926257.0,
+    "error": "HTTPSConnectionPool(host='openapi.tossinvest.com', port=443): Read timed out. (read timeout=15)",
     "stock_value_krw": 0,
-    "total_value_krw": 4926257,
+    "total_value_krw": 0,
     "unrealized_pnl_krw": 0
   },
   "threads": {

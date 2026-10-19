@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-10-17T09:53:42.480944+09:00",
+  "updated_at": "2026-10-20T07:33:42.550960+09:00",
   "blogs": [
     {
       "category": "Stock",
       "domain": "brandnew678.blogspot.com",
-      "title": "ETF 살 때 괴리율과 추적오차율 차이점, 호가창에서 위험 신호 거르는 법",
-      "url": "https://brandnew678.blogspot.com/2026/10/etf_01899757379.html",
-      "published_kst": "10/17 07:01",
-      "published_raw": "2026-10-16T15:01:54-07:00"
+      "title": "주식 계좌 현금 비중 유지법, 다 사버리는 심리 해결과 예수금 관리 기준",
+      "url": "https://brandnew678.blogspot.com/2026/10/blog-post_19.html",
+      "published_kst": "10/20 07:01",
+      "published_raw": "2026-10-19T15:01:53-07:00"
     },
     {
       "category": "IT",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "해외 호텔 예약 시티택스·리조트피 현장 추가 요금 확인법과 주의점",
-      "url": "https://brandnew901.blogspot.com/2026/10/blog-post_16.html",
-      "published_kst": "10/17 09:01",
-      "published_raw": "2026-10-16T17:01:35-07:00"
+      "title": "해외여행 1인 하루 경비, 식비·교통비·입장료 계산법과 예산 짜는 법",
+      "url": "https://brandnew901.blogspot.com/2026/10/1.html",
+      "published_kst": "10/19 09:01",
+      "published_raw": "2026-10-18T17:01:52-07:00"
     },
     {
       "category": "News",
@@ -44,46 +44,46 @@
     {
       "category": "자취템",
       "domain": "soloitems.blogspot.com",
-      "title": "원룸 주방 화력 고민 끝내는 1구 전기레인지 솔직 후기",
-      "url": "https://soloitems.blogspot.com/2026/10/1_033407529.html",
-      "published_kst": "10/16 19:12",
-      "published_raw": "2026-10-16T03:12:52-07:00"
+      "title": "원룸 바닥 머리카락 청소 끝판왕 800g 초경량 에어르 슬릭 무선 청소기 내돈내산 찐후기",
+      "url": "https://soloitems.blogspot.com/2026/10/800g.html",
+      "published_kst": "10/19 20:20",
+      "published_raw": "2026-10-19T04:20:58-07:00"
     }
   ],
   "youtube": [
     {
-      "title": "뇌는 왜 행복 대신 불안을 골랐을까? | 불안의 진짜 정체",
-      "video_id": "lr11Hd6f-jM",
-      "published_kst": "10/17 07:44",
+      "title": "상위 0.1%가 하루 만에 일 끝내는 뇌 과학 치트키",
+      "video_id": "NY5wnL-oY-8",
+      "published_kst": "10/20 04:11",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "상위 0.1%가 하루 만에 일주일 치 성과를 내는 뇌 과학의 비밀",
+      "video_id": "eKVGwBuNYgk",
+      "published_kst": "10/20 04:10",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "왜 끌어당김을 매일 시도해도 삶이 제자리일까? 37조 개 세포와 신경계를 바꾸는 3분 무의식 법칙",
+      "video_id": "FBIiR_YkuvI",
+      "published_kst": "10/19 23:25",
       "views": 2,
       "privacy": "public"
     },
     {
-      "title": "잔소리 듣는 10명 중 9명의 진짜 속마음 #shorts",
-      "video_id": "zyBZMeUMOhU",
-      "published_kst": "10/16 19:06",
-      "views": 1046,
+      "title": "37조개 세포 부의 주파수",
+      "video_id": "1tGjKoTDzIE",
+      "published_kst": "10/19 23:21",
+      "views": 468,
       "privacy": "public"
     },
     {
-      "title": "낯선 소리에 자지러진 20% 아기의 미래 #shorts",
-      "video_id": "oNYs7M0wBSM",
-      "published_kst": "10/15 19:01",
-      "views": 1046,
-      "privacy": "public"
-    },
-    {
-      "title": "연기가 차오르는 방에 갇힌 24명 #shorts",
-      "video_id": "XlTCcfHvl7Y",
-      "published_kst": "10/14 19:06",
-      "views": 1108,
-      "privacy": "public"
-    },
-    {
-      "title": "8000명이 증명한 '만약'의 힘 #shorts",
-      "video_id": "kFNL3cVP0DE",
-      "published_kst": "10/13 19:07",
-      "views": 1027,
+      "title": "확률을 뚫고 담장을 넘긴 타자의 비밀 #shorts",
+      "video_id": "ArnmG4oj-o4",
+      "published_kst": "10/19 19:04",
+      "views": 1060,
       "privacy": "public"
     }
   ],
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-17",
+      "date": "2026-10-20",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,
@@ -129,17 +129,17 @@
   },
   "threads": {
     "latest": {
-      "date": "2026-10-16T19:30:30.301059+09:00",
-      "title": "비플레인 녹두 클렌징 오일",
-      "permalink": "https://www.threads.com/@brandnew0789/post/DejUpGAGjZD",
+      "date": "2026-10-18T19:30:32.884749+09:00",
+      "title": "뷰티피플 보들 립 코튼",
+      "permalink": "https://www.threads.com/@brandnew0789/post/DeoePGfGpii",
       "views": 0,
       "likes": 0,
       "replies": 0,
       "reposts": 0,
       "quotes": 0
     },
-    "total_posts": 20,
-    "total_views": 1264,
+    "total_posts": 22,
+    "total_views": 1322,
     "total_likes": 20
   }
 }

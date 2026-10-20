@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21T00:23:43.174240+09:00",
+  "updated_at": "2026-10-21T00:33:43.655385+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "29년을 기다린 롤렉스 시계의 주인이 한 행동 #shorts",
       "video_id": "PdWXiF2XDbI",
       "published_kst": "10/20 19:07",
-      "views": 698,
+      "views": 703,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-20",
+      "date": "2026-10-21",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

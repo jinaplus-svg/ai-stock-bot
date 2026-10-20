@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-20T19:03:42.767868+09:00",
+  "updated_at": "2026-10-20T19:13:42.741328+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "29년을 기다린 롤렉스 시계의 주인이 한 행동 #shorts",
+      "video_id": "PdWXiF2XDbI",
+      "published_kst": "10/20 19:07",
+      "views": 11,
+      "privacy": "public"
+    },
+    {
       "title": "상위 0.1%가 하루 만에 일 끝내는 뇌 과학 치트키",
       "video_id": "NY5wnL-oY-8",
       "published_kst": "10/20 04:11",
@@ -76,14 +83,7 @@
       "title": "37조개 세포 부의 주파수",
       "video_id": "1tGjKoTDzIE",
       "published_kst": "10/19 23:21",
-      "views": 485,
-      "privacy": "public"
-    },
-    {
-      "title": "확률을 뚫고 담장을 넘긴 타자의 비밀 #shorts",
-      "video_id": "ArnmG4oj-o4",
-      "published_kst": "10/19 19:04",
-      "views": 1063,
+      "views": 488,
       "privacy": "public"
     }
   ],

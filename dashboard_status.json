@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21T08:13:44.896646+09:00",
+  "updated_at": "2026-10-21T08:23:44.928773+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "29년을 기다린 롤렉스 시계의 주인이 한 행동 #shorts",
+      "video_id": "PdWXiF2XDbI",
+      "published_kst": "10/20 19:07",
+      "views": 1029,
+      "privacy": "public"
+    },
+    {
+      "title": "상위 0.1%가 하루 만에 일 끝내는 뇌 과학 치트키",
+      "video_id": "NY5wnL-oY-8",
+      "published_kst": "10/20 04:11",
+      "views": 5,
+      "privacy": "public"
+    },
+    {
+      "title": "상위 0.1%가 하루 만에 일주일 치 성과를 내는 뇌 과학의 비밀",
+      "video_id": "eKVGwBuNYgk",
+      "published_kst": "10/20 04:10",
+      "views": 6,
+      "privacy": "public"
+    },
+    {
+      "title": "왜 끌어당김을 매일 시도해도 삶이 제자리일까? 37조 개 세포와 신경계를 바꾸는 3분 무의식 법칙",
+      "video_id": "FBIiR_YkuvI",
+      "published_kst": "10/19 23:25",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "37조개 세포 부의 주파수",
+      "video_id": "1tGjKoTDzIE",
+      "published_kst": "10/19 23:21",
+      "views": 492,
+      "privacy": "public"
     }
   ],
   "bots": {

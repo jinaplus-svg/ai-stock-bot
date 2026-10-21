@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21T08:53:44.589485+09:00",
+  "updated_at": "2026-10-21T09:03:45.134602+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "비행기 기내 반입 유모차 규격 기준과 도어투도어(탑승구 위탁) 서비스 신청법",
-      "url": "https://brandnew901.blogspot.com/2026/10/blog-post_19.html",
-      "published_kst": "10/20 09:02",
-      "published_raw": "2026-10-19T17:02:02-07:00"
+      "title": "영유아 동반 비행기 베시넷(아기바구니) 신청 기준과 사전 좌석 지정 팁",
+      "url": "https://brandnew901.blogspot.com/2026/10/blog-post_20.html",
+      "published_kst": "10/21 09:01",
+      "published_raw": "2026-10-20T17:01:42-07:00"
     },
     {
       "category": "News",
@@ -83,7 +83,7 @@
       "title": "37조개 세포 부의 주파수",
       "video_id": "1tGjKoTDzIE",
       "published_kst": "10/19 23:21",
-      "views": 492,
+      "views": 499,
       "privacy": "public"
     }
   ],

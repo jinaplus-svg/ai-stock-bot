@@ -1,13 +1,10 @@
 {
-  "updated_at": "2026-10-22T09:53:43.402800+09:00",
+  "updated_at": "2026-10-22T10:03:44.650864+09:00",
   "blogs": [
     {
       "category": "Stock",
       "domain": "brandnew678.blogspot.com",
-      "title": "성장주 볼 때 PER 대신 PEG를 봐야 하는 이유와 적정 주가 계산하는 법",
-      "url": "https://brandnew678.blogspot.com/2026/10/per-peg.html",
-      "published_kst": "10/22 07:02",
-      "published_raw": "2026-10-21T15:02:01-07:00"
+      "error": "<HttpError 503 when requesting https://blogger.googleapis.com/v3/blogs/7724943683997188616/posts?maxResults=1&orderBy=PUBLISHED&fetchBodies=false&status=LIVE&alt=json returned \"The service is currently unavailable.\". Details: \"[{'message': 'The service is currently unavailable.', 'domain': 'global', 'reason': 'backendError'}]\">"
     },
     {
       "category": "IT",
@@ -52,39 +49,7 @@
   ],
   "youtube": [
     {
-      "title": "익절은 3초, 물타기는 3년? 주식 망하는 지름길",
-      "video_id": "GK_yiDwoGZk",
-      "published_kst": "10/22 04:31",
-      "views": 8,
-      "privacy": "public"
-    },
-    {
-      "title": "왜 우리는 오르는 주식은 빨리 팔고 떨어지는 주식은 계속 들고 있을까",
-      "video_id": "Q1TcqSvu4aE",
-      "published_kst": "10/22 04:31",
-      "views": 1,
-      "privacy": "public"
-    },
-    {
-      "title": "한국시리즈 한 이닝에 12점을 낸 팀이 있다? 2001년 두산의 기적 #shorts",
-      "video_id": "DX084V1uS8Q",
-      "published_kst": "10/21 19:06",
-      "views": 1114,
-      "privacy": "public"
-    },
-    {
-      "title": "정해진 운명 3초 만에 바뀜",
-      "video_id": "4CoJRZ9XWv0",
-      "published_kst": "10/21 11:14",
-      "views": 223,
-      "privacy": "public"
-    },
-    {
-      "title": "정해진 운명을 단숨에 바꾸는 3가지 뇌 신경 법칙 | 요범사훈과 뇌과학이 밝혀낸 운의 비밀",
-      "video_id": "A3qoLBBkPyg",
-      "published_kst": "10/21 11:15",
-      "views": 4,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

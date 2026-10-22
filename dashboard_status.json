@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T03:03:43.304374+09:00",
+  "updated_at": "2026-10-23T03:13:43.359840+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -12,10 +12,7 @@
     {
       "category": "IT",
       "domain": "brandnew789.blogspot.com",
-      "title": "AI 안전 규제 전면전: 아모데이 “정부 개입” vs 올트먼·젠슨 황 “자율에 맡겨라”",
-      "url": "https://brandnew789.blogspot.com/2026/09/ai-vs.html",
-      "published_kst": "09/17 07:31",
-      "published_raw": "2026-09-16T15:31:18-07:00"
+      "error": "<HttpError 503 when requesting https://blogger.googleapis.com/v3/blogs/3604625893082334613/posts?maxResults=1&orderBy=PUBLISHED&fetchBodies=false&status=LIVE&alt=json returned \"The service is currently unavailable.\". Details: \"[{'message': 'The service is currently unavailable.', 'domain': 'global', 'reason': 'backendError'}]\">"
     },
     {
       "category": "Travel",
@@ -55,14 +52,14 @@
       "title": "정규시즌 1위 팀이 4전 전패로 무너진 이유 #shorts",
       "video_id": "ozx3XdrHrAw",
       "published_kst": "10/22 19:08",
-      "views": 1180,
+      "views": 1176,
       "privacy": "public"
     },
     {
       "title": "KBO 구단별 우승 횟수 순위 (1982→2025) #shorts",
       "video_id": "yJTeXQY69CI",
       "published_kst": "10/22 11:11",
-      "views": 1122,
+      "views": 1120,
       "privacy": "public"
     },
     {
@@ -83,7 +80,7 @@
       "title": "한국시리즈 한 이닝에 12점을 낸 팀이 있다? 2001년 두산의 기적 #shorts",
       "video_id": "DX084V1uS8Q",
       "published_kst": "10/21 19:06",
-      "views": 1116,
+      "views": 1117,
       "privacy": "public"
     }
   ],

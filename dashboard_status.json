@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T03:13:43.359840+09:00",
+  "updated_at": "2026-10-23T03:23:44.006195+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -12,7 +12,10 @@
     {
       "category": "IT",
       "domain": "brandnew789.blogspot.com",
-      "error": "<HttpError 503 when requesting https://blogger.googleapis.com/v3/blogs/3604625893082334613/posts?maxResults=1&orderBy=PUBLISHED&fetchBodies=false&status=LIVE&alt=json returned \"The service is currently unavailable.\". Details: \"[{'message': 'The service is currently unavailable.', 'domain': 'global', 'reason': 'backendError'}]\">"
+      "title": "AI 안전 규제 전면전: 아모데이 “정부 개입” vs 올트먼·젠슨 황 “자율에 맡겨라”",
+      "url": "https://brandnew789.blogspot.com/2026/09/ai-vs.html",
+      "published_kst": "09/17 07:31",
+      "published_raw": "2026-09-16T15:31:18-07:00"
     },
     {
       "category": "Travel",

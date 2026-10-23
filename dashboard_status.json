@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T09:13:43.312509+09:00",
+  "updated_at": "2026-10-23T09:23:43.391453+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "밤마다 나를 괴롭히는 생각의 감옥에서 벗어나 잠재의식을 바꾸는 10초의 법칙 | 432Hz 수면 명상",
-      "video_id": "Sr7zrarAVkY",
-      "published_kst": "10/23 05:30",
-      "views": 4,
-      "privacy": "public"
-    },
-    {
-      "title": "10분의 생각 10초의 느낌",
-      "video_id": "XuRPeslgJr0",
-      "published_kst": "10/23 05:29",
-      "views": 1075,
-      "privacy": "public"
-    },
-    {
-      "title": "정규시즌 1위 팀이 4전 전패로 무너진 이유 #shorts",
-      "video_id": "ozx3XdrHrAw",
-      "published_kst": "10/22 19:08",
-      "views": 1181,
-      "privacy": "public"
-    },
-    {
-      "title": "KBO 구단별 우승 횟수 순위 (1982→2025) #shorts",
-      "video_id": "yJTeXQY69CI",
-      "published_kst": "10/22 11:11",
-      "views": 1129,
-      "privacy": "public"
-    },
-    {
-      "title": "익절은 3초, 물타기는 3년? 주식 망하는 지름길",
-      "video_id": "GK_yiDwoGZk",
-      "published_kst": "10/22 04:31",
-      "views": 9,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

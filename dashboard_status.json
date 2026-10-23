@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24T07:23:43.359269+09:00",
+  "updated_at": "2026-10-24T07:33:44.102854+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -62,7 +62,7 @@
       "title": "빛의 속도가 우주의 한계인 진짜 이유 — 상대성이론 쉽게 이해하기",
       "video_id": "U2IXi_786k8",
       "published_kst": "10/24 04:33",
-      "views": 4,
+      "views": 6,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "10분의 생각 10초의 느낌",
       "video_id": "XuRPeslgJr0",
       "published_kst": "10/23 05:29",
-      "views": 1101,
+      "views": 1099,
       "privacy": "public"
     }
   ],

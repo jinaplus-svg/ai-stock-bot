@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T19:03:43.475576+09:00",
+  "updated_at": "2026-10-23T19:13:42.768022+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "가을야구를 9번이나? 전설이 된 2004년 빗속의 혈투 #shorts",
+      "video_id": "c9x2QNgw1XA",
+      "published_kst": "10/23 19:07",
+      "views": 38,
+      "privacy": "public"
+    },
+    {
       "title": "밤마다 나를 괴롭히는 생각의 감옥에서 벗어나 잠재의식을 바꾸는 10초의 법칙 | 432Hz 수면 명상",
       "video_id": "Sr7zrarAVkY",
       "published_kst": "10/23 05:30",
@@ -77,13 +84,6 @@
       "video_id": "yJTeXQY69CI",
       "published_kst": "10/22 11:11",
       "views": 1134,
-      "privacy": "public"
-    },
-    {
-      "title": "익절은 3초, 물타기는 3년? 주식 망하는 지름길",
-      "video_id": "GK_yiDwoGZk",
-      "published_kst": "10/22 04:31",
-      "views": 10,
       "privacy": "public"
     }
   ],

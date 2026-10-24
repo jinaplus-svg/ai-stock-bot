@@ -1,40 +1,90 @@
 {
-  "updated_at": "2026-10-24T20:34:05.490929+09:00",
+  "updated_at": "2026-10-24T20:43:43.679748+09:00",
   "blogs": [
     {
       "category": "Stock",
       "domain": "brandnew678.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "월배당 커버드콜 ETF, 고배당률 뒤에 숨겨진 원금 손실 위험과 나에게 맞는 선택 기준",
+      "url": "https://brandnew678.blogspot.com/2026/10/etf_0433919547.html",
+      "published_kst": "10/24 07:01",
+      "published_raw": "2026-10-23T15:01:51-07:00"
     },
     {
       "category": "IT",
       "domain": "brandnew789.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "AI 안전 규제 전면전: 아모데이 “정부 개입” vs 올트먼·젠슨 황 “자율에 맡겨라”",
+      "url": "https://brandnew789.blogspot.com/2026/09/ai-vs.html",
+      "published_kst": "09/17 07:31",
+      "published_raw": "2026-09-16T15:31:18-07:00"
     },
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "비행기 보조배터리 및 전자기기 기내 반입 용량(Wh) 계산법과 위탁수하물 금지 규정",
+      "url": "https://brandnew901.blogspot.com/2026/10/wh.html",
+      "published_kst": "10/24 09:01",
+      "published_raw": "2026-10-23T17:01:57-07:00"
     },
     {
       "category": "News",
       "domain": "brandnew890.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "인도 2027 인구조사 가옥 목록 작성 및 자체 전자 조사 일정은 어떻게 되나?",
+      "url": "https://brandnew890.blogspot.com/2026/09/2027.html",
+      "published_kst": "09/20 08:31",
+      "published_raw": "2026-09-19T16:31:24-07:00"
     },
     {
       "category": "Food",
       "domain": "brandnew567.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "추석 차례상 비용 5.1% 상승과 채소류 품목별 가격 변동",
+      "url": "https://brandnew567.blogspot.com/2026/09/51.html",
+      "published_kst": "09/19 08:01",
+      "published_raw": "2026-09-18T16:01:22-07:00"
     },
     {
       "category": "자취템",
       "domain": "soloitems.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "원룸 주방 화력 고민 끝, 쥬브 고화력 1구 인덕션 솔직 후기",
+      "url": "https://soloitems.blogspot.com/2026/10/1_0297210957.html",
+      "published_kst": "10/24 18:53",
+      "published_raw": "2026-10-24T02:53:25-07:00"
     }
   ],
   "youtube": [
     {
-      "error": "'NoneType' object has no attribute 'search'"
+      "title": "한국시리즈 첫 진출팀이 단 한 번도 지지 않을 확률은? 🏆 #shorts",
+      "video_id": "a__ZCK_9MZU",
+      "published_kst": "10/24 19:07",
+      "views": 750,
+      "privacy": "public"
+    },
+    {
+      "title": "KBO 통산 홈런 순위 TOP10 (1982→2026) #shorts",
+      "video_id": "HCFItHF5tM4",
+      "published_kst": "10/24 19:05",
+      "views": 773,
+      "privacy": "public"
+    },
+    {
+      "title": "목표를 이뤘는데 왜 허전할까? | 도착의 오류",
+      "video_id": "0rDl0Y88gEA",
+      "published_kst": "10/24 11:45",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
+      "title": "빛의 속도를 넘으면 생기는 끔찍한 일 (우주의 속도제한 이유)",
+      "video_id": "5Jcgdp2b72s",
+      "published_kst": "10/24 04:34",
+      "views": 1079,
+      "privacy": "public"
+    },
+    {
+      "title": "빛의 속도가 우주의 한계인 진짜 이유 — 상대성이론 쉽게 이해하기",
+      "video_id": "U2IXi_786k8",
+      "published_kst": "10/24 04:33",
+      "views": 8,
+      "privacy": "public"
     }
   ],
   "bots": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24T08:53:44.213009+09:00",
+  "updated_at": "2026-10-24T09:03:45.916294+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "강릉 2박 3일 KTX 뚜벅이 여행 동선, 기차 연계와 카페거리 중심 계획법",
-      "url": "https://brandnew901.blogspot.com/2026/10/2-3-ktx.html",
-      "published_kst": "10/23 09:01",
-      "published_raw": "2026-10-22T17:01:58-07:00"
+      "title": "비행기 보조배터리 및 전자기기 기내 반입 용량(Wh) 계산법과 위탁수하물 금지 규정",
+      "url": "https://brandnew901.blogspot.com/2026/10/wh.html",
+      "published_kst": "10/24 09:01",
+      "published_raw": "2026-10-23T17:01:57-07:00"
     },
     {
       "category": "News",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "빛의 속도를 넘으면 생기는 끔찍한 일 (우주의 속도제한 이유)",
-      "video_id": "5Jcgdp2b72s",
-      "published_kst": "10/24 04:34",
-      "views": 769,
-      "privacy": "public"
-    },
-    {
-      "title": "빛의 속도가 우주의 한계인 진짜 이유 — 상대성이론 쉽게 이해하기",
-      "video_id": "U2IXi_786k8",
-      "published_kst": "10/24 04:33",
-      "views": 6,
-      "privacy": "public"
-    },
-    {
-      "title": "가을야구를 9번이나? 전설이 된 2004년 빗속의 혈투 #shorts",
-      "video_id": "c9x2QNgw1XA",
-      "published_kst": "10/23 19:07",
-      "views": 740,
-      "privacy": "public"
-    },
-    {
-      "title": "밤마다 나를 괴롭히는 생각의 감옥에서 벗어나 잠재의식을 바꾸는 10초의 법칙 | 432Hz 수면 명상",
-      "video_id": "Sr7zrarAVkY",
-      "published_kst": "10/23 05:30",
-      "views": 12,
-      "privacy": "public"
-    },
-    {
-      "title": "10분의 생각 10초의 느낌",
-      "video_id": "XuRPeslgJr0",
-      "published_kst": "10/23 05:29",
-      "views": 1099,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

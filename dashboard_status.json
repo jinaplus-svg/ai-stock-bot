@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24T19:03:46.491596+09:00",
+  "updated_at": "2026-10-24T19:13:43.196094+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "한국시리즈 첫 진출팀이 단 한 번도 지지 않을 확률은? 🏆 #shorts",
+      "video_id": "a__ZCK_9MZU",
+      "published_kst": "10/24 19:07",
+      "views": 17,
+      "privacy": "public"
+    },
+    {
+      "title": "KBO 통산 홈런 순위 TOP10 (1982→2026) #shorts",
+      "video_id": "HCFItHF5tM4",
+      "published_kst": "10/24 19:05",
+      "views": 156,
+      "privacy": "public"
+    },
+    {
       "title": "목표를 이뤘는데 왜 허전할까? | 도착의 오류",
       "video_id": "0rDl0Y88gEA",
       "published_kst": "10/24 11:45",
@@ -70,20 +84,6 @@
       "video_id": "U2IXi_786k8",
       "published_kst": "10/24 04:33",
       "views": 8,
-      "privacy": "public"
-    },
-    {
-      "title": "가을야구를 9번이나? 전설이 된 2004년 빗속의 혈투 #shorts",
-      "video_id": "c9x2QNgw1XA",
-      "published_kst": "10/23 19:07",
-      "views": 969,
-      "privacy": "public"
-    },
-    {
-      "title": "밤마다 나를 괴롭히는 생각의 감옥에서 벗어나 잠재의식을 바꾸는 10초의 법칙 | 432Hz 수면 명상",
-      "video_id": "Sr7zrarAVkY",
-      "published_kst": "10/23 05:30",
-      "views": 13,
       "privacy": "public"
     }
   ],

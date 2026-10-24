@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24T15:53:43.936852+09:00",
+  "updated_at": "2026-10-24T16:03:46.783334+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "목표를 이뤘는데 왜 허전할까? | 도착의 오류",
+      "video_id": "0rDl0Y88gEA",
+      "published_kst": "10/24 11:45",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
+      "title": "빛의 속도를 넘으면 생기는 끔찍한 일 (우주의 속도제한 이유)",
+      "video_id": "5Jcgdp2b72s",
+      "published_kst": "10/24 04:34",
+      "views": 1077,
+      "privacy": "public"
+    },
+    {
+      "title": "빛의 속도가 우주의 한계인 진짜 이유 — 상대성이론 쉽게 이해하기",
+      "video_id": "U2IXi_786k8",
+      "published_kst": "10/24 04:33",
+      "views": 8,
+      "privacy": "public"
+    },
+    {
+      "title": "가을야구를 9번이나? 전설이 된 2004년 빗속의 혈투 #shorts",
+      "video_id": "c9x2QNgw1XA",
+      "published_kst": "10/23 19:07",
+      "views": 968,
+      "privacy": "public"
+    },
+    {
+      "title": "밤마다 나를 괴롭히는 생각의 감옥에서 벗어나 잠재의식을 바꾸는 10초의 법칙 | 432Hz 수면 명상",
+      "video_id": "Sr7zrarAVkY",
+      "published_kst": "10/23 05:30",
+      "views": 13,
+      "privacy": "public"
     }
   ],
   "bots": {

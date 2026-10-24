@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T00:23:43.898549+09:00",
+  "updated_at": "2026-10-25T00:33:43.922752+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "한국시리즈 첫 진출팀이 단 한 번도 지지 않을 확률은? 🏆 #shorts",
       "video_id": "a__ZCK_9MZU",
       "published_kst": "10/24 19:07",
-      "views": 1051,
+      "views": 1056,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-24",
+      "date": "2026-10-25",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

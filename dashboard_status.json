@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T06:13:44.409489+09:00",
+  "updated_at": "2026-10-26T06:23:44.264209+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "불안할 때 딱 3초만 들으면 뇌파가 멈추는 소리의 비밀",
+      "video_id": "1aavzRuyCYo",
+      "published_kst": "10/26 06:15",
+      "views": 13,
+      "privacy": "public"
+    },
+    {
+      "title": "소리의 파동이 뇌파를 바꾼다: 싱잉볼과 차임 소리가 마음을 가라앉히는 과학",
+      "video_id": "j4LrWGH7i00",
+      "published_kst": "10/26 06:14",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "잠실 주경기장이 야구장으로 바뀌는 과정 | LG·두산 2027년부터 5시즌 #shorts",
       "video_id": "wL6VW0UZ_Ng",
       "published_kst": "10/25 20:59",
@@ -70,20 +84,6 @@
       "video_id": "ZgHgqnRBqC8",
       "published_kst": "10/25 05:39",
       "views": 28,
-      "privacy": "public"
-    },
-    {
-      "title": "5초의 호흡 루틴의 진실",
-      "video_id": "3XVdnQi8u4Y",
-      "published_kst": "10/25 05:37",
-      "views": 1150,
-      "privacy": "public"
-    },
-    {
-      "title": "한국시리즈 첫 진출팀이 단 한 번도 지지 않을 확률은? 🏆 #shorts",
-      "video_id": "a__ZCK_9MZU",
-      "published_kst": "10/24 19:07",
-      "views": 1071,
       "privacy": "public"
     }
   ],

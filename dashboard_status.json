@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T21:35:47.940743+09:00",
+  "updated_at": "2026-10-25T21:43:52.750948+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,14 +55,14 @@
       "title": "잠실 주경기장이 야구장으로 바뀌는 과정 | LG·두산 2027년부터 5시즌 #shorts",
       "video_id": "wL6VW0UZ_Ng",
       "published_kst": "10/25 20:59",
-      "views": 413,
+      "views": 567,
       "privacy": "public"
     },
     {
       "title": "9경기 차를 뒤집은 2019 두산의 기적, 진짜 이유가 뭘까? #shorts",
       "video_id": "4Uty0H9Vtcc",
       "published_kst": "10/25 19:06",
-      "views": 743,
+      "views": 776,
       "privacy": "public"
     },
     {
@@ -122,9 +122,9 @@
     }
   },
   "account": {
-    "error": "HTTPSConnectionPool(host='openapi.tossinvest.com', port=443): Max retries exceeded with url: /oauth2/token (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))",
+    "buying_power": 4926257.0,
     "stock_value_krw": 0,
-    "total_value_krw": 0,
+    "total_value_krw": 4926257,
     "unrealized_pnl_krw": 0
   },
   "threads": {

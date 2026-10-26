@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T05:33:43.083736+09:00",
+  "updated_at": "2026-10-27T05:43:42.952600+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "48시간 안에 현실을 바꾸는 주파수 정렬의 기술 | 양자물리학과 끌어당김의 법칙",
+      "video_id": "rry9FcC6EgU",
+      "published_kst": "10/27 05:33",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
       "title": "48시간의 비밀 주파수를 바꿔라",
       "video_id": "EnVsTJzrDA4",
       "published_kst": "10/27 05:31",
-      "views": 0,
+      "views": 160,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "1aavzRuyCYo",
       "published_kst": "10/26 06:15",
       "views": 1039,
-      "privacy": "public"
-    },
-    {
-      "title": "소리의 파동이 뇌파를 바꾼다: 싱잉볼과 차임 소리가 마음을 가라앉히는 과학",
-      "video_id": "j4LrWGH7i00",
-      "published_kst": "10/26 06:14",
-      "views": 10,
       "privacy": "public"
     }
   ],

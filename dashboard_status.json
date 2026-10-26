@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T06:23:44.472520+09:00",
+  "updated_at": "2026-10-27T06:33:44.675181+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -62,7 +62,7 @@
       "title": "48시간의 비밀 주파수를 바꿔라",
       "video_id": "EnVsTJzrDA4",
       "published_kst": "10/27 05:31",
-      "views": 341,
+      "views": 359,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "불안할 때 딱 3초만 들으면 뇌파가 멈추는 소리의 비밀",
       "video_id": "1aavzRuyCYo",
       "published_kst": "10/26 06:15",
-      "views": 1039,
+      "views": 1040,
       "privacy": "public"
     }
   ],

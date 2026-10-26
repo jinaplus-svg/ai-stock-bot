@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:53:42.907084+09:00",
+  "updated_at": "2026-10-26T16:03:42.617649+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "불안할 때 딱 3초만 들으면 뇌파가 멈추는 소리의 비밀",
+      "video_id": "1aavzRuyCYo",
+      "published_kst": "10/26 06:15",
+      "views": 1040,
+      "privacy": "public"
+    },
+    {
+      "title": "소리의 파동이 뇌파를 바꾼다: 싱잉볼과 차임 소리가 마음을 가라앉히는 과학",
+      "video_id": "j4LrWGH7i00",
+      "published_kst": "10/26 06:14",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "잠실 주경기장이 야구장으로 바뀌는 과정 | LG·두산 2027년부터 5시즌 #shorts",
+      "video_id": "wL6VW0UZ_Ng",
+      "published_kst": "10/25 20:59",
+      "views": 1411,
+      "privacy": "public"
+    },
+    {
+      "title": "9경기 차를 뒤집은 2019 두산의 기적, 진짜 이유가 뭘까? #shorts",
+      "video_id": "4Uty0H9Vtcc",
+      "published_kst": "10/25 19:06",
+      "views": 1049,
+      "privacy": "public"
+    },
+    {
+      "title": "남의 루틴을 멈추고 심장 리듬을 맞출 때 생기는 기적 | 뇌과학과 심장 일관성의 비밀",
+      "video_id": "ZgHgqnRBqC8",
+      "published_kst": "10/25 05:39",
+      "views": 33,
+      "privacy": "public"
     }
   ],
   "bots": {

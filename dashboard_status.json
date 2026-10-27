@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T19:03:42.642417+09:00",
+  "updated_at": "2026-10-27T19:13:43.378406+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "프로야구 원년, 모두를 놀라게 한 극적인 만루 홈런 #shorts",
+      "video_id": "v4SoZoSsQy0",
+      "published_kst": "10/27 19:06",
+      "views": 60,
+      "privacy": "public"
+    },
+    {
       "title": "가을야구 사상 초유의 사태, 그날의 심리학 #shorts",
       "video_id": "QXmxZMs4wXM",
       "published_kst": "10/27 12:46",
@@ -77,13 +84,6 @@
       "video_id": "u502NXsDKJg",
       "published_kst": "10/26 19:31",
       "views": 1131,
-      "privacy": "public"
-    },
-    {
-      "title": "그라운드에 등장한 게임 속 무기? NC 창단 첫 우승 #shorts",
-      "video_id": "PvDdv1elo_w",
-      "published_kst": "10/26 19:26",
-      "views": 1,
       "privacy": "public"
     }
   ],

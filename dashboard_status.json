@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T04:03:43.385615+09:00",
+  "updated_at": "2026-10-28T04:13:44.662795+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "다중우주 이론 — 에버렛의 평행세계 해석은 과학인가 철학인가",
+      "video_id": "-DfCqf35o8I",
+      "published_kst": "10/28 04:09",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "평행세계 속 또 다른 나, 진짜 과학일까 망상일까?",
+      "video_id": "NUA9BroXJDg",
+      "published_kst": "10/28 04:09",
+      "views": 7,
+      "privacy": "public"
+    },
+    {
       "title": "프로야구 원년, 모두를 놀라게 한 극적인 만루 홈런 #shorts",
       "video_id": "v4SoZoSsQy0",
       "published_kst": "10/27 19:06",
@@ -62,7 +76,7 @@
       "title": "가을야구 사상 초유의 사태, 그날의 심리학 #shorts",
       "video_id": "QXmxZMs4wXM",
       "published_kst": "10/27 12:46",
-      "views": 1177,
+      "views": 1174,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "rry9FcC6EgU",
       "published_kst": "10/27 05:33",
       "views": 13,
-      "privacy": "public"
-    },
-    {
-      "title": "48시간의 비밀 주파수를 바꿔라",
-      "video_id": "EnVsTJzrDA4",
-      "published_kst": "10/27 05:31",
-      "views": 831,
-      "privacy": "public"
-    },
-    {
-      "title": "1승 3패 상황, 우승할 확률은 몇 %일까? #shorts",
-      "video_id": "u502NXsDKJg",
-      "published_kst": "10/26 19:31",
-      "views": 1134,
       "privacy": "public"
     }
   ],

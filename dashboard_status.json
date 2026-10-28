@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T08:23:48.185066+09:00",
+  "updated_at": "2026-10-29T08:33:48.160118+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "불안과 잡념이 2분 만에 사라지는 원리: 생각의 감옥에서 벗어나 잠재의식을 바꾸는 법",
+      "video_id": "hpRJKbiYI5I",
+      "published_kst": "10/29 05:30",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
+      "title": "2분 만의 호흡 잠재의식 리셋",
+      "video_id": "crqSrRuhCYA",
+      "published_kst": "10/29 05:28",
+      "views": 797,
+      "privacy": "public"
+    },
+    {
+      "title": "혼자서 4승을 올린 투수가 있다? 1984년 롯데의 기적 #shorts",
+      "video_id": "NntAAmmMv88",
+      "published_kst": "10/28 19:06",
+      "views": 1123,
+      "privacy": "public"
+    },
+    {
+      "title": "가을에만 터지는 선수? 2000년 한국시리즈 퀸란의 기적 #shorts",
+      "video_id": "6wyqD4H8w2g",
+      "published_kst": "10/28 12:36",
+      "views": 1143,
+      "privacy": "public"
+    },
+    {
+      "title": "다중우주 이론 — 에버렛의 평행세계 해석은 과학인가 철학인가",
+      "video_id": "-DfCqf35o8I",
+      "published_kst": "10/28 04:09",
+      "views": 16,
+      "privacy": "public"
     }
   ],
   "bots": {

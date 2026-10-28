@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T05:23:43.639200+09:00",
+  "updated_at": "2026-10-29T05:33:43.579176+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "불안과 잡념이 2분 만에 사라지는 원리: 생각의 감옥에서 벗어나 잠재의식을 바꾸는 법",
+      "video_id": "hpRJKbiYI5I",
+      "published_kst": "10/29 05:30",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "2분 만의 호흡 잠재의식 리셋",
+      "video_id": "crqSrRuhCYA",
+      "published_kst": "10/29 05:28",
+      "views": 40,
+      "privacy": "public"
+    },
+    {
       "title": "혼자서 4승을 올린 투수가 있다? 1984년 롯데의 기적 #shorts",
       "video_id": "NntAAmmMv88",
       "published_kst": "10/28 19:06",
@@ -70,20 +84,6 @@
       "video_id": "-DfCqf35o8I",
       "published_kst": "10/28 04:09",
       "views": 12,
-      "privacy": "public"
-    },
-    {
-      "title": "평행세계 속 또 다른 나, 진짜 과학일까 망상일까?",
-      "video_id": "NUA9BroXJDg",
-      "published_kst": "10/28 04:09",
-      "views": 1126,
-      "privacy": "public"
-    },
-    {
-      "title": "프로야구 원년, 모두를 놀라게 한 극적인 만루 홈런 #shorts",
-      "video_id": "v4SoZoSsQy0",
-      "published_kst": "10/27 19:06",
-      "views": 1107,
       "privacy": "public"
     }
   ],

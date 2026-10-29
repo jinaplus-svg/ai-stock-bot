@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T00:23:45.160411+09:00",
+  "updated_at": "2026-10-30T00:33:45.097789+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,14 +55,14 @@
       "title": "555m 롯데월드타워는 어떻게 올라갔을까? #shorts",
       "video_id": "ruQFFluDD9U",
       "published_kst": "10/29 23:20",
-      "views": 594,
+      "views": 694,
       "privacy": "public"
     },
     {
       "title": "단기전은 투수 놀음? 2016년 두산이 증명한 숫자 #shorts",
       "video_id": "D3ob95n0clY",
       "published_kst": "10/29 19:07",
-      "views": 411,
+      "views": 445,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-29",
+      "date": "2026-10-30",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

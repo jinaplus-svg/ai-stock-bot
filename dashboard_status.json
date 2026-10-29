@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T02:43:44.926150+09:00",
+  "updated_at": "2026-10-30T02:53:43.968184+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,14 +55,14 @@
       "title": "555m 롯데월드타워는 어떻게 올라갔을까? #shorts",
       "video_id": "ruQFFluDD9U",
       "published_kst": "10/29 23:20",
-      "views": 881,
+      "views": 990,
       "privacy": "public"
     },
     {
       "title": "단기전은 투수 놀음? 2016년 두산이 증명한 숫자 #shorts",
       "video_id": "D3ob95n0clY",
       "published_kst": "10/29 19:07",
-      "views": 727,
+      "views": 748,
       "privacy": "public"
     },
     {
@@ -122,9 +122,9 @@
     }
   },
   "account": {
-    "buying_power": 4926257.0,
+    "buying_power": 4929823.0,
     "stock_value_krw": 0,
-    "total_value_krw": 4926257,
+    "total_value_krw": 4929823,
     "unrealized_pnl_krw": 0
   },
   "threads": {

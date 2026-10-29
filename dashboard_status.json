@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T08:43:42.489971+09:00",
+  "updated_at": "2026-10-30T08:53:42.573888+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "입기만 해도 뇌 기능이 달라지는 충격적인 이유",
+      "video_id": "338TzYl6Yyg",
+      "published_kst": "10/30 04:12",
+      "views": 1104,
+      "privacy": "public"
+    },
+    {
+      "title": "옷차림이 뇌를 바꾼다 — 착용 인지 실험의 비밀",
+      "video_id": "WYNpRkyB7lA",
+      "published_kst": "10/30 04:11",
+      "views": 4,
+      "privacy": "public"
+    },
+    {
+      "title": "555m 롯데월드타워는 어떻게 올라갔을까? #shorts",
+      "video_id": "ruQFFluDD9U",
+      "published_kst": "10/29 23:20",
+      "views": 1048,
+      "privacy": "public"
+    },
+    {
+      "title": "단기전은 투수 놀음? 2016년 두산이 증명한 숫자 #shorts",
+      "video_id": "D3ob95n0clY",
+      "published_kst": "10/29 19:07",
+      "views": 1008,
+      "privacy": "public"
+    },
+    {
+      "title": "한국시리즈 최초의 1:0 완봉승, 양현종의 122구 투혼 #shorts",
+      "video_id": "w4QLx3UEd64",
+      "published_kst": "10/29 12:36",
+      "views": 1215,
+      "privacy": "public"
     }
   ],
   "bots": {

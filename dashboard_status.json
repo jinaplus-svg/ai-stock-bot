@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T23:13:45.806493+09:00",
+  "updated_at": "2026-10-29T23:23:44.921646+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "555m 롯데월드타워는 어떻게 올라갔을까? #shorts",
+      "video_id": "ruQFFluDD9U",
+      "published_kst": "10/29 23:20",
+      "views": 6,
+      "privacy": "public"
+    },
+    {
       "title": "단기전은 투수 놀음? 2016년 두산이 증명한 숫자 #shorts",
       "video_id": "D3ob95n0clY",
       "published_kst": "10/29 19:07",
-      "views": 1,
+      "views": 2,
       "privacy": "public"
     },
     {
@@ -76,14 +83,7 @@
       "title": "2분 만의 호흡 잠재의식 리셋",
       "video_id": "crqSrRuhCYA",
       "published_kst": "10/29 05:28",
-      "views": 1019,
-      "privacy": "public"
-    },
-    {
-      "title": "혼자서 4승을 올린 투수가 있다? 1984년 롯데의 기적 #shorts",
-      "video_id": "NntAAmmMv88",
-      "published_kst": "10/28 19:06",
-      "views": 1125,
+      "views": 1021,
       "privacy": "public"
     }
   ],

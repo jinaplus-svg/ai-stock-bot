@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T05:23:42.868854+09:00",
+  "updated_at": "2026-10-31T05:33:45.209387+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "95% 무의식 당신은 사자다",
+      "video_id": "KJHlmuhFiuk",
+      "published_kst": "10/31 05:33",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "1-5를 뒤집은 기적, 37년 만에 광주에서 울려 퍼진 V12 #shorts",
       "video_id": "J0ivAoFMp2o",
       "published_kst": "10/30 19:06",
-      "views": 1092,
+      "views": 1087,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "WYNpRkyB7lA",
       "published_kst": "10/30 04:11",
       "views": 34,
-      "privacy": "public"
-    },
-    {
-      "title": "555m 롯데월드타워는 어떻게 올라갔을까? #shorts",
-      "video_id": "ruQFFluDD9U",
-      "published_kst": "10/29 23:20",
-      "views": 1062,
       "privacy": "public"
     }
   ],

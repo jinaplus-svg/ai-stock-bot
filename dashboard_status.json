@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T05:33:45.209387+09:00",
+  "updated_at": "2026-10-31T05:43:43.446855+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,17 +52,24 @@
   ],
   "youtube": [
     {
+      "title": "불안에 떨던 쥐의 삶을 끝내는 95% 무의식 재프로그래밍 | 양자역학 끌어당김 명상",
+      "video_id": "mjMeTP5fftg",
+      "published_kst": "10/31 05:36",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "95% 무의식 당신은 사자다",
       "video_id": "KJHlmuhFiuk",
       "published_kst": "10/31 05:33",
-      "views": 0,
+      "views": 80,
       "privacy": "public"
     },
     {
       "title": "1-5를 뒤집은 기적, 37년 만에 광주에서 울려 퍼진 V12 #shorts",
       "video_id": "J0ivAoFMp2o",
       "published_kst": "10/30 19:06",
-      "views": 1087,
+      "views": 1092,
       "privacy": "public"
     },
     {
@@ -76,14 +83,7 @@
       "title": "입기만 해도 뇌 기능이 달라지는 충격적인 이유",
       "video_id": "338TzYl6Yyg",
       "published_kst": "10/30 04:12",
-      "views": 1116,
-      "privacy": "public"
-    },
-    {
-      "title": "옷차림이 뇌를 바꾼다 — 착용 인지 실험의 비밀",
-      "video_id": "WYNpRkyB7lA",
-      "published_kst": "10/30 04:11",
-      "views": 34,
+      "views": 1117,
       "privacy": "public"
     }
   ],

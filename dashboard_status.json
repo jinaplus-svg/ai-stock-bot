@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T05:23:43.587454+09:00",
+  "updated_at": "2026-11-01T05:33:43.674141+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "하루 5초 호흡과 잠들기 전 1장의 메모: 뇌 신경망을 재설계하고 현실을 바꾸는 내면소통의 원리",
+      "video_id": "OY5zWy2_faI",
+      "published_kst": "11/01 05:28",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "단 5초의 호흡 현실이 바뀐다",
+      "video_id": "POZX5_VxNDA",
+      "published_kst": "11/01 05:28",
+      "views": 22,
+      "privacy": "public"
+    },
+    {
       "title": "7점 차를 뒤집은 기적의 9회 초 #shorts",
       "video_id": "5_a9VeqoZTM",
       "published_kst": "10/31 19:07",
@@ -70,20 +84,6 @@
       "video_id": "mjMeTP5fftg",
       "published_kst": "10/31 05:36",
       "views": 12,
-      "privacy": "public"
-    },
-    {
-      "title": "95% 무의식 당신은 사자다",
-      "video_id": "KJHlmuhFiuk",
-      "published_kst": "10/31 05:33",
-      "views": 667,
-      "privacy": "public"
-    },
-    {
-      "title": "1-5를 뒤집은 기적, 37년 만에 광주에서 울려 퍼진 V12 #shorts",
-      "video_id": "J0ivAoFMp2o",
-      "published_kst": "10/30 19:06",
-      "views": 1104,
       "privacy": "public"
     }
   ],

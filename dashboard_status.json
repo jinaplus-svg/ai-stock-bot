@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T00:03:51.001242+09:00",
+  "updated_at": "2026-11-01T00:13:43.216029+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "7점 차를 뒤집은 기적의 9회 초 #shorts",
       "video_id": "5_a9VeqoZTM",
       "published_kst": "10/31 19:07",
-      "views": 961,
+      "views": 973,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "1-5를 뒤집은 기적, 37년 만에 광주에서 울려 퍼진 V12 #shorts",
       "video_id": "J0ivAoFMp2o",
       "published_kst": "10/30 19:06",
-      "views": 1101,
+      "views": 1102,
       "privacy": "public"
     }
   ],
@@ -122,9 +122,9 @@
     }
   },
   "account": {
-    "error": "500 Server Error: Internal Server Error for url: https://openapi.tossinvest.com/api/v1/buying-power?currency=KRW",
+    "buying_power": 4929823.0,
     "stock_value_krw": 0,
-    "total_value_krw": 0,
+    "total_value_krw": 4929823,
     "unrealized_pnl_krw": 0
   },
   "threads": {

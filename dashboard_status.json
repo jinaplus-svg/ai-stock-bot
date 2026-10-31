@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T08:03:42.847144+09:00",
+  "updated_at": "2026-11-01T08:13:43.884016+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "하루 5초 호흡과 잠들기 전 1장의 메모: 뇌 신경망을 재설계하고 현실을 바꾸는 내면소통의 원리",
-      "video_id": "OY5zWy2_faI",
-      "published_kst": "11/01 05:28",
-      "views": 1,
-      "privacy": "public"
-    },
-    {
-      "title": "단 5초의 호흡 현실이 바뀐다",
-      "video_id": "POZX5_VxNDA",
-      "published_kst": "11/01 05:28",
-      "views": 747,
-      "privacy": "public"
-    },
-    {
-      "title": "7점 차를 뒤집은 기적의 9회 초 #shorts",
-      "video_id": "5_a9VeqoZTM",
-      "published_kst": "10/31 19:07",
-      "views": 992,
-      "privacy": "public"
-    },
-    {
-      "title": "정규시즌 내내 1위를 뺏긴 날은 며칠일까요? 2022 SSG #shorts",
-      "video_id": "KpW3mBgC27M",
-      "published_kst": "10/31 12:35",
-      "views": 1145,
-      "privacy": "public"
-    },
-    {
-      "title": "불안에 떨던 쥐의 삶을 끝내는 95% 무의식 재프로그래밍 | 양자역학 끌어당김 명상",
-      "video_id": "mjMeTP5fftg",
-      "published_kst": "10/31 05:36",
-      "views": 12,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T15:53:43.963639+09:00",
+  "updated_at": "2026-10-31T16:03:43.690602+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "정규시즌 내내 1위를 뺏긴 날은 며칠일까요? 2022 SSG #shorts",
+      "video_id": "KpW3mBgC27M",
+      "published_kst": "10/31 12:35",
+      "views": 800,
+      "privacy": "public"
+    },
+    {
+      "title": "불안에 떨던 쥐의 삶을 끝내는 95% 무의식 재프로그래밍 | 양자역학 끌어당김 명상",
+      "video_id": "mjMeTP5fftg",
+      "published_kst": "10/31 05:36",
+      "views": 10,
+      "privacy": "public"
+    },
+    {
+      "title": "95% 무의식 당신은 사자다",
+      "video_id": "KJHlmuhFiuk",
+      "published_kst": "10/31 05:33",
+      "views": 666,
+      "privacy": "public"
+    },
+    {
+      "title": "1-5를 뒤집은 기적, 37년 만에 광주에서 울려 퍼진 V12 #shorts",
+      "video_id": "J0ivAoFMp2o",
+      "published_kst": "10/30 19:06",
+      "views": 1097,
+      "privacy": "public"
+    },
+    {
+      "title": "1992년 롯데 우승, 우리가 약팀에 열광하는 진짜 이유 #shorts",
+      "video_id": "v1tSsgkIz7k",
+      "published_kst": "10/30 12:36",
+      "views": 1054,
+      "privacy": "public"
     }
   ],
   "bots": {

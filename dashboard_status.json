@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T23:53:43.501248+09:00",
+  "updated_at": "2026-11-01T00:03:51.001242+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "7점 차를 뒤집은 기적의 9회 초 #shorts",
       "video_id": "5_a9VeqoZTM",
       "published_kst": "10/31 19:07",
-      "views": 859,
+      "views": 961,
       "privacy": "public"
     },
     {
@@ -69,7 +69,7 @@
       "title": "불안에 떨던 쥐의 삶을 끝내는 95% 무의식 재프로그래밍 | 양자역학 끌어당김 명상",
       "video_id": "mjMeTP5fftg",
       "published_kst": "10/31 05:36",
-      "views": 11,
+      "views": 12,
       "privacy": "public"
     },
     {
@@ -122,9 +122,9 @@
     }
   },
   "account": {
-    "buying_power": 4929823.0,
+    "error": "500 Server Error: Internal Server Error for url: https://openapi.tossinvest.com/api/v1/buying-power?currency=KRW",
     "stock_value_krw": 0,
-    "total_value_krw": 4929823,
+    "total_value_krw": 0,
     "unrealized_pnl_krw": 0
   },
   "threads": {

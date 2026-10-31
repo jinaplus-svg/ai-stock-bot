@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T00:23:42.590021+09:00",
+  "updated_at": "2026-11-01T00:33:42.534853+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,21 +55,21 @@
       "title": "7점 차를 뒤집은 기적의 9회 초 #shorts",
       "video_id": "5_a9VeqoZTM",
       "published_kst": "10/31 19:07",
-      "views": 982,
+      "views": 984,
       "privacy": "public"
     },
     {
       "title": "정규시즌 내내 1위를 뺏긴 날은 며칠일까요? 2022 SSG #shorts",
       "video_id": "KpW3mBgC27M",
       "published_kst": "10/31 12:35",
-      "views": 1147,
+      "views": 1146,
       "privacy": "public"
     },
     {
       "title": "불안에 떨던 쥐의 삶을 끝내는 95% 무의식 재프로그래밍 | 양자역학 끌어당김 명상",
       "video_id": "mjMeTP5fftg",
       "published_kst": "10/31 05:36",
-      "views": 11,
+      "views": 12,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-10-31",
+      "date": "2026-11-01",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

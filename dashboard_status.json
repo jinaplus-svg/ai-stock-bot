@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-11-02T06:53:43.652872+09:00",
+  "updated_at": "2026-11-02T07:03:44.300446+09:00",
   "blogs": [
     {
       "category": "Stock",
       "domain": "brandnew678.blogspot.com",
-      "title": "부채 많은 기업 거르는 법, 부채비율과 이자보상배율로 한계기업 찾아내는 기준",
-      "url": "https://brandnew678.blogspot.com/2026/10/blog-post_31.html",
-      "published_kst": "11/01 07:02",
-      "published_raw": "2026-10-31T15:02:22-07:00"
+      "title": "연말 포트폴리오 점검, 자산군 목표 비중 오차 계산과 엑셀 리밸런싱 주문 수량 도출법",
+      "url": "https://brandnew678.blogspot.com/2026/11/blog-post.html",
+      "published_kst": "11/02 07:01",
+      "published_raw": "2026-11-01T14:01:58-08:00"
     },
     {
       "category": "IT",
@@ -55,14 +55,14 @@
       "title": "물리학자들도 경악한 시간이 한 방향으로만 흐르는 비밀",
       "video_id": "p_8MHmpdzLQ",
       "published_kst": "11/02 04:11",
-      "views": 659,
+      "views": 670,
       "privacy": "public"
     },
     {
       "title": "엔트로피와 시간의 화살 — 왜 시간은 한 방향으로만 흐르는가",
       "video_id": "ZWTXUwuMDV0",
       "published_kst": "11/02 04:10",
-      "views": 2,
+      "views": 3,
       "privacy": "public"
     },
     {

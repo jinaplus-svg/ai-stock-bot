@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-02T09:23:43.109393+09:00",
+  "updated_at": "2026-11-02T09:33:43.081219+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "물리학자들도 경악한 시간이 한 방향으로만 흐르는 비밀",
+      "video_id": "p_8MHmpdzLQ",
+      "published_kst": "11/02 04:11",
+      "views": 978,
+      "privacy": "public"
+    },
+    {
+      "title": "엔트로피와 시간의 화살 — 왜 시간은 한 방향으로만 흐르는가",
+      "video_id": "ZWTXUwuMDV0",
+      "published_kst": "11/02 04:10",
+      "views": 4,
+      "privacy": "public"
+    },
+    {
+      "title": "정규 1위가 아니어도 우승? 해태 왕조가 증명한 가을의 마법 🏆 #shorts",
+      "video_id": "e-R6YNtFE_w",
+      "published_kst": "11/01 19:08",
+      "views": 1059,
+      "privacy": "public"
+    },
+    {
+      "title": "21년의 한을 푼 기적의 9회말 백투백 홈런 #shorts",
+      "video_id": "4YucDB1p1Wo",
+      "published_kst": "11/01 12:38",
+      "views": 1098,
+      "privacy": "public"
+    },
+    {
+      "title": "하루 5초 호흡과 잠들기 전 1장의 메모: 뇌 신경망을 재설계하고 현실을 바꾸는 내면소통의 원리",
+      "video_id": "OY5zWy2_faI",
+      "published_kst": "11/01 05:28",
+      "views": 27,
+      "privacy": "public"
     }
   ],
   "bots": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-03T00:23:43.234812+09:00",
+  "updated_at": "2026-11-03T00:33:43.479605+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "14.5경기 차이를 뒤집은 2018년 SK의 가을 기적 #shorts",
       "video_id": "R5eKZI7-fJY",
       "published_kst": "11/02 19:08",
-      "views": 232,
+      "views": 235,
       "privacy": "public"
     },
     {
@@ -69,7 +69,7 @@
       "title": "물리학자들도 경악한 시간이 한 방향으로만 흐르는 비밀",
       "video_id": "p_8MHmpdzLQ",
       "published_kst": "11/02 04:11",
-      "views": 985,
+      "views": 986,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-11-02",
+      "date": "2026-11-03",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

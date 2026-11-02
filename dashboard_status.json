@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-02T19:03:44.413107+09:00",
+  "updated_at": "2026-11-02T19:13:43.409092+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "14.5경기 차이를 뒤집은 2018년 SK의 가을 기적 #shorts",
+      "video_id": "R5eKZI7-fJY",
+      "published_kst": "11/02 19:08",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "1%의 확률을 뚫은 삼성의 기적 #shorts",
       "video_id": "n5m3RQyh18s",
       "published_kst": "11/02 12:38",
-      "views": 872,
+      "views": 914,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "e-R6YNtFE_w",
       "published_kst": "11/01 19:08",
       "views": 1060,
-      "privacy": "public"
-    },
-    {
-      "title": "21년의 한을 푼 기적의 9회말 백투백 홈런 #shorts",
-      "video_id": "4YucDB1p1Wo",
-      "published_kst": "11/01 12:38",
-      "views": 1099,
       "privacy": "public"
     }
   ],

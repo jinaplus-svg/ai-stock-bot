@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-03T14:03:42.500489+09:00",
+  "updated_at": "2026-11-03T14:13:43.045156+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -90,9 +90,9 @@
     }
   },
   "account": {
-    "buying_power": 4411002.0,
+    "buying_power": 4413994.0,
     "stock_value_krw": 0,
-    "total_value_krw": 4411002,
+    "total_value_krw": 4413994,
     "unrealized_pnl_krw": 0
   },
   "threads": {

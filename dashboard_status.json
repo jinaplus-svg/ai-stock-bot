@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-04T19:03:43.493453+09:00",
+  "updated_at": "2026-11-04T19:13:43.794147+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "정규시즌 1위 팀의 가을야구 우승 확률은? #shorts",
+      "video_id": "dOmCC5sOKxk",
+      "published_kst": "11/04 19:07",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
       "title": "0%의 확률을 뚫은 5위의 기적 #shorts",
       "video_id": "iYtFOD-ymtA",
       "published_kst": "11/04 12:38",
@@ -77,13 +84,6 @@
       "video_id": "EvIt4ceg96g",
       "published_kst": "11/03 19:07",
       "views": 963,
-      "privacy": "public"
-    },
-    {
-      "title": "1승 3패에서 우승할 확률? 2013 한국시리즈의 기적 #shorts",
-      "video_id": "XFxzdKRk28Q",
-      "published_kst": "11/03 12:37",
-      "views": 1060,
       "privacy": "public"
     }
   ],

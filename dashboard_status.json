@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-04T16:53:42.663041+09:00",
+  "updated_at": "2026-11-04T17:03:42.652983+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "0%의 확률을 뚫은 5위의 기적 #shorts",
+      "video_id": "iYtFOD-ymtA",
+      "published_kst": "11/04 12:38",
+      "views": 725,
+      "privacy": "public"
+    },
+    {
+      "title": "카톡 친구 100명 넘으면 인생 망하는 과학적 이유",
+      "video_id": "1QkqRQvggsc",
+      "published_kst": "11/04 04:11",
+      "views": 1043,
+      "privacy": "public"
+    },
+    {
+      "title": "사람을 정리해야 인생이 풀린다 — 던바의 수와 에너지를 빼앗는 관계의 심리학",
+      "video_id": "Ik7QdLbbsK4",
+      "published_kst": "11/04 04:10",
+      "views": 10,
+      "privacy": "public"
+    },
+    {
+      "title": "사상 초유의 1차전 서스펜디드, 왜 기세가 꺾였을까? #shorts",
+      "video_id": "EvIt4ceg96g",
+      "published_kst": "11/03 19:07",
+      "views": 961,
+      "privacy": "public"
+    },
+    {
+      "title": "1승 3패에서 우승할 확률? 2013 한국시리즈의 기적 #shorts",
+      "video_id": "XFxzdKRk28Q",
+      "published_kst": "11/03 12:37",
+      "views": 1060,
+      "privacy": "public"
     }
   ],
   "bots": {

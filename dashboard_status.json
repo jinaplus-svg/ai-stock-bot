@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-05T05:23:44.074176+09:00",
+  "updated_at": "2026-11-05T05:33:44.662588+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "잠들기 전 10초의 기적",
+      "video_id": "ZYSFZHu-5SI",
+      "published_kst": "11/05 05:31",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "정규시즌 1위 팀의 가을야구 우승 확률은? #shorts",
       "video_id": "dOmCC5sOKxk",
       "published_kst": "11/04 19:07",
@@ -77,13 +84,6 @@
       "video_id": "Ik7QdLbbsK4",
       "published_kst": "11/04 04:10",
       "views": 26,
-      "privacy": "public"
-    },
-    {
-      "title": "사상 초유의 1차전 서스펜디드, 왜 기세가 꺾였을까? #shorts",
-      "video_id": "EvIt4ceg96g",
-      "published_kst": "11/03 19:07",
-      "views": 963,
       "privacy": "public"
     }
   ],

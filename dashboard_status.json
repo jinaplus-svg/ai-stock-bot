@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-05T05:33:44.662588+09:00",
+  "updated_at": "2026-11-05T05:43:43.279602+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "잠들기 전 10초의 법칙: 내면의 상처를 지우고 잠재의식을 깨우는 7일간의 무의식 치유 명상",
+      "video_id": "O5kfOUJX628",
+      "published_kst": "11/05 05:33",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "잠들기 전 10초의 기적",
       "video_id": "ZYSFZHu-5SI",
       "published_kst": "11/05 05:31",
-      "views": 0,
+      "views": 103,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "1QkqRQvggsc",
       "published_kst": "11/04 04:11",
       "views": 1036,
-      "privacy": "public"
-    },
-    {
-      "title": "사람을 정리해야 인생이 풀린다 — 던바의 수와 에너지를 빼앗는 관계의 심리학",
-      "video_id": "Ik7QdLbbsK4",
-      "published_kst": "11/04 04:10",
-      "views": 26,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-06T04:13:43.962336+09:00",
+  "updated_at": "2026-11-06T04:23:43.384017+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -62,14 +62,14 @@
       "title": "결제 버튼 누르기 전 '이것'만 하면 통장 잔고 2배로 불어납니다",
       "video_id": "DTg4cTCOWRs",
       "published_kst": "11/06 04:10",
-      "views": 0,
+      "views": 104,
       "privacy": "public"
     },
     {
       "title": "1차전을 내주고도 우승할 수 있을까? #shorts",
       "video_id": "IkzlO9cOJ8Y",
       "published_kst": "11/05 12:36",
-      "views": 1011,
+      "views": 1006,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "잠들기 전 10초의 기적",
       "video_id": "ZYSFZHu-5SI",
       "published_kst": "11/05 05:31",
-      "views": 980,
+      "views": 986,
       "privacy": "public"
     }
   ],

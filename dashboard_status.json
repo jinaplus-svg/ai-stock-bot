@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-06T09:23:43.331107+09:00",
+  "updated_at": "2026-11-06T09:33:43.086021+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "72시간 룰 — 충동구매를 막는 가장 단순하고 강력한 심리 트릭",
+      "video_id": "fcCj36otEBc",
+      "published_kst": "11/06 04:09",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
+      "title": "결제 버튼 누르기 전 '이것'만 하면 통장 잔고 2배로 불어납니다",
+      "video_id": "DTg4cTCOWRs",
+      "published_kst": "11/06 04:10",
+      "views": 519,
+      "privacy": "public"
+    },
+    {
+      "title": "1차전을 내주고도 우승할 수 있을까? #shorts",
+      "video_id": "IkzlO9cOJ8Y",
+      "published_kst": "11/05 12:36",
+      "views": 1010,
+      "privacy": "public"
+    },
+    {
+      "title": "잠들기 전 10초의 법칙: 내면의 상처를 지우고 잠재의식을 깨우는 7일간의 무의식 치유 명상",
+      "video_id": "O5kfOUJX628",
+      "published_kst": "11/05 05:33",
+      "views": 11,
+      "privacy": "public"
+    },
+    {
+      "title": "잠들기 전 10초의 기적",
+      "video_id": "ZYSFZHu-5SI",
+      "published_kst": "11/05 05:31",
+      "views": 980,
+      "privacy": "public"
     }
   ],
   "bots": {

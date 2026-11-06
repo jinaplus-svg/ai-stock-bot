@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-07T05:23:44.185744+09:00",
+  "updated_at": "2026-11-07T05:33:44.624108+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,24 @@
   ],
   "youtube": [
     {
-      "title": "잠들기 전 10초의 법칙: 내면의 상처를 지우고 잠재의식을 깨우는 7일간의 무의식 치유 명상",
-      "video_id": "O5kfOUJX628",
-      "published_kst": "11/05 05:33",
-      "views": 11,
+      "title": "채우기 전에 버릴 7가지",
+      "video_id": "3Rg3onzNxrc",
+      "published_kst": "11/07 05:32",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "원하는 것을 끌어당기지 못하는 진짜 이유: 채우기 전에 먼저 버려야 하는 7가지 마음 (양자역학 주파수의 비밀)",
+      "video_id": "238EHp3xxJU",
+      "published_kst": "11/07 05:33",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "72시간 룰 — 충동구매를 막는 가장 단순하고 강력한 심리 트릭",
+      "video_id": "fcCj36otEBc",
+      "published_kst": "11/06 04:09",
+      "views": 4,
       "privacy": "public"
     },
     {
@@ -66,24 +80,10 @@
       "privacy": "public"
     },
     {
-      "title": "카톡 친구 100명 넘으면 인생 망하는 과학적 이유",
-      "video_id": "1QkqRQvggsc",
-      "published_kst": "11/04 04:11",
-      "views": 1037,
-      "privacy": "public"
-    },
-    {
       "title": "1차전을 내주고도 우승할 수 있을까? #shorts",
       "video_id": "IkzlO9cOJ8Y",
       "published_kst": "11/05 12:36",
       "views": 1015,
-      "privacy": "public"
-    },
-    {
-      "title": "잠들기 전 10초의 기적",
-      "video_id": "ZYSFZHu-5SI",
-      "published_kst": "11/05 05:31",
-      "views": 1003,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-07T08:23:43.847296+09:00",
+  "updated_at": "2026-11-07T08:33:44.284722+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,17 +52,17 @@
   ],
   "youtube": [
     {
-      "title": "채우기 전에 버릴 7가지",
-      "video_id": "3Rg3onzNxrc",
-      "published_kst": "11/07 05:32",
-      "views": 164,
-      "privacy": "public"
-    },
-    {
       "title": "원하는 것을 끌어당기지 못하는 진짜 이유: 채우기 전에 먼저 버려야 하는 7가지 마음 (양자역학 주파수의 비밀)",
       "video_id": "238EHp3xxJU",
       "published_kst": "11/07 05:33",
       "views": 2,
+      "privacy": "public"
+    },
+    {
+      "title": "0%의 확률을 뚫은 5위의 기적 #shorts",
+      "video_id": "iYtFOD-ymtA",
+      "published_kst": "11/04 12:38",
+      "views": 1094,
       "privacy": "public"
     },
     {
@@ -73,17 +73,17 @@
       "privacy": "public"
     },
     {
-      "title": "결제 버튼 누르기 전 '이것'만 하면 통장 잔고 2배로 불어납니다",
-      "video_id": "DTg4cTCOWRs",
-      "published_kst": "11/06 04:10",
-      "views": 626,
-      "privacy": "public"
-    },
-    {
       "title": "1차전을 내주고도 우승할 수 있을까? #shorts",
       "video_id": "IkzlO9cOJ8Y",
       "published_kst": "11/05 12:36",
       "views": 1015,
+      "privacy": "public"
+    },
+    {
+      "title": "잠들기 전 10초의 기적",
+      "video_id": "ZYSFZHu-5SI",
+      "published_kst": "11/05 05:31",
+      "views": 1003,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-08T04:03:45.971155+09:00",
+  "updated_at": "2026-11-08T04:13:43.401621+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "물리학자들도 경악한 블랙홀 내부의 충격적인 진실",
+      "video_id": "BbV-gqf533E",
+      "published_kst": "11/08 04:11",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "블랙홀 안에서는 무슨 일이 일어날까 — 특이점을 둘러싼 물리학의 최전선",
+      "video_id": "6AZX4aGv2mg",
+      "published_kst": "11/08 04:09",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "배트맨 효과 — 나를 이름으로 부르면 왜 더 강해질까",
       "video_id": "p8alPQwU3ts",
       "published_kst": "11/07 12:13",
@@ -70,20 +84,6 @@
       "video_id": "238EHp3xxJU",
       "published_kst": "11/07 05:33",
       "views": 10,
-      "privacy": "public"
-    },
-    {
-      "title": "72시간 룰 — 충동구매를 막는 가장 단순하고 강력한 심리 트릭",
-      "video_id": "fcCj36otEBc",
-      "published_kst": "11/06 04:09",
-      "views": 6,
-      "privacy": "public"
-    },
-    {
-      "title": "결제 버튼 누르기 전 '이것'만 하면 통장 잔고 2배로 불어납니다",
-      "video_id": "DTg4cTCOWRs",
-      "published_kst": "11/06 04:10",
-      "views": 679,
       "privacy": "public"
     }
   ],

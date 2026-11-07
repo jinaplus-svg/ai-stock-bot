@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-07T09:03:44.650750+09:00",
+  "updated_at": "2026-11-07T09:13:43.912729+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "채우기 전에 버릴 7가지",
+      "video_id": "3Rg3onzNxrc",
+      "published_kst": "11/07 05:32",
+      "views": 164,
+      "privacy": "public"
+    },
+    {
+      "title": "원하는 것을 끌어당기지 못하는 진짜 이유: 채우기 전에 먼저 버려야 하는 7가지 마음 (양자역학 주파수의 비밀)",
+      "video_id": "238EHp3xxJU",
+      "published_kst": "11/07 05:33",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "72시간 룰 — 충동구매를 막는 가장 단순하고 강력한 심리 트릭",
+      "video_id": "fcCj36otEBc",
+      "published_kst": "11/06 04:09",
+      "views": 4,
+      "privacy": "public"
+    },
+    {
+      "title": "결제 버튼 누르기 전 '이것'만 하면 통장 잔고 2배로 불어납니다",
+      "video_id": "DTg4cTCOWRs",
+      "published_kst": "11/06 04:10",
+      "views": 630,
+      "privacy": "public"
+    },
+    {
+      "title": "1차전을 내주고도 우승할 수 있을까? #shorts",
+      "video_id": "IkzlO9cOJ8Y",
+      "published_kst": "11/05 12:36",
+      "views": 1015,
+      "privacy": "public"
     }
   ],
   "bots": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-08T10:23:46.536500+09:00",
+  "updated_at": "2026-11-08T10:33:43.623088+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "물리학자들도 경악한 블랙홀 내부의 충격적인 진실",
-      "video_id": "BbV-gqf533E",
-      "published_kst": "11/08 04:11",
-      "views": 893,
-      "privacy": "public"
-    },
-    {
-      "title": "블랙홀 안에서는 무슨 일이 일어날까 — 특이점을 둘러싼 물리학의 최전선",
-      "video_id": "6AZX4aGv2mg",
-      "published_kst": "11/08 04:09",
-      "views": 4,
-      "privacy": "public"
-    },
-    {
-      "title": "배트맨 효과 — 나를 이름으로 부르면 왜 더 강해질까",
-      "video_id": "p8alPQwU3ts",
-      "published_kst": "11/07 12:13",
-      "views": 10,
-      "privacy": "public"
-    },
-    {
-      "title": "채우기 전에 버릴 7가지",
-      "video_id": "3Rg3onzNxrc",
-      "published_kst": "11/07 05:32",
-      "views": 180,
-      "privacy": "public"
-    },
-    {
-      "title": "원하는 것을 끌어당기지 못하는 진짜 이유: 채우기 전에 먼저 버려야 하는 7가지 마음 (양자역학 주파수의 비밀)",
-      "video_id": "238EHp3xxJU",
-      "published_kst": "11/07 05:33",
-      "views": 15,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

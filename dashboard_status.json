@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T01:23:43.222370+09:00",
+  "updated_at": "2026-11-09T01:33:42.685712+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -69,7 +69,7 @@
       "title": "배트맨 효과 — 나를 이름으로 부르면 왜 더 강해질까",
       "video_id": "p8alPQwU3ts",
       "published_kst": "11/07 12:13",
-      "views": 22,
+      "views": 23,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-11-08",
+      "date": "2026-11-09",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

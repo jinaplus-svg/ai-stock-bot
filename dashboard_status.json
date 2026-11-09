@@ -1,40 +1,90 @@
 {
-  "updated_at": "2026-11-10T08:27:17.787693+09:00",
+  "updated_at": "2026-11-10T08:48:07.294934+09:00",
   "blogs": [
     {
       "category": "Stock",
       "domain": "brandnew678.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "닻내림 효과(앵커링) 극복, 매수가에 얽매여 본전만 기다리는 심리 벗어나는 법",
+      "url": "https://brandnew678.blogspot.com/2026/11/blog-post_09.html",
+      "published_kst": "11/10 07:01",
+      "published_raw": "2026-11-09T14:01:43-08:00"
     },
     {
       "category": "IT",
       "domain": "brandnew789.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "AI 안전 규제 전면전: 아모데이 “정부 개입” vs 올트먼·젠슨 황 “자율에 맡겨라”",
+      "url": "https://brandnew789.blogspot.com/2026/09/ai-vs.html",
+      "published_kst": "09/17 07:31",
+      "published_raw": "2026-09-16T15:31:18-07:00"
     },
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "제주 서쪽 애월부터 한림까지 2박 3일 렌터카 해안도로 드라이브 및 감성 카페 동선 짜는 법",
+      "url": "https://brandnew901.blogspot.com/2026/11/2-3.html",
+      "published_kst": "11/09 09:02",
+      "published_raw": "2026-11-08T16:02:06-08:00"
     },
     {
       "category": "News",
       "domain": "brandnew890.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "인도 2027 인구조사 가옥 목록 작성 및 자체 전자 조사 일정은 어떻게 되나?",
+      "url": "https://brandnew890.blogspot.com/2026/09/2027.html",
+      "published_kst": "09/20 08:31",
+      "published_raw": "2026-09-19T16:31:24-07:00"
     },
     {
       "category": "Food",
       "domain": "brandnew567.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "추석 차례상 비용 5.1% 상승과 채소류 품목별 가격 변동",
+      "url": "https://brandnew567.blogspot.com/2026/09/51.html",
+      "published_kst": "09/19 08:01",
+      "published_raw": "2026-09-18T16:01:22-07:00"
     },
     {
       "category": "자취템",
       "domain": "soloitems.blogspot.com",
-      "error": "'NoneType' object has no attribute 'posts'"
+      "title": "좁은 원룸 넓게 쓰는 접이식 테이블 솔직 후기 공간 활용 끝판왕",
+      "url": "https://soloitems.blogspot.com/2026/11/blog-post_09.html",
+      "published_kst": "11/09 23:28",
+      "published_raw": "2026-11-09T06:28:09-08:00"
     }
   ],
   "youtube": [
     {
-      "error": "'NoneType' object has no attribute 'search'"
+      "title": "가난과 불행도 전염된다? 과학이 밝혀낸 충격적 비밀",
+      "video_id": "kZDr8LeDMHU",
+      "published_kst": "11/10 04:31",
+      "views": 418,
+      "privacy": "public"
+    },
+    {
+      "title": "잘되는 사람 곁에 있어야 하는 과학적 이유 — 정서 전염과 거울뉴런",
+      "video_id": "aEkVY210vN8",
+      "published_kst": "11/10 04:31",
+      "views": 1,
+      "privacy": "public"
+    },
+    {
+      "title": "4차원을 넘어 11차원 의식에 닿는 순간, 결핍은 2분 만에 풍요의 파동으로 바뀝니다 (양자장 명상 다큐)",
+      "video_id": "ejbhwD2Gkwg",
+      "published_kst": "11/09 05:32",
+      "views": 50,
+      "privacy": "public"
+    },
+    {
+      "title": "4차원 너머 11차원의 문",
+      "video_id": "HsFadVOMj3g",
+      "published_kst": "11/09 05:30",
+      "views": 1099,
+      "privacy": "public"
+    },
+    {
+      "title": "물리학자들도 경악한 블랙홀 내부의 충격적인 진실",
+      "video_id": "BbV-gqf533E",
+      "published_kst": "11/08 04:11",
+      "views": 1004,
+      "privacy": "public"
     }
   ],
   "bots": {

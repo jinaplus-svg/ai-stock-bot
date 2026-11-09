@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T17:53:42.384330+09:00",
+  "updated_at": "2026-11-09T18:03:42.625813+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,24 @@
   ],
   "youtube": [
     {
-      "title": "4차원을 넘어 11차원 의식에 닿는 순간, 결핍은 2분 만에 풍요의 파동으로 바뀝니다 (양자장 명상 다큐)",
-      "video_id": "ejbhwD2Gkwg",
-      "published_kst": "11/09 05:32",
-      "views": 22,
+      "title": "블랙홀 안에서는 무슨 일이 일어날까 — 특이점을 둘러싼 물리학의 최전선",
+      "video_id": "6AZX4aGv2mg",
+      "published_kst": "11/08 04:09",
+      "views": 45,
+      "privacy": "public"
+    },
+    {
+      "title": "배트맨 효과 — 나를 이름으로 부르면 왜 더 강해질까",
+      "video_id": "p8alPQwU3ts",
+      "published_kst": "11/07 12:13",
+      "views": 30,
+      "privacy": "public"
+    },
+    {
+      "title": "72시간 룰 — 충동구매를 막는 가장 단순하고 강력한 심리 트릭",
+      "video_id": "fcCj36otEBc",
+      "published_kst": "11/06 04:09",
+      "views": 10,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "BbV-gqf533E",
       "published_kst": "11/08 04:11",
       "views": 964,
-      "privacy": "public"
-    },
-    {
-      "title": "블랙홀 안에서는 무슨 일이 일어날까 — 특이점을 둘러싼 물리학의 최전선",
-      "video_id": "6AZX4aGv2mg",
-      "published_kst": "11/08 04:09",
-      "views": 45,
-      "privacy": "public"
-    },
-    {
-      "title": "배트맨 효과 — 나를 이름으로 부르면 왜 더 강해질까",
-      "video_id": "p8alPQwU3ts",
-      "published_kst": "11/07 12:13",
-      "views": 30,
       "privacy": "public"
     }
   ],

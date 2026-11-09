@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T03:23:43.999863+09:00",
+  "updated_at": "2026-11-10T03:33:43.267194+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -62,7 +62,7 @@
       "title": "4차원 너머 11차원의 문",
       "video_id": "HsFadVOMj3g",
       "published_kst": "11/09 05:30",
-      "views": 1101,
+      "views": 1098,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "배트맨 효과 — 나를 이름으로 부르면 왜 더 강해질까",
       "video_id": "p8alPQwU3ts",
       "published_kst": "11/07 12:13",
-      "views": 43,
+      "views": 37,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11T05:23:43.426486+09:00",
+  "updated_at": "2026-11-11T05:33:43.795411+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "우리가 놓쳤던 수억 개의 신호: 양자역학과 무의식이 현실을 직조하는 방식",
+      "video_id": "TQgJHIvZPow",
+      "published_kst": "11/11 05:32",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "10억 개의 신호 10비트의 현실",
+      "video_id": "_NnofQ6xUtI",
+      "published_kst": "11/11 05:30",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "미래의 나에게 말을 건 10대, 8년 뒤 일어난 일 #shorts",
       "video_id": "Z8pV-Pms4Pw",
       "published_kst": "11/10 19:06",
@@ -62,7 +76,7 @@
       "title": "하루 수시간 도파민에 절여진 사람에게 생기는 변화 #shorts",
       "video_id": "gMx1XkSmeOM",
       "published_kst": "11/10 12:21",
-      "views": 8,
+      "views": 7,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "kZDr8LeDMHU",
       "published_kst": "11/10 04:31",
       "views": 427,
-      "privacy": "public"
-    },
-    {
-      "title": "잘되는 사람 곁에 있어야 하는 과학적 이유 — 정서 전염과 거울뉴런",
-      "video_id": "aEkVY210vN8",
-      "published_kst": "11/10 04:31",
-      "views": 51,
-      "privacy": "public"
-    },
-    {
-      "title": "4차원을 넘어 11차원 의식에 닿는 순간, 결핍은 2분 만에 풍요의 파동으로 바뀝니다 (양자장 명상 다큐)",
-      "video_id": "ejbhwD2Gkwg",
-      "published_kst": "11/09 05:32",
-      "views": 84,
       "privacy": "public"
     }
   ],

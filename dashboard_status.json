@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T09:33:42.970463+09:00",
+  "updated_at": "2026-11-10T09:43:44.386364+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "가난과 불행도 전염된다? 과학이 밝혀낸 충격적 비밀",
-      "video_id": "kZDr8LeDMHU",
-      "published_kst": "11/10 04:31",
-      "views": 418,
-      "privacy": "public"
-    },
-    {
-      "title": "잘되는 사람 곁에 있어야 하는 과학적 이유 — 정서 전염과 거울뉴런",
-      "video_id": "aEkVY210vN8",
-      "published_kst": "11/10 04:31",
-      "views": 1,
-      "privacy": "public"
-    },
-    {
-      "title": "4차원을 넘어 11차원 의식에 닿는 순간, 결핍은 2분 만에 풍요의 파동으로 바뀝니다 (양자장 명상 다큐)",
-      "video_id": "ejbhwD2Gkwg",
-      "published_kst": "11/09 05:32",
-      "views": 54,
-      "privacy": "public"
-    },
-    {
-      "title": "4차원 너머 11차원의 문",
-      "video_id": "HsFadVOMj3g",
-      "published_kst": "11/09 05:30",
-      "views": 1099,
-      "privacy": "public"
-    },
-    {
-      "title": "물리학자들도 경악한 블랙홀 내부의 충격적인 진실",
-      "video_id": "BbV-gqf533E",
-      "published_kst": "11/08 04:11",
-      "views": 1004,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

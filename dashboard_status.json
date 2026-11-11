@@ -1,90 +1,40 @@
 {
-  "updated_at": "2026-11-12T05:23:44.138148+09:00",
+  "updated_at": "2026-11-12T05:41:53.824216+09:00",
   "blogs": [
     {
       "category": "Stock",
       "domain": "brandnew678.blogspot.com",
-      "title": "ETF 살 때 상장폐지 기준은 무엇일까? 자산규모와 시가총액으로 조기청산 위험 거르는 법",
-      "url": "https://brandnew678.blogspot.com/2026/11/etf.html",
-      "published_kst": "11/11 07:02",
-      "published_raw": "2026-11-10T14:02:01-08:00"
+      "error": "'NoneType' object has no attribute 'posts'"
     },
     {
       "category": "IT",
       "domain": "brandnew789.blogspot.com",
-      "title": "AI 안전 규제 전면전: 아모데이 “정부 개입” vs 올트먼·젠슨 황 “자율에 맡겨라”",
-      "url": "https://brandnew789.blogspot.com/2026/09/ai-vs.html",
-      "published_kst": "09/17 07:31",
-      "published_raw": "2026-09-16T15:31:18-07:00"
+      "error": "'NoneType' object has no attribute 'posts'"
     },
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "해외여행 eSIM과 유심(USIM) 로밍 차이점 비교 및 내 스마트폰 지원 모델 확인법",
-      "url": "https://brandnew901.blogspot.com/2026/11/esim-usim.html",
-      "published_kst": "11/11 09:01",
-      "published_raw": "2026-11-10T16:01:37-08:00"
+      "error": "'NoneType' object has no attribute 'posts'"
     },
     {
       "category": "News",
       "domain": "brandnew890.blogspot.com",
-      "title": "인도 2027 인구조사 가옥 목록 작성 및 자체 전자 조사 일정은 어떻게 되나?",
-      "url": "https://brandnew890.blogspot.com/2026/09/2027.html",
-      "published_kst": "09/20 08:31",
-      "published_raw": "2026-09-19T16:31:24-07:00"
+      "error": "'NoneType' object has no attribute 'posts'"
     },
     {
       "category": "Food",
       "domain": "brandnew567.blogspot.com",
-      "title": "추석 차례상 비용 5.1% 상승과 채소류 품목별 가격 변동",
-      "url": "https://brandnew567.blogspot.com/2026/09/51.html",
-      "published_kst": "09/19 08:01",
-      "published_raw": "2026-09-18T16:01:22-07:00"
+      "error": "'NoneType' object has no attribute 'posts'"
     },
     {
       "category": "자취템",
       "domain": "soloitems.blogspot.com",
-      "title": "좁은 원룸 옷정리 끝판왕 튼튼한 이동식 스탠드 행거 추천",
-      "url": "https://soloitems.blogspot.com/2026/11/blog-post_11.html",
-      "published_kst": "11/11 22:01",
-      "published_raw": "2026-11-11T05:01:06-08:00"
+      "error": "'NoneType' object has no attribute 'posts'"
     }
   ],
   "youtube": [
     {
-      "title": "내 인생이 유독 우울했던 충격적인 이유 (뇌의 거짓말)",
-      "video_id": "QPX-Jyvd96s",
-      "published_kst": "11/12 04:24",
-      "views": 623,
-      "privacy": "public"
-    },
-    {
-      "title": "인생에서 좋은 일은 25%뿐? 뇌가 불행을 더 크게 느끼는 부정성 편향",
-      "video_id": "zc7Fd16Pl4s",
-      "published_kst": "11/12 04:24",
-      "views": 0,
-      "privacy": "public"
-    },
-    {
-      "title": "마음이 아픈 62명, 21일 동안 진통제를 먹었더니 생기는 일 #shorts",
-      "video_id": "btPP0CrLSBk",
-      "published_kst": "11/11 19:07",
-      "views": 996,
-      "privacy": "public"
-    },
-    {
-      "title": "120곡 중 3곡, 두드린 사람은 왜 절반은 맞힐 거라 믿었을까 #shorts",
-      "video_id": "pfXeMOEqr9o",
-      "published_kst": "11/11 12:30",
-      "views": 1068,
-      "privacy": "public"
-    },
-    {
-      "title": "우리가 놓쳤던 수억 개의 신호: 양자역학과 무의식이 현실을 직조하는 방식",
-      "video_id": "TQgJHIvZPow",
-      "published_kst": "11/11 05:32",
-      "views": 27,
-      "privacy": "public"
+      "error": "'NoneType' object has no attribute 'search'"
     }
   ],
   "bots": {

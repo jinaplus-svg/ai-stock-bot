@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11T09:23:58.835030+09:00",
+  "updated_at": "2026-11-11T09:33:43.945387+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "우리가 놓쳤던 수억 개의 신호: 양자역학과 무의식이 현실을 직조하는 방식",
+      "video_id": "TQgJHIvZPow",
+      "published_kst": "11/11 05:32",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "10억 개의 신호 10비트의 현실",
+      "video_id": "_NnofQ6xUtI",
+      "published_kst": "11/11 05:30",
+      "views": 1031,
+      "privacy": "public"
+    },
+    {
+      "title": "미래의 나에게 말을 건 10대, 8년 뒤 일어난 일 #shorts",
+      "video_id": "Z8pV-Pms4Pw",
+      "published_kst": "11/10 19:06",
+      "views": 1088,
+      "privacy": "public"
+    },
+    {
+      "title": "하루 수시간 도파민에 절여진 사람에게 생기는 변화 #shorts",
+      "video_id": "gMx1XkSmeOM",
+      "published_kst": "11/10 12:21",
+      "views": 8,
+      "privacy": "public"
+    },
+    {
+      "title": "가난과 불행도 전염된다? 과학이 밝혀낸 충격적 비밀",
+      "video_id": "kZDr8LeDMHU",
+      "published_kst": "11/10 04:31",
+      "views": 427,
+      "privacy": "public"
     }
   ],
   "bots": {

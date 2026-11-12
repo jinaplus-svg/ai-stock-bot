@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T10:23:44.491408+09:00",
+  "updated_at": "2026-11-12T10:33:46.182885+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "내 인생이 유독 우울했던 충격적인 이유 (뇌의 거짓말)",
+      "video_id": "QPX-Jyvd96s",
+      "published_kst": "11/12 04:24",
+      "views": 1041,
+      "privacy": "public"
+    },
+    {
+      "title": "인생에서 좋은 일은 25%뿐? 뇌가 불행을 더 크게 느끼는 부정성 편향",
+      "video_id": "zc7Fd16Pl4s",
+      "published_kst": "11/12 04:24",
+      "views": 6,
+      "privacy": "public"
+    },
+    {
+      "title": "마음이 아픈 62명, 21일 동안 진통제를 먹었더니 생기는 일 #shorts",
+      "video_id": "btPP0CrLSBk",
+      "published_kst": "11/11 19:07",
+      "views": 1026,
+      "privacy": "public"
+    },
+    {
+      "title": "120곡 중 3곡, 두드린 사람은 왜 절반은 맞힐 거라 믿었을까 #shorts",
+      "video_id": "pfXeMOEqr9o",
+      "published_kst": "11/11 12:30",
+      "views": 1069,
+      "privacy": "public"
+    },
+    {
+      "title": "우리가 놓쳤던 수억 개의 신호: 양자역학과 무의식이 현실을 직조하는 방식",
+      "video_id": "TQgJHIvZPow",
+      "published_kst": "11/11 05:32",
+      "views": 36,
+      "privacy": "public"
     }
   ],
   "bots": {

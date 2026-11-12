@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13T05:33:58.602103+09:00",
+  "updated_at": "2026-11-13T05:43:44.690651+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "돈을 쫓지 않는 순간 일어나는 양자역학적 변화 (부의 주파수 재프로그래밍 수면 명상)",
+      "video_id": "N7pFAIfHZN8",
+      "published_kst": "11/13 05:37",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "쫓지 마세요 자석이 됩니다",
+      "video_id": "rQsc6aHZl5s",
+      "published_kst": "11/13 05:35",
+      "views": 92,
+      "privacy": "public"
+    },
+    {
       "title": "[마음 실험실 1] 14년 동안 11,000명을 추적한 결과 #shorts",
       "video_id": "jCiFtkB2B6k",
       "published_kst": "11/12 19:06",
@@ -70,20 +84,6 @@
       "video_id": "QPX-Jyvd96s",
       "published_kst": "11/12 04:24",
       "views": 1047,
-      "privacy": "public"
-    },
-    {
-      "title": "인생에서 좋은 일은 25%뿐? 뇌가 불행을 더 크게 느끼는 부정성 편향",
-      "video_id": "zc7Fd16Pl4s",
-      "published_kst": "11/12 04:24",
-      "views": 28,
-      "privacy": "public"
-    },
-    {
-      "title": "마음이 아픈 62명, 21일 동안 진통제를 먹었더니 생기는 일 #shorts",
-      "video_id": "btPP0CrLSBk",
-      "published_kst": "11/11 19:07",
-      "views": 1050,
       "privacy": "public"
     }
   ],

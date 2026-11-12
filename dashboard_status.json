@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T08:53:44.154075+09:00",
+  "updated_at": "2026-11-12T09:03:45.834703+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -20,10 +20,10 @@
     {
       "category": "Travel",
       "domain": "brandnew901.blogspot.com",
-      "title": "해외여행 eSIM과 유심(USIM) 로밍 차이점 비교 및 내 스마트폰 지원 모델 확인법",
-      "url": "https://brandnew901.blogspot.com/2026/11/esim-usim.html",
-      "published_kst": "11/11 09:01",
-      "published_raw": "2026-11-10T16:01:37-08:00"
+      "title": "해외여행 팁 문화 국가별 팁 계산법과 식당·호텔 팁 카드 vs 현금 지불 기준",
+      "url": "https://brandnew901.blogspot.com/2026/11/vs_01641306510.html",
+      "published_kst": "11/12 09:01",
+      "published_raw": "2026-11-11T16:01:49-08:00"
     },
     {
       "category": "News",
@@ -55,7 +55,7 @@
       "title": "내 인생이 유독 우울했던 충격적인 이유 (뇌의 거짓말)",
       "video_id": "QPX-Jyvd96s",
       "published_kst": "11/12 04:24",
-      "views": 752,
+      "views": 1041,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "우리가 놓쳤던 수억 개의 신호: 양자역학과 무의식이 현실을 직조하는 방식",
       "video_id": "TQgJHIvZPow",
       "published_kst": "11/11 05:32",
-      "views": 36,
+      "views": 35,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13T10:03:42.743252+09:00",
+  "updated_at": "2026-11-13T10:13:43.218659+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "돈을 쫓지 않는 순간 일어나는 양자역학적 변화 (부의 주파수 재프로그래밍 수면 명상)",
-      "video_id": "N7pFAIfHZN8",
-      "published_kst": "11/13 05:37",
-      "views": 2,
-      "privacy": "public"
-    },
-    {
-      "title": "쫓지 마세요 자석이 됩니다",
-      "video_id": "rQsc6aHZl5s",
-      "published_kst": "11/13 05:35",
-      "views": 510,
-      "privacy": "public"
-    },
-    {
-      "title": "[마음 실험실 1] 14년 동안 11,000명을 추적한 결과 #shorts",
-      "video_id": "jCiFtkB2B6k",
-      "published_kst": "11/12 19:06",
-      "views": 1179,
-      "privacy": "public"
-    },
-    {
-      "title": "마시멜로 앞에서 끝까지 버틴 아이들의 비밀, 의지가 아니었다 #shorts",
-      "video_id": "VIJePhYUMrk",
-      "published_kst": "11/12 12:30",
-      "views": 239,
-      "privacy": "public"
-    },
-    {
-      "title": "내 인생이 유독 우울했던 충격적인 이유 (뇌의 거짓말)",
-      "video_id": "QPX-Jyvd96s",
-      "published_kst": "11/12 04:24",
-      "views": 1047,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

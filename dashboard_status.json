@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T08:23:48.414145+09:00",
+  "updated_at": "2026-11-14T08:33:47.883991+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "부모님과 보내는 시간, 18살에 이미 92%를 썼다 #shorts #부모님 #인생",
+      "video_id": "Rw6ay1A71B0",
+      "published_kst": "11/14 08:26",
+      "views": 92,
+      "privacy": "public"
+    },
+    {
       "title": "21일만 버티면 습관 된다는 말, 뇌과학자가 비웃는 이유",
       "video_id": "4RqY94hIxsE",
       "published_kst": "11/14 04:29",
@@ -77,13 +84,6 @@
       "video_id": "wT6j_lv1lMQ",
       "published_kst": "11/13 12:30",
       "views": 125,
-      "privacy": "public"
-    },
-    {
-      "title": "돈을 쫓지 않는 순간 일어나는 양자역학적 변화 (부의 주파수 재프로그래밍 수면 명상)",
-      "video_id": "N7pFAIfHZN8",
-      "published_kst": "11/13 05:37",
-      "views": 20,
       "privacy": "public"
     }
   ],

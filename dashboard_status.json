@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13T19:03:43.268213+09:00",
+  "updated_at": "2026-11-13T19:13:43.385379+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "5cm 작은 조각이 에베레스트를 무너뜨리는 법 #shorts",
+      "video_id": "XJXOPytC1_M",
+      "published_kst": "11/13 19:08",
+      "views": 2,
+      "privacy": "public"
+    },
+    {
       "title": "정답률은 높은데 두 배 느린 사람들, 실수를 두려워하는 뇌 #shorts",
       "video_id": "wT6j_lv1lMQ",
       "published_kst": "11/13 12:30",
@@ -77,13 +84,6 @@
       "video_id": "jCiFtkB2B6k",
       "published_kst": "11/12 19:06",
       "views": 1181,
-      "privacy": "public"
-    },
-    {
-      "title": "마시멜로 앞에서 끝까지 버틴 아이들의 비밀, 의지가 아니었다 #shorts",
-      "video_id": "VIJePhYUMrk",
-      "published_kst": "11/12 12:30",
-      "views": 342,
       "privacy": "public"
     }
   ],

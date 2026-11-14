@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T09:33:47.736845+09:00",
+  "updated_at": "2026-11-14T09:43:45.199001+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "부모님과 보내는 시간, 18살에 이미 92%를 썼다 #shorts #부모님 #인생",
-      "video_id": "Rw6ay1A71B0",
-      "published_kst": "11/14 08:26",
-      "views": 626,
-      "privacy": "public"
-    },
-    {
-      "title": "21일만 버티면 습관 된다는 말, 뇌과학자가 비웃는 이유",
-      "video_id": "4RqY94hIxsE",
-      "published_kst": "11/14 04:29",
-      "views": 1092,
-      "privacy": "public"
-    },
-    {
-      "title": "습관 형성의 뇌과학 — 21일의 법칙은 왜 틀렸는가",
-      "video_id": "oHwzmBVClTQ",
-      "published_kst": "11/14 04:28",
-      "views": 10,
-      "privacy": "public"
-    },
-    {
-      "title": "5cm 작은 조각이 에베레스트를 무너뜨리는 법 #shorts",
-      "video_id": "XJXOPytC1_M",
-      "published_kst": "11/13 19:08",
-      "views": 1176,
-      "privacy": "public"
-    },
-    {
-      "title": "정답률은 높은데 두 배 느린 사람들, 실수를 두려워하는 뇌 #shorts",
-      "video_id": "wT6j_lv1lMQ",
-      "published_kst": "11/13 12:30",
-      "views": 125,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

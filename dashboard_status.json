@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T05:33:49.851637+09:00",
+  "updated_at": "2026-11-15T05:43:43.201768+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "불안과 집착이 3초 만에 사라지고 내면의 에너지가 열리는 원리",
+      "video_id": "ovuUa_40v4s",
+      "published_kst": "11/15 05:35",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "마음의 밸브 3초 만에 열림",
+      "video_id": "SEDNULKtea8",
+      "published_kst": "11/15 05:34",
+      "views": 152,
+      "privacy": "public"
+    },
+    {
       "title": "10살 아이에게 똑똑하다고 칭찬했더니 생긴 일 #shorts",
       "video_id": "EEeqjo3GekA",
       "published_kst": "11/14 19:05",
@@ -70,20 +84,6 @@
       "video_id": "4RqY94hIxsE",
       "published_kst": "11/14 04:29",
       "views": 1131,
-      "privacy": "public"
-    },
-    {
-      "title": "습관 형성의 뇌과학 — 21일의 법칙은 왜 틀렸는가",
-      "video_id": "oHwzmBVClTQ",
-      "published_kst": "11/14 04:28",
-      "views": 30,
-      "privacy": "public"
-    },
-    {
-      "title": "5cm 작은 조각이 에베레스트를 무너뜨리는 법 #shorts",
-      "video_id": "XJXOPytC1_M",
-      "published_kst": "11/13 19:08",
-      "views": 1178,
       "privacy": "public"
     }
   ],

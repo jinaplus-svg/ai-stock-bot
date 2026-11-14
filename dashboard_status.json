@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T19:03:48.581699+09:00",
+  "updated_at": "2026-11-14T19:13:43.149520+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "10살 아이에게 똑똑하다고 칭찬했더니 생긴 일 #shorts",
+      "video_id": "EEeqjo3GekA",
+      "published_kst": "11/14 19:05",
+      "views": 19,
+      "privacy": "public"
+    },
+    {
       "title": "부모님과 보내는 시간, 18살에 이미 92%를 썼다 #shorts #부모님 #인생",
       "video_id": "Rw6ay1A71B0",
       "published_kst": "11/14 08:26",
@@ -77,13 +84,6 @@
       "video_id": "XJXOPytC1_M",
       "published_kst": "11/13 19:08",
       "views": 1178,
-      "privacy": "public"
-    },
-    {
-      "title": "정답률은 높은데 두 배 느린 사람들, 실수를 두려워하는 뇌 #shorts",
-      "video_id": "wT6j_lv1lMQ",
-      "published_kst": "11/13 12:30",
-      "views": 210,
       "privacy": "public"
     }
   ],

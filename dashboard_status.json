@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T00:23:43.253109+09:00",
+  "updated_at": "2026-11-15T00:33:43.320859+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -69,7 +69,7 @@
       "title": "21일만 버티면 습관 된다는 말, 뇌과학자가 비웃는 이유",
       "video_id": "4RqY94hIxsE",
       "published_kst": "11/14 04:29",
-      "views": 1128,
+      "views": 1131,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-11-14",
+      "date": "2026-11-15",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

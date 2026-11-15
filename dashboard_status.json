@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T16:53:43.877735+09:00",
+  "updated_at": "2026-11-15T17:03:44.819784+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "평생, 누구와 가장 많은 시간을 보낼까? #shorts #인생 #시간",
+      "video_id": "wvvCHx_cmUo",
+      "published_kst": "11/15 12:00",
+      "views": 533,
+      "privacy": "public"
+    },
+    {
+      "title": "불안과 집착이 3초 만에 사라지고 내면의 에너지가 열리는 원리",
+      "video_id": "ovuUa_40v4s",
+      "published_kst": "11/15 05:35",
+      "views": 5,
+      "privacy": "public"
+    },
+    {
+      "title": "마음의 밸브 3초 만에 열림",
+      "video_id": "SEDNULKtea8",
+      "published_kst": "11/15 05:34",
+      "views": 1169,
+      "privacy": "public"
+    },
+    {
+      "title": "10살 아이에게 똑똑하다고 칭찬했더니 생긴 일 #shorts",
+      "video_id": "EEeqjo3GekA",
+      "published_kst": "11/14 19:05",
+      "views": 1072,
+      "privacy": "public"
+    },
+    {
+      "title": "부모님과 보내는 시간, 18살에 이미 92%를 썼다 #shorts #부모님 #인생",
+      "video_id": "Rw6ay1A71B0",
+      "published_kst": "11/14 08:26",
+      "views": 1076,
+      "privacy": "public"
     }
   ],
   "bots": {

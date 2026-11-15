@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T04:03:47.292871+09:00",
+  "updated_at": "2026-11-16T04:13:45.233317+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "노력해도 인생이 제자리인 사람들의 소름 돋는 공통점",
+      "video_id": "KoP96MwzV0Q",
+      "published_kst": "11/16 04:12",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "장소를 바꾸면 운명이 바뀐다 — 습관 단절 가설과 환경 설계",
+      "video_id": "7L-VETSTntc",
+      "published_kst": "11/16 04:11",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "행동의 43%를 지배하는 것, 의지가 아니었다 #shorts",
       "video_id": "tWmeZ-_oDyY",
       "published_kst": "11/15 19:08",
@@ -62,7 +76,7 @@
       "title": "평생, 누구와 가장 많은 시간을 보낼까? #shorts #인생 #시간",
       "video_id": "wvvCHx_cmUo",
       "published_kst": "11/15 12:00",
-      "views": 695,
+      "views": 697,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "ovuUa_40v4s",
       "published_kst": "11/15 05:35",
       "views": 5,
-      "privacy": "public"
-    },
-    {
-      "title": "마음의 밸브 3초 만에 열림",
-      "video_id": "SEDNULKtea8",
-      "published_kst": "11/15 05:34",
-      "views": 1171,
-      "privacy": "public"
-    },
-    {
-      "title": "10살 아이에게 똑똑하다고 칭찬했더니 생긴 일 #shorts",
-      "video_id": "EEeqjo3GekA",
-      "published_kst": "11/14 19:05",
-      "views": 1075,
       "privacy": "public"
     }
   ],

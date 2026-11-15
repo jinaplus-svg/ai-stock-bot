@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T00:23:43.105261+09:00",
+  "updated_at": "2026-11-16T00:33:43.698934+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -76,7 +76,7 @@
       "title": "마음의 밸브 3초 만에 열림",
       "video_id": "SEDNULKtea8",
       "published_kst": "11/15 05:34",
-      "views": 1169,
+      "views": 1171,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-11-15",
+      "date": "2026-11-16",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

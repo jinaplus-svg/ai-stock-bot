@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17T05:23:43.586449+09:00",
+  "updated_at": "2026-11-17T05:33:44.097851+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "0.1초의 착각 삭제는 없다",
+      "video_id": "gDXSpCP87GU",
+      "published_kst": "11/17 05:32",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "사람을 바꾸고 싶다면 꼭 봐야 할 공항 화장실의 기적 #shorts",
       "video_id": "Q0CARCT3eI0",
       "published_kst": "11/16 19:06",
@@ -62,7 +69,7 @@
       "title": "강아지와 보내는 시간, 나에겐 16% 그 아이에겐 100% #shorts #강아지 #반려견",
       "video_id": "4qpB0yJT0Wo",
       "published_kst": "11/16 12:00",
-      "views": 313,
+      "views": 319,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "7L-VETSTntc",
       "published_kst": "11/16 04:11",
       "views": 15,
-      "privacy": "public"
-    },
-    {
-      "title": "행동의 43%를 지배하는 것, 의지가 아니었다 #shorts",
-      "video_id": "tWmeZ-_oDyY",
-      "published_kst": "11/15 19:08",
-      "views": 0,
       "privacy": "public"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T16:53:43.096849+09:00",
+  "updated_at": "2026-11-16T17:03:43.221770+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "강아지와 보내는 시간, 나에겐 16% 그 아이에겐 100% #shorts #강아지 #반려견",
+      "video_id": "4qpB0yJT0Wo",
+      "published_kst": "11/16 12:00",
+      "views": 253,
+      "privacy": "public"
+    },
+    {
+      "title": "노력해도 인생이 제자리인 사람들의 소름 돋는 공통점",
+      "video_id": "KoP96MwzV0Q",
+      "published_kst": "11/16 04:12",
+      "views": 251,
+      "privacy": "public"
+    },
+    {
+      "title": "장소를 바꾸면 운명이 바뀐다 — 습관 단절 가설과 환경 설계",
+      "video_id": "7L-VETSTntc",
+      "published_kst": "11/16 04:11",
+      "views": 11,
+      "privacy": "public"
+    },
+    {
+      "title": "행동의 43%를 지배하는 것, 의지가 아니었다 #shorts",
+      "video_id": "tWmeZ-_oDyY",
+      "published_kst": "11/15 19:08",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "평생, 누구와 가장 많은 시간을 보낼까? #shorts #인생 #시간",
+      "video_id": "wvvCHx_cmUo",
+      "published_kst": "11/15 12:00",
+      "views": 768,
+      "privacy": "public"
     }
   ],
   "bots": {

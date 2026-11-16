@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17T05:33:44.097851+09:00",
+  "updated_at": "2026-11-17T05:43:44.050167+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,17 @@
   ],
   "youtube": [
     {
+      "title": "불안을 억지로 없애려 할수록 무의식이 닫히는 이유 (진짜 무의식 정화의 비밀)",
+      "video_id": "tXFfOeTxNls",
+      "published_kst": "11/17 05:36",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "0.1초의 착각 삭제는 없다",
       "video_id": "gDXSpCP87GU",
       "published_kst": "11/17 05:32",
-      "views": 0,
+      "views": 112,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "KoP96MwzV0Q",
       "published_kst": "11/16 04:12",
       "views": 251,
-      "privacy": "public"
-    },
-    {
-      "title": "장소를 바꾸면 운명이 바뀐다 — 습관 단절 가설과 환경 설계",
-      "video_id": "7L-VETSTntc",
-      "published_kst": "11/16 04:11",
-      "views": 15,
       "privacy": "public"
     }
   ],

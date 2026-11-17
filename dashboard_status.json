@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17T10:04:11.085843+09:00",
+  "updated_at": "2026-11-17T10:13:43.948736+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "불안을 억지로 없애려 할수록 무의식이 닫히는 이유 (진짜 무의식 정화의 비밀)",
-      "video_id": "tXFfOeTxNls",
-      "published_kst": "11/17 05:36",
-      "views": 2,
-      "privacy": "public"
-    },
-    {
-      "title": "0.1초의 착각 삭제는 없다",
-      "video_id": "gDXSpCP87GU",
-      "published_kst": "11/17 05:32",
-      "views": 537,
-      "privacy": "public"
-    },
-    {
-      "title": "사람을 바꾸고 싶다면 꼭 봐야 할 공항 화장실의 기적 #shorts",
-      "video_id": "Q0CARCT3eI0",
-      "published_kst": "11/16 19:06",
-      "views": 1074,
-      "privacy": "public"
-    },
-    {
-      "title": "강아지와 보내는 시간, 나에겐 16% 그 아이에겐 100% #shorts #강아지 #반려견",
-      "video_id": "4qpB0yJT0Wo",
-      "published_kst": "11/16 12:00",
-      "views": 325,
-      "privacy": "public"
-    },
-    {
-      "title": "노력해도 인생이 제자리인 사람들의 소름 돋는 공통점",
-      "video_id": "KoP96MwzV0Q",
-      "published_kst": "11/16 04:12",
-      "views": 251,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

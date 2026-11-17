@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18T04:03:44.380535+09:00",
+  "updated_at": "2026-11-18T04:13:43.946841+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "나이 들수록 머리 굳는다는 말이 새빨간 거짓말인 이유",
+      "video_id": "IAWlByqeuW4",
+      "published_kst": "11/18 04:10",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "뇌는 죽을 때까지 변한다 — 신경가소성을 활용해 뇌의 회로를 재설계하는 과학적 방법",
+      "video_id": "yWHxA8780G8",
+      "published_kst": "11/18 04:10",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "14개월의 분석을 이긴 2초의 직감 #shorts",
       "video_id": "XR_cDeTbcEU",
       "published_kst": "11/17 19:07",
@@ -70,20 +84,6 @@
       "video_id": "gDXSpCP87GU",
       "published_kst": "11/17 05:32",
       "views": 997,
-      "privacy": "public"
-    },
-    {
-      "title": "사람을 바꾸고 싶다면 꼭 봐야 할 공항 화장실의 기적 #shorts",
-      "video_id": "Q0CARCT3eI0",
-      "published_kst": "11/16 19:06",
-      "views": 1075,
-      "privacy": "public"
-    },
-    {
-      "title": "강아지와 보내는 시간, 나에겐 16% 그 아이에겐 100% #shorts #강아지 #반려견",
-      "video_id": "4qpB0yJT0Wo",
-      "published_kst": "11/16 12:00",
-      "views": 499,
       "privacy": "public"
     }
   ],

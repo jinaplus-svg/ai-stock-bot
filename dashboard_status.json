@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17T19:03:49.314298+09:00",
+  "updated_at": "2026-11-17T19:13:43.454441+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "14개월의 분석을 이긴 2초의 직감 #shorts",
+      "video_id": "XR_cDeTbcEU",
+      "published_kst": "11/17 19:07",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "불안을 억지로 없애려 할수록 무의식이 닫히는 이유 (진짜 무의식 정화의 비밀)",
       "video_id": "tXFfOeTxNls",
       "published_kst": "11/17 05:36",
@@ -62,7 +69,7 @@
       "title": "0.1초의 착각 삭제는 없다",
       "video_id": "gDXSpCP87GU",
       "published_kst": "11/17 05:32",
-      "views": 993,
+      "views": 994,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "4qpB0yJT0Wo",
       "published_kst": "11/16 12:00",
       "views": 403,
-      "privacy": "public"
-    },
-    {
-      "title": "노력해도 인생이 제자리인 사람들의 소름 돋는 공통점",
-      "video_id": "KoP96MwzV0Q",
-      "published_kst": "11/16 04:12",
-      "views": 251,
       "privacy": "public"
     }
   ],

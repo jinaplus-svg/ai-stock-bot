@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-19T05:33:55.452694+09:00",
+  "updated_at": "2026-11-19T05:43:44.582757+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,20 @@
   ],
   "youtube": [
     {
+      "title": "아침 눈뜨자마자 3분, 95% 무의식의 문이 열릴 때 운명이 바뀌는 양자역학적 원리",
+      "video_id": "vX7RCE2ZUQM",
+      "published_kst": "11/19 05:37",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "86%의 실수 잠든 뇌 깨우기",
+      "video_id": "7e9iqCq64fY",
+      "published_kst": "11/19 05:35",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
       "title": "이스라엘 판사들, 배고플 때 벌어지는 일 #shorts",
       "video_id": "ccQH-opX42A",
       "published_kst": "11/18 19:06",
@@ -70,20 +84,6 @@
       "video_id": "yWHxA8780G8",
       "published_kst": "11/18 04:10",
       "views": 8,
-      "privacy": "public"
-    },
-    {
-      "title": "14개월의 분석을 이긴 2초의 직감 #shorts",
-      "video_id": "XR_cDeTbcEU",
-      "published_kst": "11/17 19:07",
-      "views": 151,
-      "privacy": "public"
-    },
-    {
-      "title": "불안을 억지로 없애려 할수록 무의식이 닫히는 이유 (진짜 무의식 정화의 비밀)",
-      "video_id": "tXFfOeTxNls",
-      "published_kst": "11/17 05:36",
-      "views": 19,
       "privacy": "public"
     }
   ],

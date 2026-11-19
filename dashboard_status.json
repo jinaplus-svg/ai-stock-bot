@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-19T19:03:48.556032+09:00",
+  "updated_at": "2026-11-19T19:13:44.585117+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "학생 1500명의 시험, 첫 직감을 믿지 마세요 #shorts",
+      "video_id": "ufF3Cf7zzv4",
+      "published_kst": "11/19 19:06",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "아침 눈뜨자마자 3분, 95% 무의식의 문이 열릴 때 운명이 바뀌는 양자역학적 원리",
       "video_id": "vX7RCE2ZUQM",
       "published_kst": "11/19 05:37",
@@ -77,13 +84,6 @@
       "video_id": "IAWlByqeuW4",
       "published_kst": "11/18 04:10",
       "views": 203,
-      "privacy": "public"
-    },
-    {
-      "title": "뇌는 죽을 때까지 변한다 — 신경가소성을 활용해 뇌의 회로를 재설계하는 과학적 방법",
-      "video_id": "yWHxA8780G8",
-      "published_kst": "11/18 04:10",
-      "views": 10,
       "privacy": "public"
     }
   ],

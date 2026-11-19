@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-19T10:03:43.951464+09:00",
+  "updated_at": "2026-11-19T10:13:43.397915+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "아침 눈뜨자마자 3분, 95% 무의식의 문이 열릴 때 운명이 바뀌는 양자역학적 원리",
-      "video_id": "vX7RCE2ZUQM",
-      "published_kst": "11/19 05:37",
-      "views": 5,
-      "privacy": "public"
-    },
-    {
-      "title": "86%의 실수 잠든 뇌 깨우기",
-      "video_id": "7e9iqCq64fY",
-      "published_kst": "11/19 05:35",
-      "views": 456,
-      "privacy": "public"
-    },
-    {
-      "title": "이스라엘 판사들, 배고플 때 벌어지는 일 #shorts",
-      "video_id": "ccQH-opX42A",
-      "published_kst": "11/18 19:06",
-      "views": 244,
-      "privacy": "public"
-    },
-    {
-      "title": "나이 들수록 머리 굳는다는 말이 새빨간 거짓말인 이유",
-      "video_id": "IAWlByqeuW4",
-      "published_kst": "11/18 04:10",
-      "views": 203,
-      "privacy": "public"
-    },
-    {
-      "title": "뇌는 죽을 때까지 변한다 — 신경가소성을 활용해 뇌의 회로를 재설계하는 과학적 방법",
-      "video_id": "yWHxA8780G8",
-      "published_kst": "11/18 04:10",
-      "views": 8,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

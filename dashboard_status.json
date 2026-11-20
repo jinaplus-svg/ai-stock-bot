@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20T19:03:48.414791+09:00",
+  "updated_at": "2026-11-20T19:13:43.167620+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "작은 부탁에 2배 더 허락하게 되는 심리 #shorts",
+      "video_id": "Pm2VsuHhweE",
+      "published_kst": "11/20 19:06",
+      "views": 6,
+      "privacy": "public"
+    },
+    {
       "title": "끝내지 못한 일이 당신의 뇌를 망치는 소름 돋는 이유",
       "video_id": "oJkufgfuBhQ",
       "published_kst": "11/20 04:11",
@@ -76,14 +83,7 @@
       "title": "아침 눈뜨자마자 3분, 95% 무의식의 문이 열릴 때 운명이 바뀌는 양자역학적 원리",
       "video_id": "vX7RCE2ZUQM",
       "published_kst": "11/19 05:37",
-      "views": 23,
-      "privacy": "public"
-    },
-    {
-      "title": "86%의 실수 잠든 뇌 깨우기",
-      "video_id": "7e9iqCq64fY",
-      "published_kst": "11/19 05:35",
-      "views": 566,
+      "views": 24,
       "privacy": "public"
     }
   ],

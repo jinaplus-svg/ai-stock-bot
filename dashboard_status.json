@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20T10:23:43.847127+09:00",
+  "updated_at": "2026-11-20T10:33:48.044678+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "끝내지 못한 일이 당신의 뇌를 망치는 소름 돋는 이유",
-      "video_id": "oJkufgfuBhQ",
-      "published_kst": "11/20 04:11",
-      "views": 977,
-      "privacy": "public"
-    },
-    {
-      "title": "끝내지 못한 일이 뇌를 파괴한다 — 자이가르닉 효과의 역발상",
-      "video_id": "tfDPmW9PiCM",
-      "published_kst": "11/20 04:10",
-      "views": 3,
-      "privacy": "public"
-    },
-    {
-      "title": "학생 1500명의 시험, 첫 직감을 믿지 마세요 #shorts",
-      "video_id": "ufF3Cf7zzv4",
-      "published_kst": "11/19 19:06",
-      "views": 1212,
-      "privacy": "public"
-    },
-    {
-      "title": "아침 눈뜨자마자 3분, 95% 무의식의 문이 열릴 때 운명이 바뀌는 양자역학적 원리",
-      "video_id": "vX7RCE2ZUQM",
-      "published_kst": "11/19 05:37",
-      "views": 21,
-      "privacy": "public"
-    },
-    {
-      "title": "86%의 실수 잠든 뇌 깨우기",
-      "video_id": "7e9iqCq64fY",
-      "published_kst": "11/19 05:35",
-      "views": 559,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

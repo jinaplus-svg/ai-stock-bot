@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-22T00:23:43.375690+09:00",
+  "updated_at": "2026-11-22T00:33:43.324460+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "수감자 수만 명의 수용소, 생사를 가른 한 가지 #shorts",
       "video_id": "Zw94dvwTpbE",
       "published_kst": "11/21 19:05",
-      "views": 777,
+      "views": 1007,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-11-21",
+      "date": "2026-11-22",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-22T05:33:43.482917+09:00",
+  "updated_at": "2026-11-22T05:43:44.127320+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,14 +55,14 @@
       "title": "공짜 돈이라 생각해서 쉽게 날린다? 심적 회계가 통장을 갉아먹는 방식",
       "video_id": "aFYV4H4aAJg",
       "published_kst": "11/22 04:11",
-      "views": 0,
+      "views": 1,
       "privacy": "public"
     },
     {
       "title": "성과급 받자마자 통장이 털리는 소름 돋는 이유",
       "video_id": "n8v-9ub7RWc",
       "published_kst": "11/22 04:12",
-      "views": 605,
+      "views": 647,
       "privacy": "public"
     },
     {
@@ -83,7 +83,7 @@
       "title": "3초 만에 뇌를 깨우는 작은 불빛",
       "video_id": "2sGJ0yZrax8",
       "published_kst": "11/21 05:32",
-      "views": 1008,
+      "views": 1010,
       "privacy": "public"
     }
   ],

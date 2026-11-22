@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T00:23:43.571155+09:00",
+  "updated_at": "2026-11-23T00:33:43.710533+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "탑승객 254명의 비행기, 왜 산에 부딪혔을까? #shorts",
       "video_id": "8kon8FIEqAs",
       "published_kst": "11/22 19:06",
-      "views": 1159,
+      "views": 1172,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-11-22",
+      "date": "2026-11-23",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T05:44:03.594338+09:00",
+  "updated_at": "2026-11-23T05:54:04.945520+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "1초 1100만개 몸의 신호",
+      "video_id": "Lzt3DR3Ygoo",
+      "published_kst": "11/23 05:54",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "탑승객 254명의 비행기, 왜 산에 부딪혔을까? #shorts",
       "video_id": "8kon8FIEqAs",
       "published_kst": "11/22 19:06",
@@ -62,7 +69,7 @@
       "title": "공짜 돈이라 생각해서 쉽게 날린다? 심적 회계가 통장을 갉아먹는 방식",
       "video_id": "aFYV4H4aAJg",
       "published_kst": "11/22 04:11",
-      "views": 11,
+      "views": 9,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "Zw94dvwTpbE",
       "published_kst": "11/21 19:05",
       "views": 1047,
-      "privacy": "public"
-    },
-    {
-      "title": "무기력한 뇌를 깨우는 3초의 법칙과 내면의 신호 듣기 | 마음챙김 확언 명상",
-      "video_id": "PvppUt9JKQs",
-      "published_kst": "11/21 05:34",
-      "views": 5,
       "privacy": "public"
     }
   ],

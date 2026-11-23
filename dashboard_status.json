@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T10:13:43.250774+09:00",
+  "updated_at": "2026-11-23T10:23:43.241521+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "1초 1100만개 몸의 신호",
+      "video_id": "Lzt3DR3Ygoo",
+      "published_kst": "11/23 05:54",
+      "views": 783,
+      "privacy": "public"
+    },
+    {
+      "title": "1초에 1,100만 개 정보를 처리하는 몸의 신호: 무의식을 정렬하고 현실을 바꾸는 고요한 아침의 법칙",
+      "video_id": "jY4sVpJI2v4",
+      "published_kst": "11/23 05:54",
+      "views": 4,
+      "privacy": "public"
+    },
+    {
+      "title": "탑승객 254명의 비행기, 왜 산에 부딪혔을까? #shorts",
+      "video_id": "8kon8FIEqAs",
+      "published_kst": "11/22 19:06",
+      "views": 1244,
+      "privacy": "public"
+    },
+    {
+      "title": "공짜 돈이라 생각해서 쉽게 날린다? 심적 회계가 통장을 갉아먹는 방식",
+      "video_id": "aFYV4H4aAJg",
+      "published_kst": "11/22 04:11",
+      "views": 11,
+      "privacy": "public"
+    },
+    {
+      "title": "성과급 받자마자 통장이 털리는 소름 돋는 이유",
+      "video_id": "n8v-9ub7RWc",
+      "published_kst": "11/22 04:12",
+      "views": 1060,
+      "privacy": "public"
     }
   ],
   "bots": {

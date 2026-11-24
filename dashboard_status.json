@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-24T09:43:45.553027+09:00",
+  "updated_at": "2026-11-24T09:53:43.869552+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "IQ까지 바뀐다? 어른의 뇌를 완전히 다시 리셋하는 4가지 방법",
+      "video_id": "TPli3UJAxL4",
+      "published_kst": "11/24 04:13",
+      "views": 1055,
+      "privacy": "public"
+    },
+    {
+      "title": "뇌는 성인이 되어도 다시 설계될 수 있다 — 신경가소성을 활용한 4가지 뇌 훈련법",
+      "video_id": "73_5VTyvMfo",
+      "published_kst": "11/24 04:11",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "실험실에 모인 성인들, 하룻밤 4시간만 자게 했더니? #shorts",
+      "video_id": "alz__dPxrDE",
+      "published_kst": "11/23 19:05",
+      "views": 1101,
+      "privacy": "public"
+    },
+    {
+      "title": "1초 1100만개 몸의 신호",
+      "video_id": "Lzt3DR3Ygoo",
+      "published_kst": "11/23 05:54",
+      "views": 964,
+      "privacy": "public"
+    },
+    {
+      "title": "1초에 1,100만 개 정보를 처리하는 몸의 신호: 무의식을 정렬하고 현실을 바꾸는 고요한 아침의 법칙",
+      "video_id": "jY4sVpJI2v4",
+      "published_kst": "11/23 05:54",
+      "views": 17,
+      "privacy": "public"
     }
   ],
   "bots": {

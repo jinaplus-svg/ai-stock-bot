@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-25T06:43:43.769666+09:00",
+  "updated_at": "2026-11-25T06:53:57.479750+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -62,7 +62,7 @@
       "title": "잠재의식 95% 11차원의 신호",
       "video_id": "3L83CzgsvYU",
       "published_kst": "11/25 05:36",
-      "views": 294,
+      "views": 301,
       "privacy": "public"
     },
     {
@@ -122,9 +122,9 @@
     }
   },
   "account": {
-    "buying_power": 4413994.0,
+    "error": "HTTPSConnectionPool(host='openapi.tossinvest.com', port=443): Read timed out. (read timeout=15)",
     "stock_value_krw": 0,
-    "total_value_krw": 4413994,
+    "total_value_krw": 0,
     "unrealized_pnl_krw": 0
   },
   "threads": {

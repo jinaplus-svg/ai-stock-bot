@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T04:03:44.750615+09:00",
+  "updated_at": "2026-11-26T04:13:47.359715+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "우주는 왜 아무것도 없는 상태가 아닐까: 양자역학이 밝혀낸 무(無)의 충격적 실체",
+      "video_id": "uqxU8JWtynE",
+      "published_kst": "11/26 04:12",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "110년간 우승 못한 선수들이 바꾼 한 가지 #shorts",
       "video_id": "Yia4IRg84qE",
       "published_kst": "11/25 19:06",
@@ -77,13 +84,6 @@
       "video_id": "V2iyN38dYU8",
       "published_kst": "11/24 19:06",
       "views": 128,
-      "privacy": "public"
-    },
-    {
-      "title": "IQ까지 바뀐다? 어른의 뇌를 완전히 다시 리셋하는 4가지 방법",
-      "video_id": "TPli3UJAxL4",
-      "published_kst": "11/24 04:13",
-      "views": 1092,
       "privacy": "public"
     }
   ],

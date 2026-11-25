@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-25T08:53:43.453315+09:00",
+  "updated_at": "2026-11-25T09:03:45.136580+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,39 +52,7 @@
   ],
   "youtube": [
     {
-      "title": "잠재의식에 11차원의 신호를 보내는 법 | 잠들기 전 5분, 부와 치유를 현실로 만드는 양자역학 확언 명상",
-      "video_id": "XF7keucVXCw",
-      "published_kst": "11/25 05:43",
-      "views": 3,
-      "privacy": "public"
-    },
-    {
-      "title": "잠재의식 95% 11차원의 신호",
-      "video_id": "3L83CzgsvYU",
-      "published_kst": "11/25 05:36",
-      "views": 415,
-      "privacy": "public"
-    },
-    {
-      "title": "P&G 연구팀이 평범한 주부의 집을 관찰했더니? #shorts",
-      "video_id": "V2iyN38dYU8",
-      "published_kst": "11/24 19:06",
-      "views": 82,
-      "privacy": "public"
-    },
-    {
-      "title": "IQ까지 바뀐다? 어른의 뇌를 완전히 다시 리셋하는 4가지 방법",
-      "video_id": "TPli3UJAxL4",
-      "published_kst": "11/24 04:13",
-      "views": 1072,
-      "privacy": "public"
-    },
-    {
-      "title": "뇌는 성인이 되어도 다시 설계될 수 있다 — 신경가소성을 활용한 4가지 뇌 훈련법",
-      "video_id": "73_5VTyvMfo",
-      "published_kst": "11/24 04:11",
-      "views": 5,
-      "privacy": "public"
+      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
     }
   ],
   "bots": {

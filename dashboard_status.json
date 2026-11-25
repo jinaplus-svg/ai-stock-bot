@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T04:13:47.359715+09:00",
+  "updated_at": "2026-11-26T04:23:43.686761+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "완벽한 '무(無)'는 존재할 수 없다는 양자역학의 충격적 진실",
+      "video_id": "WmXe6IiPc7U",
+      "published_kst": "11/26 04:14",
+      "views": 80,
+      "privacy": "public"
+    },
+    {
       "title": "우주는 왜 아무것도 없는 상태가 아닐까: 양자역학이 밝혀낸 무(無)의 충격적 실체",
       "video_id": "uqxU8JWtynE",
       "published_kst": "11/26 04:12",
@@ -62,7 +69,7 @@
       "title": "110년간 우승 못한 선수들이 바꾼 한 가지 #shorts",
       "video_id": "Yia4IRg84qE",
       "published_kst": "11/25 19:06",
-      "views": 814,
+      "views": 842,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "3L83CzgsvYU",
       "published_kst": "11/25 05:36",
       "views": 609,
-      "privacy": "public"
-    },
-    {
-      "title": "P&G 연구팀이 평범한 주부의 집을 관찰했더니? #shorts",
-      "video_id": "V2iyN38dYU8",
-      "published_kst": "11/24 19:06",
-      "views": 128,
       "privacy": "public"
     }
   ],

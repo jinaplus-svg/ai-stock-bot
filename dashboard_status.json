@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-25T19:03:45.447266+09:00",
+  "updated_at": "2026-11-25T19:13:43.062247+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "110년간 우승 못한 선수들이 바꾼 한 가지 #shorts",
+      "video_id": "Yia4IRg84qE",
+      "published_kst": "11/25 19:06",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "잠재의식에 11차원의 신호를 보내는 법 | 잠들기 전 5분, 부와 치유를 현실로 만드는 양자역학 확언 명상",
       "video_id": "XF7keucVXCw",
       "published_kst": "11/25 05:43",
@@ -62,7 +69,7 @@
       "title": "잠재의식 95% 11차원의 신호",
       "video_id": "3L83CzgsvYU",
       "published_kst": "11/25 05:36",
-      "views": 591,
+      "views": 592,
       "privacy": "public"
     },
     {
@@ -77,13 +84,6 @@
       "video_id": "TPli3UJAxL4",
       "published_kst": "11/24 04:13",
       "views": 1083,
-      "privacy": "public"
-    },
-    {
-      "title": "뇌는 성인이 되어도 다시 설계될 수 있다 — 신경가소성을 활용한 4가지 뇌 훈련법",
-      "video_id": "73_5VTyvMfo",
-      "published_kst": "11/24 04:11",
-      "views": 5,
       "privacy": "public"
     }
   ],

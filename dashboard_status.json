@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T10:23:44.321777+09:00",
+  "updated_at": "2026-11-26T10:33:42.727097+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "완벽한 '무(無)'는 존재할 수 없다는 양자역학의 충격적 진실",
+      "video_id": "WmXe6IiPc7U",
+      "published_kst": "11/26 04:14",
+      "views": 1008,
+      "privacy": "public"
+    },
+    {
+      "title": "우주는 왜 아무것도 없는 상태가 아닐까: 양자역학이 밝혀낸 무(無)의 충격적 실체",
+      "video_id": "uqxU8JWtynE",
+      "published_kst": "11/26 04:12",
+      "views": 5,
+      "privacy": "public"
+    },
+    {
+      "title": "110년간 우승 못한 선수들이 바꾼 한 가지 #shorts",
+      "video_id": "Yia4IRg84qE",
+      "published_kst": "11/25 19:06",
+      "views": 992,
+      "privacy": "public"
+    },
+    {
+      "title": "잠재의식에 11차원의 신호를 보내는 법 | 잠들기 전 5분, 부와 치유를 현실로 만드는 양자역학 확언 명상",
+      "video_id": "XF7keucVXCw",
+      "published_kst": "11/25 05:43",
+      "views": 7,
+      "privacy": "public"
+    },
+    {
+      "title": "잠재의식 95% 11차원의 신호",
+      "video_id": "3L83CzgsvYU",
+      "published_kst": "11/25 05:36",
+      "views": 723,
+      "privacy": "public"
     }
   ],
   "bots": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T19:03:43.025344+09:00",
+  "updated_at": "2026-11-26T19:13:43.111379+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "한계보다 조금 어려운 일에 몰두하면 생기는 일 #shorts",
+      "video_id": "lckXMN1C4jw",
+      "published_kst": "11/26 19:07",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "완벽한 '무(無)'는 존재할 수 없다는 양자역학의 충격적 진실",
       "video_id": "WmXe6IiPc7U",
       "published_kst": "11/26 04:14",
@@ -77,13 +84,6 @@
       "video_id": "XF7keucVXCw",
       "published_kst": "11/25 05:43",
       "views": 7,
-      "privacy": "public"
-    },
-    {
-      "title": "잠재의식 95% 11차원의 신호",
-      "video_id": "3L83CzgsvYU",
-      "published_kst": "11/25 05:36",
-      "views": 811,
       "privacy": "public"
     }
   ],

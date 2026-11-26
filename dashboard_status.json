@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T05:33:51.803867+09:00",
+  "updated_at": "2026-11-27T05:43:44.190850+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,24 @@
   ],
   "youtube": [
     {
+      "title": "4만 달러 빚에서 50만 달러로: 밖으로 자랑하지 않고 내면의 주파수를 10배로 증폭시키는 부의 양자역학",
+      "video_id": "0n6DkzrjJRQ",
+      "published_kst": "11/27 05:38",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "4만 달러 빚 침묵의 주파수",
+      "video_id": "notUAluLD3Q",
+      "published_kst": "11/27 05:34",
+      "views": 66,
+      "privacy": "public"
+    },
+    {
       "title": "한계보다 조금 어려운 일에 몰두하면 생기는 일 #shorts",
       "video_id": "lckXMN1C4jw",
       "published_kst": "11/26 19:07",
-      "views": 630,
+      "views": 642,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "uqxU8JWtynE",
       "published_kst": "11/26 04:12",
       "views": 20,
-      "privacy": "public"
-    },
-    {
-      "title": "110년간 우승 못한 선수들이 바꾼 한 가지 #shorts",
-      "video_id": "Yia4IRg84qE",
-      "published_kst": "11/25 19:06",
-      "views": 992,
-      "privacy": "public"
-    },
-    {
-      "title": "잠재의식에 11차원의 신호를 보내는 법 | 잠들기 전 5분, 부와 치유를 현실로 만드는 양자역학 확언 명상",
-      "video_id": "XF7keucVXCw",
-      "published_kst": "11/25 05:43",
-      "views": 7,
       "privacy": "public"
     }
   ],

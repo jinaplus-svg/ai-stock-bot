@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T00:23:43.611527+09:00",
+  "updated_at": "2026-11-27T00:33:43.950469+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -55,7 +55,7 @@
       "title": "한계보다 조금 어려운 일에 몰두하면 생기는 일 #shorts",
       "video_id": "lckXMN1C4jw",
       "published_kst": "11/26 19:07",
-      "views": 351,
+      "views": 365,
       "privacy": "public"
     },
     {
@@ -105,7 +105,7 @@
       "positions": []
     },
     "binance": {
-      "date": "2026-11-26",
+      "date": "2026-11-27",
       "daily_pnl": 0.0,
       "cumulative_pnl": 12.852799417647088,
       "trade_count_today": 0,

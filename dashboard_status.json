@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T16:53:42.429777+09:00",
+  "updated_at": "2026-11-27T17:03:42.818321+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,7 +52,39 @@
   ],
   "youtube": [
     {
-      "error": "<HttpError 429 when requesting https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCTv3MH-od8Ny31SLZFGu3QQ&order=date&type=video&maxResults=5&alt=json returned \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\". Details: \"[{'message': \"Quota exceeded for quota metric 'Search Queries' and limit 'Search Queries per day' of service 'youtube.googleapis.com' for consumer 'project_number:490793614020'.\", 'domain': 'global', 'reason': 'rateLimitExceeded'}]\">"
+      "title": "4만 달러 빚에서 50만 달러로: 밖으로 자랑하지 않고 내면의 주파수를 10배로 증폭시키는 부의 양자역학",
+      "video_id": "0n6DkzrjJRQ",
+      "published_kst": "11/27 05:38",
+      "views": 22,
+      "privacy": "public"
+    },
+    {
+      "title": "4만 달러 빚 침묵의 주파수",
+      "video_id": "notUAluLD3Q",
+      "published_kst": "11/27 05:34",
+      "views": 369,
+      "privacy": "public"
+    },
+    {
+      "title": "한계보다 조금 어려운 일에 몰두하면 생기는 일 #shorts",
+      "video_id": "lckXMN1C4jw",
+      "published_kst": "11/26 19:07",
+      "views": 920,
+      "privacy": "public"
+    },
+    {
+      "title": "완벽한 '무(無)'는 존재할 수 없다는 양자역학의 충격적 진실",
+      "video_id": "WmXe6IiPc7U",
+      "published_kst": "11/26 04:14",
+      "views": 1022,
+      "privacy": "public"
+    },
+    {
+      "title": "우주는 왜 아무것도 없는 상태가 아닐까: 양자역학이 밝혀낸 무(無)의 충격적 실체",
+      "video_id": "uqxU8JWtynE",
+      "published_kst": "11/26 04:12",
+      "views": 42,
+      "privacy": "public"
     }
   ],
   "bots": {

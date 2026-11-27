@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-28T04:23:43.726667+09:00",
+  "updated_at": "2026-11-28T04:33:43.756495+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,10 +52,24 @@
   ],
   "youtube": [
     {
+      "title": "-50% 찍혀도 손절 못 하는 사람들의 소름 돋는 뇌 과학",
+      "video_id": "bryusuQHbWc",
+      "published_kst": "11/28 04:31",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
+      "title": "물려도 못 파는 사람들의 심리 — 손실 회피와 처분 효과의 덫",
+      "video_id": "6zOb4xywSHI",
+      "published_kst": "11/28 04:31",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "왕 1명, 안경 1개. 세상을 바꾼 마법 #shorts",
       "video_id": "CnlFK-weHtM",
       "published_kst": "11/27 19:07",
-      "views": 0,
+      "views": 2,
       "privacy": "public"
     },
     {
@@ -70,20 +84,6 @@
       "video_id": "notUAluLD3Q",
       "published_kst": "11/27 05:34",
       "views": 399,
-      "privacy": "public"
-    },
-    {
-      "title": "한계보다 조금 어려운 일에 몰두하면 생기는 일 #shorts",
-      "video_id": "lckXMN1C4jw",
-      "published_kst": "11/26 19:07",
-      "views": 978,
-      "privacy": "public"
-    },
-    {
-      "title": "완벽한 '무(無)'는 존재할 수 없다는 양자역학의 충격적 진실",
-      "video_id": "WmXe6IiPc7U",
-      "published_kst": "11/26 04:14",
-      "views": 1024,
       "privacy": "public"
     }
   ],

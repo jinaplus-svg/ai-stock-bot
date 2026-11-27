@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T19:03:43.383705+09:00",
+  "updated_at": "2026-11-27T19:13:43.366150+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "왕 1명, 안경 1개. 세상을 바꾼 마법 #shorts",
+      "video_id": "CnlFK-weHtM",
+      "published_kst": "11/27 19:07",
+      "views": 0,
+      "privacy": "public"
+    },
+    {
       "title": "4만 달러 빚에서 50만 달러로: 밖으로 자랑하지 않고 내면의 주파수를 10배로 증폭시키는 부의 양자역학",
       "video_id": "0n6DkzrjJRQ",
       "published_kst": "11/27 05:38",
@@ -77,13 +84,6 @@
       "video_id": "WmXe6IiPc7U",
       "published_kst": "11/26 04:14",
       "views": 1022,
-      "privacy": "public"
-    },
-    {
-      "title": "우주는 왜 아무것도 없는 상태가 아닐까: 양자역학이 밝혀낸 무(無)의 충격적 실체",
-      "video_id": "uqxU8JWtynE",
-      "published_kst": "11/26 04:12",
-      "views": 47,
       "privacy": "public"
     }
   ],

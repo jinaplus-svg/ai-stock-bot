@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-28T19:33:42.919712+09:00",
+  "updated_at": "2026-11-28T19:43:43.418645+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,13 +52,6 @@
   ],
   "youtube": [
     {
-      "title": "10대 소녀들 188% 급증, 폰을 쥐고 살면 생기는 일 #shorts",
-      "video_id": "3FACR-dxFXg",
-      "published_kst": "11/28 19:05",
-      "views": 12,
-      "privacy": "public"
-    },
-    {
       "title": "-50% 찍혀도 손절 못 하는 사람들의 소름 돋는 뇌 과학",
       "video_id": "bryusuQHbWc",
       "published_kst": "11/28 04:31",
@@ -66,10 +59,10 @@
       "privacy": "public"
     },
     {
-      "title": "물려도 못 파는 사람들의 심리 — 손실 회피와 처분 효과의 덫",
-      "video_id": "6zOb4xywSHI",
-      "published_kst": "11/28 04:31",
-      "views": 3,
+      "title": "10대 소녀들 188% 급증, 폰을 쥐고 살면 생기는 일 #shorts",
+      "video_id": "3FACR-dxFXg",
+      "published_kst": "11/28 19:05",
+      "views": 12,
       "privacy": "public"
     },
     {
@@ -80,10 +73,17 @@
       "privacy": "public"
     },
     {
-      "title": "4만 달러 빚에서 50만 달러로: 밖으로 자랑하지 않고 내면의 주파수를 10배로 증폭시키는 부의 양자역학",
-      "video_id": "0n6DkzrjJRQ",
-      "published_kst": "11/27 05:38",
-      "views": 37,
+      "title": "물려도 못 파는 사람들의 심리 — 손실 회피와 처분 효과의 덫",
+      "video_id": "6zOb4xywSHI",
+      "published_kst": "11/28 04:31",
+      "views": 3,
+      "privacy": "public"
+    },
+    {
+      "title": "4만 달러 빚 침묵의 주파수",
+      "video_id": "notUAluLD3Q",
+      "published_kst": "11/27 05:34",
+      "views": 485,
       "privacy": "public"
     }
   ],

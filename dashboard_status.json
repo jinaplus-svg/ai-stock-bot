@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-28T19:03:48.970835+09:00",
+  "updated_at": "2026-11-28T19:13:43.331843+09:00",
   "blogs": [
     {
       "category": "Stock",
@@ -52,6 +52,13 @@
   ],
   "youtube": [
     {
+      "title": "10대 소녀들 188% 급증, 폰을 쥐고 살면 생기는 일 #shorts",
+      "video_id": "3FACR-dxFXg",
+      "published_kst": "11/28 19:05",
+      "views": 4,
+      "privacy": "public"
+    },
+    {
       "title": "-50% 찍혀도 손절 못 하는 사람들의 소름 돋는 뇌 과학",
       "video_id": "bryusuQHbWc",
       "published_kst": "11/28 04:31",
@@ -77,13 +84,6 @@
       "video_id": "0n6DkzrjJRQ",
       "published_kst": "11/27 05:38",
       "views": 37,
-      "privacy": "public"
-    },
-    {
-      "title": "4만 달러 빚 침묵의 주파수",
-      "video_id": "notUAluLD3Q",
-      "published_kst": "11/27 05:34",
-      "views": 483,
       "privacy": "public"
     }
   ],
